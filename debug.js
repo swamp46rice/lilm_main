@@ -89,7 +89,7 @@ function initDebugMode(){
   const btn=document.createElement('button');
   btn.id='debugModeBtn';
   btn.textContent='DEBUG MODE';
-  btn.style.cssText='position:absolute;top:20px;right:24px;font-family:monospace;font-size:14px;color:#000;opacity:0.5;background:none;border:none;padding:3px 6px;cursor:pointer;z-index:101;';
+  btn.style.cssText='position:absolute;top:20px;right:24px;font-family:monospace;font-size:14px;color:#f55;opacity:0.5;background:none;border:none;padding:3px 6px;cursor:pointer;z-index:101;';
   btn.addEventListener('click', e=>{
     e.stopPropagation();
     debugMode=!debugMode;
