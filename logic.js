@@ -2031,13 +2031,13 @@ function playOpening(){
 function initTitleScreen(){
   const ts=document.getElementById('titleScreen');
   if(!ts) return;
-  // 画像セット
-  document.getElementById('titleLogo').src=typeof TITLE_IMG!=='undefined'?TITLE_IMG:'';
-  document.getElementById('titlePressStart').src=typeof PRESS_START_IMG!=='undefined'?PRESS_START_IMG:'';
-  document.getElementById('titleCopyright').src=typeof COPYRIGHT_IMG!=='undefined'?COPYRIGHT_IMG:'';
-  if(document.getElementById('titleSettingsBtn')) document.getElementById('titleSettingsBtn').src=typeof SETTINGS_IMG!=='undefined'?SETTINGS_IMG:'';
-  // tire0をキャラとして表示
-  document.getElementById('titleChara').src=TIRE_IMAGES[0];
+  // 画像セット（全要素を安全にセット）
+  const setImg=(id, src)=>{ const el=document.getElementById(id); if(el && src) el.src=src; };
+  setImg('titleLogo',       typeof TITLE_IMG       !=='undefined' ? TITLE_IMG       : '');
+  setImg('titlePressStart', typeof PRESS_START_IMG !=='undefined' ? PRESS_START_IMG : '');
+  setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined' ? COPYRIGHT_IMG   : '');
+  setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined' ? SETTINGS_IMG    : '');
+  setImg('titleChara', TIRE_IMAGES[0]);
   // キー/クリックで解除
   function startGame(){
     // Safari対策: ユーザー操作との紐付けを保つため再生は先頭で行う
