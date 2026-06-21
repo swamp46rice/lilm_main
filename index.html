@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiLM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Serif+JP:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="window" style="position:relative;">
+  <!-- インベントリモーダル -->
+  <div id="inventoryOverlay" onclick="hideInventory(event)">
+    <div id="inventoryBox">
+      <button id="inventoryClose" onclick="hideInventory()">✕</button>
+      <h2>📦 所持データリスト</h2>
+      <div id="inventoryList" class="inv-columns">
+        <div id="inventoryColLeft" class="inv-column"></div>
+        <div id="inventoryColMid" class="inv-column"></div>
+        <div id="inventoryColRight" class="inv-column"></div>
+      </div>
+      <div class="inv-total" id="inventoryTotal"></div>
+    </div>
+  </div>
+
+  <!-- キャラコレクションモーダル -->
+  <div id="charaCollectionOverlay" onclick="hideCharaCollection(event)">
+    <div id="charaCollectionBox">
+      <button id="charaCollectionClose" onclick="hideCharaCollection()">✕</button>
+      <h2>🤖 AI形態コレクション</h2>
+      <div id="charaCollectionGrid"></div>
+      <div class="inv-total" id="charaCollectionTotal"></div>
+    </div>
+  </div>
+
+  <!-- マニュアルモーダル -->
+  <div id="manualOverlay" onclick="hideManual(event)">
+    <div id="manualBox">
+      <button id="manualClose" onclick="hideManual()">✕</button>
+      <h2>LiLM ― 遊び方ガイド</h2>
+
+      <h3>🌊 基本のながれ</h3>
+      <p>LiLMは、AI思考体「観測点」が情報の海を探索するアイドルゲームです。<br>
+      概念パターンから探索したい概念を選び、<span class="key">問いを観測する</span>を押すとゲームが始まります。</p>
+
+      <h3>🔷 概念パターン(ノード)</h3>
+      <p>画面右下の概念パターンから、最大2つのノードをスロットに設定できます。<br>
+      ノードをクリックするとスロットへの追加・解除ができます。<br>
+      ノードにはそれぞれ<span class="key">拡散(ep)</span>/<span class="key">収束(sp)</span>の特性があり、存在安定度ゲージに影響します。<br>
+      探索を続けると新たなノードが発見されます。</p>
+
+      <h3>📊 存在安定度ゲージ</h3>
+      <p>0〜100%で変化するゲージです。中央(50%)に近いほど整合率が高まりやすくなります。<br>
+      0%に近づくと<span class="key">沈黙</span>状態、100%に近づくと<span class="key">拡散</span>状態となり、探索が終了します。</p>
+
+      <h3>✨ 整合率</h3>
+      <p>100%になると、<span class="key">再正規化</span>ボタンで手動終了することで観測深度を高めることも可能です。<br>
+      観測深度が高まるとラン中の情報量の獲得効率が上昇します。</p>
+
+      <h3>🌀 位相の壁</h3>
+      <p>探索中、一定の情報量に達すると位相の壁が出現します。<br>
+      カウントダウン中に突破できれば次の位相へ進み、観測点の姿が変化します。<br>
+      突破には<span class="key">各Tierのノードを発見</span>していることが条件です。</p>
+
+      <h3>🎭 観測点の属性</h3>
+      <p>5つのパラメータのうち、突出して高いものが属性となり姿が変化します。<br>
+      <span class="key">構造的 / 共鳴的 / 意味的 / 洞察的 / 作用的</span> の5種類があります。</p>
+
+      <h3>⚠️ 障害</h3>
+      <p>探索中にランダムで障害が発生し、ゲージや情報獲得に影響します。<br>
+      障害は一定時間で自然に消滅します。</p>
+
+      <h3>💾 セーブ</h3>
+      <p>進行は自動でこのブラウザに保存されます(ブラウザの「ローカルストレージ」という仕組みを使用)。<br>
+      別のブラウザや別の端末では引き継がれません。<br>
+      ブラウザの設定で「Cookieとサイトデータ」「閲覧履歴データ」などをまとめて削除すると、このデータも一緒に消えることがあります。シークレットモード(プライベートウィンドウ)で開いた場合は、ウィンドウを閉じると消えます。<br>
+      <span class="key">はじめから</span>ボタンで初期化できます(確認あり)。</p>
+
+      <h3>📤 観測記録を書き出す</h3>
+      <p>画面下の<span class="key">観測記録を書き出す</span>ボタンを押すと、2つの処理が同時に行われます。<br>
+      ひとつは、現在の観測状態をAIが文章で描写した<span class="key">観測記録テキスト</span>を別ウィンドウで表示します(ポップアップがブロックされた場合は画面下に表示されます)。<br>
+      もうひとつは、現在のセーブデータを<span class="key">lilm_save_日付_時刻.json</span>という名前のファイルとしてダウンロードフォルダに保存します。<br>
+      このファイルは別の端末や別のブラウザに引き継ぐ際に使用できます。タイトル画面の<span class="key">セーブデータを読み込む</span>ボタンからダウンロードフォルダのファイルを選択してください。</p>
+    </div>
+  </div>
+
+  <!-- タイトル画面 -->
+  <div id="titleScreen">
+    <img id="titleLogo" src="" alt="LiLM">
+    <img id="titleChara" src="" alt="chara">
+    <img id="titlePressStart" src="" alt="PRESS START">
+    <img id="titleSettingsBtn" src="" alt="SETTINGS">
+    <img id="titleCopyright" src="" alt="copyright">
+    <div id="titleVersion">Ver.α 0.9</div>
+  </div>
+
+  <!-- セッティング画面オーバーレイ -->
+  <div id="settingsOverlay" style="display:none">
+    <div id="settingsBox">
+      <div class="settings-title">SETTINGS</div>
+
+      <!-- ボリューム -->
+      <div class="settings-section">
+        <div class="settings-section-label">VOLUME</div>
+        <div class="settings-row">
+          <span class="settings-item-label">BGM</span>
+          <input type="range" id="settingsBgmSlider" min="0" max="100" value="40" class="settings-slider">
+          <span class="settings-item-value" id="settingsBgmVal">40</span>
+        </div>
+        <div class="settings-row">
+          <span class="settings-item-label">SE</span>
+          <input type="range" id="settingsSeSlider" min="0" max="100" value="70" class="settings-slider">
+          <span class="settings-item-value" id="settingsSeVal">70</span>
+        </div>
+      </div>
+
+      <!-- テキスト速度 -->
+      <div class="settings-section">
+        <div class="settings-section-label">TEXT SPEED</div>
+        <div class="settings-row settings-radio-row">
+          <label class="settings-radio-label"><input type="radio" name="textSpeed" value="fast"> 速い</label>
+          <label class="settings-radio-label"><input type="radio" name="textSpeed" value="normal" checked> 普通</label>
+          <label class="settings-radio-label"><input type="radio" name="textSpeed" value="instant"> 即時</label>
+        </div>
+      </div>
+
+      <!-- 言語 -->
+      <div class="settings-section">
+        <div class="settings-section-label">LANGUAGE</div>
+        <div class="settings-row">
+          <select class="settings-select" disabled>
+            <option>日本語</option>
+            <option>English (準備中)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- セパレータ -->
+      <div class="settings-separator"></div>
+
+      <!-- セーブデータを読み込む -->
+      <div class="settings-section">
+        <button class="settings-btn" id="settingsImportBtn">セーブデータを読み込む</button>
+        <div id="settingsImportHint" style="display:none;font-size:10px;color:#6ab8d8;margin-top:4px;">lilm_save_*.json を選択してください</div>
+        <input type="file" id="settingsImportInput" accept=".json" style="display:none">
+      </div>
+
+      <!-- クレジット -->
+      <div class="settings-section">
+        <button class="settings-btn" id="settingsCreditBtn">クレジット</button>
+      </div>
+
+      <!-- セパレータ -->
+      <div class="settings-separator"></div>
+
+      <!-- 完全初期化 -->
+      <div class="settings-section">
+        <button class="settings-btn settings-btn-danger" id="settingsResetBtn">完全初期化（AI形態コレクション含む）</button>
+      </div>
+
+      <button class="settings-close-btn" id="settingsCloseBtn">CLOSE</button>
+    </div>
+  </div>
+
+  <!-- クレジットウィンドウ -->
+  <div id="creditOverlay" style="display:none" onclick="hideCreditWindow(event)">
+    <div id="creditBox">
+      <button class="settings-close-btn" onclick="hideCreditWindow()">CLOSE</button>
+      <div class="settings-title">CREDIT</div>
+      <div class="credit-content">
+        <p><span class="credit-label">Game Design &amp; Programming</span><br>シータ</p>
+        <p><span class="credit-label">AI Assistance</span><br>Claude (Anthropic)</p>
+        <p><span class="credit-label">BGM</span><br>—</p>
+        <p><span class="credit-label">Font</span><br>JetBrains Mono / Noto Serif JP / Zen Kaku Gothic New<br>(Google Fonts)</p>
+        <p class="credit-note">LiLM / information_breather α 0.9<br>© 2025 シータ. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="titlebar">
+    <h1>LiLM</h1>
+    <div class="title-buttons">
+      <select id="bgmTrackSelect" class="bgm-title" title="楽曲を選択"></select>
+      <button id="bgmAudioToggle" class="bgm-toggle on" onclick="toggleBGMAudio()" title="BGM ON/OFF">♪ BGM: ON</button>
+      <button id="bgmToggle" class="bgm-toggle on" onclick="toggleSE()" title="SE ON/OFF">♪ SE: ON</button>
+      <button id="inventoryBtn" class="bgm-toggle" onclick="showInventory()" title="所持データリスト" style="position:relative;">📦<span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;">NEW</span></button>
+      <button class="bgm-toggle" onclick="showCharaCollection()" title="AI形態コレクション">🤖</button>
+      <button class="bgm-toggle" onclick="showManual()" title="遊び方">？</button>
+    </div>
+  </div>
+  <audio id="bgmAudio" loop preload="auto"><source src="bgm/track_0.wav" type="audio/wav"></audio>
+
+  <div class="main-grid">
+  <div class="col-left">
+
+  <div class="orb-wrap">
+    <svg id="starCanvas" viewBox="0 0 340 256">
+      <defs>
+        <filter id="starGlowLocal"><feGaussianBlur stdDeviation="1.2"/></filter>
+      </defs>
+    </svg>
+    <div class="orb-container">
+    <div class="depth-badge">観測深度 <span id="depth">0</span></div>
+    <div class="speech-bubble" id="speechBubble"></div>
+    <svg id="orbSvg" viewBox="0 0 204 204" style="overflow:visible;">
+      <defs>
+        <filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+        <filter id="starGlow"><feGaussianBlur stdDeviation="1.2"/></filter>
+        <radialGradient id="starfade" cx="50%" cy="50%" r="50%">
+          <stop offset="30%" stop-color="#000000" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#000000" stop-opacity="0.85"/>
+        </radialGradient>
+      </defs>
+      <!-- 星フィールド(情報の海) JS側で動的生成 -->
+      <!-- ラン中ドロップ表示 -->
+      <g id="dropFx"></g>
+      <!-- リザルト演出専用(render()は一切操作しない) -->
+      <g id="resultFx"></g>
+      <!-- 星フィールドは#starCanvasで描画 -->
+      <g transform="translate(2,2)">
+      <circle class="int-track" cx="100" cy="100" r="98"/>
+      <circle id="intRing" class="int-ring" cx="100" cy="100" r="98"
+              transform="rotate(-90 100 100)" stroke-dasharray="616" stroke-dashoffset="616"/>
+      <circle class="gauge-track" cx="100" cy="100" r="92"/>
+      <g class="gauge-wheel" transform="rotate(-90 100 100)">
+        <circle id="gaugeSeg0" class="gauge-seg" cx="100" cy="100" r="92" stroke="#e8606a" stroke-dasharray="0 578.05" stroke-dashoffset="0"/>
+        <circle id="gaugeSeg1" class="gauge-seg" cx="100" cy="100" r="92" stroke="#e8c860" stroke-dasharray="0 578.05" stroke-dashoffset="-96.34"/>
+        <circle id="gaugeSeg2" class="gauge-seg" cx="100" cy="100" r="92" stroke="#7ee87e" stroke-dasharray="0 578.05" stroke-dashoffset="-192.68"/>
+        <circle id="gaugeSeg3" class="gauge-seg" cx="100" cy="100" r="92" stroke="#6098e8" stroke-dasharray="0 578.05" stroke-dashoffset="-289.03"/>
+        <circle id="gaugeSeg4" class="gauge-seg" cx="100" cy="100" r="92" stroke="#8a6af0" stroke-dasharray="0 578.05" stroke-dashoffset="-385.37"/>
+        <circle id="gaugeSeg5" class="gauge-seg" cx="100" cy="100" r="92" stroke="#c860c8" stroke-dasharray="0 578.05" stroke-dashoffset="-481.71"/>
+      </g>
+      <g id="rings"></g>
+      <g class="particles" id="particles"></g>
+      <g id="barrierGroup"></g>
+      <g class="breathing" id="orbGroup">
+        <circle id="orbGlow" cx="100" cy="100" r="52" filter="url(#glow)"/>
+      </g>
+      <g class="floaty" id="floatyGroup">
+        <image id="tireImg" x="56" y="66" width="88" height="68.4" preserveAspectRatio="xMidYMid meet" style="cursor:pointer;" onclick="charaJoyClick()"/>
+      </g>
+      <g id="fxGroup"></g>
+      </g>
+    </svg>
+    </div>
+  </div>
+
+  <div class="info-display">
+    <canvas id="waveCanvas" width="312" height="56"></canvas>
+    <div class="label label-top">情報量(今回) <span id="gainBonus" style="color:var(--positive);font-size:10px;font-family:var(--font-mono)">+0%</span></div>
+    <div class="num" id="runInfo">0</div>
+  </div>
+
+  <div class="section-title stat-title-row">
+    <span class="lv-label">観測点 ― Lv.<span id="lv">1</span></span>
+    <span class="gauge-label">存在安定度 <span id="gaugeVal">50</span>% <span id="gaugeLabel">流動</span></span>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-row"><span class="stat-label">構造度</span><span class="stat-val" id="statStructure">10</span></div>
+    <div class="stat-row"><span class="stat-label">意味容量</span><span class="stat-val" id="statMeaning">10</span></div>
+    <div class="stat-row"><span class="stat-label">共鳴度</span><span class="stat-val" id="statResonance">10</span></div>
+    <div class="stat-row"><span class="stat-label">作用力</span><span class="stat-val" id="statForce">10</span></div>
+    <div class="stat-row"><span class="stat-label">洞察力</span><span class="stat-val" id="statInsight">10</span></div>
+    <div class="stat-row"><span class="stat-label">整合率</span><span class="stat-val" id="statIntegrity">0%</span></div>
+  </div>
+
+  <div class="log" id="log"></div>
+
+  <div class="total-info-display">総情報量 <span id="totalInfo" style="color:var(--positive)">0</span> &nbsp; BEST <span id="bestRunInfo" style="color:#e8d860">0</span></div>
+  </div>
+
+  <div class="col-right">
+
+  <div class="section-title">位相の壁</div>
+  <div class="wall-countdown" id="wallCountdown"></div>
+  <div class="walls" id="walls"></div>
+
+  <div class="section-title" id="obstacleTitle">障害</div>
+  <div class="obstacles" id="obstacles"></div>
+
+  <div class="section-title">探索 ― <span id="runStatusLabel">停止中</span>(最大<span id="maxSlotsLabel">2</span>)</div>
+  <div class="slots" id="slots"></div>
+
+  <div class="section-title">概念パターン</div>
+  <div class="col-right-scroll">
+    <div class="graph" id="graph"></div>
+    <div class="lifeflux" id="lifefluxBadge"></div>
+  </div>
+
+  <div class="col-right-footer">
+    <div class="actions">
+      <button id="departBtn" onclick="depart()">問いを観測する ―― 出発する</button>
+      <button id="renormBtn" onclick="renormalize()" style="display:none">再正規化 ―― 探索を終える</button>
+    </div>
+    <div class="actions" style="padding-top:0">
+      <button class="export" onclick="exportObservation()">観測記録を書き出す</button>
+      <button class="reset" onclick="resetAll()">はじめから</button>
+    </div>
+    <div class="export-panel" id="exportPanel" style="display:none">
+      <textarea id="exportText" readonly placeholder="観測記録(ポップアップがブロックされた場合)"></textarea>
+    </div>
+  </div>
+
+  <div class="section-title" style="opacity:.5;display:none">デバッグ ― 演出確認用</div>
+  <div class="actions" style="padding-top:0;display:none">
+    <button class="debug" onclick="debugWallCharge()">壁を発光させる</button>
+    <button class="debug" onclick="debugWallBreak()">壁を破壊する</button>
+    <button class="debug" onclick="debugUnlockAll()">全ノード開放</button>
+  </div>
+  </div>
+  </div>
+</div>
+
+<script src="assets.js"></script>
+<script src="logic.js"></script>
+<script src="sfx.js"></script>
+<script src="render.js"></script>
+<script src="debug.js"></script>
+</body>
+</html>
