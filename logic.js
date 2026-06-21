@@ -754,9 +754,16 @@ function tickGauge(){
   }
   delta+=effBaselineDrift;
   const gaugeBefore=s.gauge;
+  const zoneBefore=gaugeZone().label;
   s.gauge+=delta;
+  const zoneAfter=gaugeZone().label;
   if((gaugeBefore<=80 && s.gauge>80) || (gaugeBefore>=20 && s.gauge<20)){
     sfxGaugeAlert();
+  }
+  // ゾーン変化によるBGM解放（観測中のみ）
+  if(s.runStatus==='観測中' && zoneBefore!==zoneAfter){
+    if(zoneAfter==='沈黙') grantTrack('track_5');
+    if(zoneAfter==='エントロピー') grantTrack('track_4');
   }
   s.causAcc.nodes=s.causAcc.nodes||{};
   for(const k in contrib) s.causAcc.nodes[k]=(s.causAcc.nodes[k]||0)+contrib[k];
@@ -832,10 +839,8 @@ function handleFailure(type){
   let text;
   if(type==='silence'){
     s.gauge=0;
-    // track_5: 初めて沈黙状態に突入時
-    grantTrack('track_5');
     // track_9: 初めてゲージ0%で失敗時
-    if(!s.unlockedTracks.includes('track_9')) grantTrack('track_9');
+    grantTrack('track_9');
     if(!s.metaUnlocks.mu && s.committed.includes('death')){
       s.metaUnlocks.mu=true;
       // foundには即時追加(NEWマーク表示・Tier判定のため)
@@ -851,10 +856,8 @@ function handleFailure(type){
     else text=SILENCE_GENERIC;
   }else if(type==='entropy'){
     s.gauge=100;
-    // track_4: 初めてエントロピー状態に突入時
-    grantTrack('track_4');
     // track_8: 初めてゲージ100%で失敗時
-    if(!s.unlockedTracks.includes('track_8')) grantTrack('track_8');
+    grantTrack('track_8');
     if(!s.metaUnlocks.karma && ['mu','resonance_q','memory'].every(id=>s.committed.includes(id))){
       s.metaUnlocks.karma=true;
       // foundには即時追加(NEWマーク表示・Tier判定のため)
