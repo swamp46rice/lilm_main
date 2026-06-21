@@ -10,6 +10,7 @@ function debugUnlockAllTracks(){
   save();
   log('DEBUG: 全BGMトラックを解放しました。');
 }
+function debugUnlockAll(){
   s.found=NODE_IDS.slice();
   checkAllTierCompleteAchievements();
   render();
