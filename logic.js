@@ -2072,8 +2072,9 @@ function initTitleScreen(){
     document.removeEventListener('keydown', skipLogo);
     document.removeEventListener('click', skipLogo);
     if(logoScreen){
-      // ロゴだけフェードアウト（タイトルは裏で既に表示中）
-      logoScreen.style.opacity='0';
+      // ロゴ画像だけフェードアウト、白背景はそのまま維持してからdisplay:none
+      const logoImg=document.getElementById('makerLogoImg');
+      if(logoImg) logoImg.style.opacity='0';
       setTimeout(()=>{
         if(logoScreen) logoScreen.style.display='none';
         // タイトル画面BGM: track_2を再生
@@ -2089,10 +2090,12 @@ function initTitleScreen(){
   }
 
   if(logoScreen){
+    // ロゴ画面（白背景）は即表示、ロゴ画像だけフェードイン
     logoScreen.style.display='flex';
+    const logoImg=document.getElementById('makerLogoImg');
     requestAnimationFrame(()=>{
       requestAnimationFrame(()=>{
-        logoScreen.style.opacity='1';
+        if(logoImg) logoImg.style.opacity='1';
       });
     });
     setTimeout(showTitle, 3800);
