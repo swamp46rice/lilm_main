@@ -2048,9 +2048,10 @@ function initTitleScreen(){
   setImg('titleChara', TIRE_IMAGES[0]);
   setImg('makerLogoImg', typeof SWAMP_LOGO_IMG!=='undefined' ? SWAMP_LOGO_IMG : '');
 
-  // タイトル画面は最初非表示
-  ts.style.opacity='0';
-  ts.style.display='none';
+  // タイトル画面はロゴの裏で最初から表示
+  ts.style.opacity='1';
+  ts.style.display='';
+  ts.style.transition='none';
 
   // メーカーロゴ → タイトルのフロー
   const logoScreen=document.getElementById('makerLogoScreen');
@@ -2062,19 +2063,14 @@ function initTitleScreen(){
     document.removeEventListener('keydown', skipLogo);
     document.removeEventListener('click', skipLogo);
     if(logoScreen){
+      // ロゴだけフェードアウト（タイトルは裏で既に表示中）
       logoScreen.style.opacity='0';
       setTimeout(()=>{
         if(logoScreen) logoScreen.style.display='none';
-        // タイトルを即表示（インゲーム画面が透けないよう遷移なし）
-        ts.style.display='';
-        ts.style.transition='none';
-        ts.style.opacity='1';
         // タイトル画面BGM: track_2を再生
         if(typeof switchBgmTrack==='function') switchBgmTrack(2);
       }, 800);
     } else {
-      ts.style.display='';
-      ts.style.opacity='1';
       if(typeof switchBgmTrack==='function') switchBgmTrack(2);
     }
   }
@@ -2094,8 +2090,7 @@ function initTitleScreen(){
     document.addEventListener('keydown', skipLogo);
     document.addEventListener('click', skipLogo);
   } else {
-    ts.style.display='';
-    ts.style.opacity='1';
+    if(typeof switchBgmTrack==='function') switchBgmTrack(2);
   }
 
   // キー/クリックで解除
