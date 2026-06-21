@@ -1674,7 +1674,7 @@ function buildExportDigest(){
     existence_stability:Math.round(s.gauge),
     integrity:Math.round(s.integrity),
     run_info:Math.floor(s.runInfo),
-    total_info: s.metaUnlocks.infinity ? '∞' : Math.floor(s.totalInfo),
+    total_info: (s.inventory&&s.inventory[37]) ? '∞' : Math.floor(s.totalInfo),
     best_run_info: Math.floor(s.bestRunInfo),
     walls_crossed: s.wallsThisRun.slice(),
     committed: s.committed.map(id=>NODES[id].name),
