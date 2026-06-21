@@ -2111,7 +2111,7 @@ function initSettings(){
   if(seSlider) seSlider.addEventListener('input',()=>{
     const v=parseInt(seSlider.value);
     if(seVal) seVal.textContent=v;
-    if(sfxNodes&&sfxNodes.sfxGain) sfxNodes.sfxGain.gain.value=v/100;
+    seVolume=v/100;
   });
   const closeBtn=document.getElementById('settingsCloseBtn');
   if(closeBtn) closeBtn.addEventListener('click',hideSettings);
