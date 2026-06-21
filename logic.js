@@ -1037,6 +1037,7 @@ function dreamEvent(chance){
   if(chance===undefined) chance=0.3;
   if(s.runInfo<500) return;
   if(Math.random()>=chance) return;
+  sfxObstacle(); // 夢イベント発生SE
 
   const roll=Math.random();
   if(roll<0.15){
@@ -1630,7 +1631,7 @@ function showResultSequence(){
   }
   seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:'今回の獲得情報量: '+Math.floor(finalRunInfo), type:'positive'});
   if(bestUpdated){
-    seq.push({delay:300, text:'BEST更新！ ―― 過去最高記録を更新した。', type:'observe'});
+    seq.push({delay:300, text:'BEST更新！ ―― 過去最高記録を更新した。', type:'observe', sfx:'integcrit'});
     bestAchievementsGranted.forEach(name=>{
       seq.push({delay:400, text:'「'+name+'」の実績解除！', type:'observe', sfx:'levelup'});
     });
@@ -1665,6 +1666,7 @@ function showResultSequence(){
       const el=document.getElementById('log');
       if(!el){ next(); return; }
       if(item.sfx==='levelup' && !s._resultSkipRequested) sfxLevelUp();
+      if(item.sfx==='integcrit' && !s._resultSkipRequested) sfxIntegCrit();
       const div=document.createElement('div');
       if(item.type) div.className='log-'+item.type;
       const ts=document.createElement('span');
@@ -2028,6 +2030,12 @@ function playOpening(){
   next();
 }
 
+let _tickInterval=null;
+function startTick(){
+  if(_tickInterval) return;
+  _tickInterval=setInterval(tick, 1000);
+}
+
 function initTitleScreen(){
   const ts=document.getElementById('titleScreen');
   if(!ts) return;
@@ -2038,6 +2046,57 @@ function initTitleScreen(){
   setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined' ? COPYRIGHT_IMG   : '');
   setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined' ? SETTINGS_IMG    : '');
   setImg('titleChara', TIRE_IMAGES[0]);
+  setImg('makerLogoImg', typeof SWAMP_LOGO_IMG!=='undefined' ? SWAMP_LOGO_IMG : '');
+
+  // タイトル画面は最初非表示
+  ts.style.opacity='0';
+  ts.style.display='';
+
+  // メーカーロゴ → タイトルのフロー
+  const logoScreen=document.getElementById('makerLogoScreen');
+  let _logoSkipped=false;
+
+  function showTitle(){
+    if(_logoSkipped) return;
+    _logoSkipped=true;
+    document.removeEventListener('keydown', skipLogo);
+    document.removeEventListener('click', skipLogo);
+    // ロゴフェードアウト
+    if(logoScreen){
+      logoScreen.style.opacity='0';
+      setTimeout(()=>{
+        if(logoScreen) logoScreen.style.display='none';
+        // タイトルフェードイン
+        ts.style.transition='opacity 0.8s';
+        ts.style.opacity='1';
+      }, 800);
+    } else {
+      ts.style.transition='opacity 0.8s';
+      ts.style.opacity='1';
+    }
+  }
+
+  function skipLogo(){
+    if(_logoSkipped) return;
+    showTitle();
+  }
+
+  if(logoScreen){
+    logoScreen.style.display='flex';
+    // フェードイン
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        logoScreen.style.opacity='1';
+      });
+    });
+    // 3秒表示後にフェードアウト → タイトル
+    setTimeout(showTitle, 3800); // 0.8s fade-in + 3s display
+    document.addEventListener('keydown', skipLogo);
+    document.addEventListener('click', skipLogo);
+  } else {
+    ts.style.opacity='1';
+  }
+
   // キー/クリックで解除
   function startGame(){
     // Safari対策: ユーザー操作との紐付けを保つため再生は先頭で行う
@@ -2055,6 +2114,7 @@ function initTitleScreen(){
         });
       }
     }
+    startTick(); // Press Start時にtick開始
     ts.style.transition='opacity .6s';
     ts.style.opacity='0';
     setTimeout(()=>{

@@ -1016,5 +1016,5 @@ initBgmSelect();
   drawWave();
   requestAnimationFrame(waveLoop);
 })();
-setInterval(tick,1000);
-
+// tickはPress Startまで停止（メーカーロゴ・タイトル表示中は不要）
+// startTick()はinitTitleScreen内のstartGame()から呼ばれる
