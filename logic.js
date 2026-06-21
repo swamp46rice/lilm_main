@@ -589,6 +589,7 @@ function tickWalls(){
       s.wallActive={frontier, remain:deadline, deadline};
       _debugForceReady=false;
       events.push({text:'壁「'+w.name+'」が立ち上がった。残り'+deadline+'秒 ―― 突破を試みる。', type:'event'});
+      sfxWallAppear();
     }
     return {events, timeout:false};
   }
@@ -605,6 +606,7 @@ function tickWalls(){
     grantPhaseAchievement(frontier);
     if(frontier===6) checkAttrLimitAchievement();
     s.wallActive=null;
+    sfxWallStop();
     _lastWallAttack='hit';
     wallDrop(frontier);
   }else{
@@ -612,6 +614,7 @@ function tickWalls(){
     _lastWallAttack = prob>0 ? 'miss' : null;
     if(s.wallActive.remain<=0){
       s.wallActive=null;
+      sfxWallStop();
       return {events, timeout:true, nodeReqFailed:!wallNodeReqMet(frontier)};
     }
   }
@@ -853,6 +856,7 @@ function handleFailure(type){
   checkAllTierCompleteAchievements();
   s.wallsThisRun=[];
   s.wallActive=null;
+  sfxWallStop();
   const runInfoThisRun=s.runInfo;
   const resultLogs=[];
   const {absorbed, rejected}=loseDrops(resultLogs, type);
@@ -885,6 +889,7 @@ function renormalize(){
   checkAllTierCompleteAchievements();
   s.wallsThisRun=[];
   s.wallActive=null;
+  sfxWallStop();
 
   const resultLogs=[];
 
@@ -1107,6 +1112,7 @@ function depart(){
   // 上限到達状態を維持したまま新しいランに入った場合、壁突破カウントの基準点を新ランの0に揃える
   if(s.charaJoyBonusTotal>=30) s.charaJoyWallsAtCap=0;
   s.wallActive=null;
+  sfxWallStop();
   s.activeObstacles=[];
   s.lastFailType=null; s.lastEventText=null;
   s.causAcc={}; s.causGaugeStart=50; s.causClock=0;
@@ -1537,6 +1543,7 @@ function _resultTypewrite(el, text, onDone){
     if(s._resultSkipRequested){ el.textContent=text; onDone(); return; }
     i++;
     el.textContent=text.slice(0,i);
+    sfxTypeChar();
     if(i>=n){ onDone(); return; }
     setTimeout(step, 26);
   }

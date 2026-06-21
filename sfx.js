@@ -110,6 +110,8 @@ const SE_FILES = [
   'se/sfx_09.wav', // sfxObstacle      障害発生
   'se/sfx_10.wav', // sfxDamage        ダメージ
   'se/sfx_11.wav', // sfxCommit        スロットへノード設定
+  'se/sfx_12.wav', // sfxTypeChar      タイプライター1文字
+  'se/sfx_13.wav', // sfxWallAppear    位相の壁出現(ループ)
 ];
 
 /* ===== SE: 初期化・ON/OFFトグル ===== */
@@ -149,3 +151,24 @@ function sfxItemDrop()      { playSE(8); }   // アイテムドロップ
 function sfxObstacle()      { playSE(9); }   // 障害発生
 function sfxDamage()        { playSE(10); }  // ダメージ
 function sfxCommit()        { playSE(11); }  // スロットへノード設定
+
+// タイプライター1文字SE
+function sfxTypeChar()      { playSE(12); }  // タイプライター1文字
+
+// 位相の壁出現ループSE
+let _wallLoopAudio = null;
+function sfxWallAppear(){
+  if(!seOn) return;
+  if(_wallLoopAudio) return; // 既に再生中
+  const audio = new Audio(SE_FILES[13]);
+  audio.loop = true;
+  audio.volume = seVolume;
+  audio.play().catch(()=>{});
+  _wallLoopAudio = audio;
+}
+function sfxWallStop(){
+  if(!_wallLoopAudio) return;
+  _wallLoopAudio.pause();
+  _wallLoopAudio.currentTime = 0;
+  _wallLoopAudio = null;
+}
