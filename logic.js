@@ -954,6 +954,8 @@ function renormalize(){
   };
 }
 
+let _prevAttr=null;
+
 function coreTick(silent){
   if(s.runStatus!=='観測中') return 0;
   s.runTicks++;
@@ -971,6 +973,13 @@ function coreTick(silent){
   s.causClock++;
   let causText=null;
   if(s.causClock>=CAUS_INTERVAL){ causText=causalityDigest(); s.causClock=0; }
+
+  // 属性変化検出
+  if(!silent){
+    const currentAttr=detectAttr(computeStats());
+    if(_prevAttr!==null && _prevAttr!==currentAttr) sfxCharaChange();
+    _prevAttr=currentAttr;
+  }
 
   if(!silent){
     wallResult.events.forEach(e=>{
