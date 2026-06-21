@@ -1278,7 +1278,7 @@ function resetAll(){
 }
 
 /* ===== BGM解放 ===== */
-const AUTO_SWITCH_TRACKS=['track_4','track_5','track_14','track_15'];
+const AUTO_SWITCH_TRACKS=['track_4','track_5','track_6','track_14','track_15'];
 
 function grantTrack(trackKey){
   if(!s.unlockedTracks) s.unlockedTracks=[];
