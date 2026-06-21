@@ -290,12 +290,14 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   causClock:0, causAcc:{}, causGaugeStart:50,
   lastTs:null,
   charaSeen:{},
-  unlockedTracks:[]
+  unlockedTracks:[],
+  currentTrackIdx:0
 };
 // 旧セーブからの移行
 if(!s.newlyUnlocked) s.newlyUnlocked=[];
 if(!s.charaSeen) s.charaSeen={};
 if(!s.unlockedTracks) s.unlockedTracks=[];
+if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
 if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
@@ -591,6 +593,8 @@ function tickWalls(){
       _debugForceReady=false;
       events.push({text:'壁「'+w.name+'」が立ち上がった。残り'+deadline+'秒 ―― 突破を試みる。', type:'event'});
       sfxWallAppear();
+      // track_6: 初めて位相の壁に遭遇時
+      grantTrack('track_6');
     }
     return {events, timeout:false};
   }
@@ -609,6 +613,8 @@ function tickWalls(){
     if(frontier===6) checkAttrLimitAchievement();
     s.wallActive=null;
     sfxWallStop();
+    // track_7: 言語面の壁(frontier===1)突破時
+    if(frontier===1) grantTrack('track_7');
     _lastWallAttack='hit';
     wallDrop(frontier);
   }else{
@@ -826,6 +832,10 @@ function handleFailure(type){
   let text;
   if(type==='silence'){
     s.gauge=0;
+    // track_5: 初めて沈黙状態に突入時
+    grantTrack('track_5');
+    // track_9: 初めてゲージ0%で失敗時
+    if(!s.unlockedTracks.includes('track_9')) grantTrack('track_9');
     if(!s.metaUnlocks.mu && s.committed.includes('death')){
       s.metaUnlocks.mu=true;
       // foundには即時追加(NEWマーク表示・Tier判定のため)
@@ -841,6 +851,10 @@ function handleFailure(type){
     else text=SILENCE_GENERIC;
   }else if(type==='entropy'){
     s.gauge=100;
+    // track_4: 初めてエントロピー状態に突入時
+    grantTrack('track_4');
+    // track_8: 初めてゲージ100%で失敗時
+    if(!s.unlockedTracks.includes('track_8')) grantTrack('track_8');
     if(!s.metaUnlocks.karma && ['mu','resonance_q','memory'].every(id=>s.committed.includes(id))){
       s.metaUnlocks.karma=true;
       // foundには即時追加(NEWマーク表示・Tier判定のため)
@@ -978,6 +992,8 @@ function coreTick(silent){
     newly.forEach(id=>{
       log('新しい問いが見えてきた ―― 「'+NODES[id].name+'」。'+NODES[id].note, 'event');
       sfxDiscover();
+      if(id==='alpha')  grantTrack('track_14');
+      if(id==='lumina') grantTrack('track_15');
       if(id==='t0_touch'){
         log('探索中にも概念パターンを入れ替えることができるが、それは整合性を失う行為であることをわきまえておこう。', 'positive');
       }
@@ -1223,11 +1239,13 @@ function resetAll(){
     setTimeout(()=>{resetArmed=false;},5000);
     return;
   }
-  // charaSeen(AI形態コレクション)はリセット後も保持する
+  // charaSeen(AI形態コレクション)・BGM解放状態はリセット後も保持する
   const savedCharaSeen=s.charaSeen ? Object.assign({},s.charaSeen) : {};
+  const savedUnlockedTracks=s.unlockedTracks ? s.unlockedTracks.slice() : [];
+  const savedTrackIdx=s.currentTrackIdx||0;
   localStorage.removeItem('ib_v9');
   localStorage.removeItem('ib_v9_opening_done');
-  // リセット後の新規sにcharaSeenを引き継ぐ
+  // リセット後の新規sにcharaSeen・BGM情報を引き継ぐ
   const newS=JSON.parse(localStorage.getItem('ib_v9')||'null');
   if(!newS){
     // 新規sをlocalStorageに作成してcharaSeenを埋め込む
@@ -1240,11 +1258,25 @@ function resetAll(){
       activeObstacles:[],lastEventText:null,lastExportFound:[],
       causClock:0,causAcc:{},causGaugeStart:50,lastTs:null,
       metaUnlocks:{mu:false,karma:false,infinity:false},
-      charaSeen:savedCharaSeen
+      charaSeen:savedCharaSeen,
+      unlockedTracks:savedUnlockedTracks,
+      currentTrackIdx:savedTrackIdx
     };
     localStorage.setItem('ib_v9',JSON.stringify(base));
   }
   location.reload();
+}
+
+/* ===== BGM解放 ===== */
+function grantTrack(trackKey){
+  if(!s.unlockedTracks) s.unlockedTracks=[];
+  if(s.unlockedTracks.includes(trackKey)) return; // 既に解放済み
+  s.unlockedTracks.push(trackKey);
+  const track=TRACKS.find(t=>t.unlockKey===trackKey);
+  const title=track?track.title:'楽曲';
+  log('音の波を感知。'+title+'の音源を入手した！', 'observe');
+  if(typeof updateBgmSelect==='function') updateBgmSelect();
+  save();
 }
 
 /* ===== 即時付与アイテム(位相データ・実績系): ドロップ演出なしで条件達成時にs.inventoryへ直接セット ===== */
@@ -1401,6 +1433,11 @@ function wallDrop(wallIdx){
   const extendedMax=cur!==null&&cur!==undefined ? Math.min(5, Math.min(baseMax+1, cur.rank+1)) : baseMax;
   let rank=rollDropRank(extendedMax, computeStats());
   grantDrop(itemId, rank);
+  // BGM確率解放: 壁突破後のドロップ判定に合わせて抽選
+  if(wallIdx>=2 && !s.unlockedTracks.includes('track_10') && Math.random()<0.003) grantTrack('track_10');
+  if(wallIdx>=4 && !s.unlockedTracks.includes('track_11') && Math.random()<0.003) grantTrack('track_11');
+  if(wallIdx>=6 && !s.unlockedTracks.includes('track_12') && Math.random()<0.001) grantTrack('track_12');
+  if(wallIdx>=6 && s.wallsThisRun.length>=7 && !s.unlockedTracks.includes('track_13') && Math.random()<0.001) grantTrack('track_13');
 }
 function obstacleDrop(stats){
   const attr=detectAttr(stats);

@@ -31,9 +31,13 @@ let currentTrackIdx = 0;
 function initBgmSelect(){
   const sel = document.getElementById('bgmTrackSelect');
   if(!sel) return;
+  // セーブからcurrentTrackIdxを復元
+  if(typeof s !== 'undefined' && s.currentTrackIdx !== undefined){
+    currentTrackIdx = s.currentTrackIdx;
+  }
   sel.innerHTML = '';
   TRACKS.forEach((t, i) => {
-    const unlocked = true; // 解放条件は後で実装。現在は全曲表示
+    const unlocked = !t.unlockKey || (typeof s !== 'undefined' && s.unlockedTracks && s.unlockedTracks.includes(t.unlockKey));
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = unlocked ? t.title : '???';
@@ -43,7 +47,11 @@ function initBgmSelect(){
   sel.value = currentTrackIdx;
   sel.addEventListener('change', ()=>{
     const idx = parseInt(sel.value);
-    if(!isNaN(idx)) switchBgmTrack(idx);
+    if(!isNaN(idx)){
+      switchBgmTrack(idx);
+      // 選択トラックをセーブに反映
+      if(typeof s !== 'undefined'){ s.currentTrackIdx = idx; if(typeof save==='function') save(); }
+    }
   });
 }
 
