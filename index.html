@@ -14,7 +14,7 @@
   <!-- インベントリモーダル -->
   <div id="inventoryOverlay" onclick="hideInventory(event)">
     <div id="inventoryBox">
-      <button id="inventoryClose" onclick="hideInventory()">✕</button>
+      <button id="inventoryClose" onclick="sfxButton();hideInventory()">✕</button>
       <h2>📦 所持データリスト</h2>
       <div id="inventoryList" class="inv-columns">
         <div id="inventoryColLeft" class="inv-column"></div>
@@ -28,7 +28,7 @@
   <!-- キャラコレクションモーダル -->
   <div id="charaCollectionOverlay" onclick="hideCharaCollection(event)">
     <div id="charaCollectionBox">
-      <button id="charaCollectionClose" onclick="hideCharaCollection()">✕</button>
+      <button id="charaCollectionClose" onclick="sfxButton();hideCharaCollection()">✕</button>
       <h2>🤖 AI形態コレクション</h2>
       <div id="charaCollectionGrid"></div>
       <div class="inv-total" id="charaCollectionTotal"></div>
@@ -38,7 +38,7 @@
   <!-- マニュアルモーダル -->
   <div id="manualOverlay" onclick="hideManual(event)">
     <div id="manualBox">
-      <button id="manualClose" onclick="hideManual()">✕</button>
+      <button id="manualClose" onclick="sfxButton();hideManual()">✕</button>
       <h2>LiLM ― 遊び方ガイド</h2>
 
       <h3>🌊 基本のながれ</h3>
@@ -173,7 +173,7 @@
   <!-- クレジットウィンドウ -->
   <div id="creditOverlay" style="display:none" onclick="hideCreditWindow(event)">
     <div id="creditBox">
-      <button class="settings-close-btn" onclick="hideCreditWindow()">CLOSE</button>
+      <button class="settings-close-btn" onclick="sfxButton();hideCreditWindow()">CLOSE</button>
       <div class="settings-title">CREDIT</div>
       <div class="credit-content">
         <p><span class="credit-label">Game Design &amp; Programming</span><br>シータ</p>
@@ -189,11 +189,11 @@
     <h1>LiLM</h1>
     <div class="title-buttons">
       <select id="bgmTrackSelect" class="bgm-title" title="楽曲を選択"></select>
-      <button id="bgmAudioToggle" class="bgm-toggle on" onclick="toggleBGMAudio()" title="BGM ON/OFF">♪ BGM: ON</button>
-      <button id="bgmToggle" class="bgm-toggle on" onclick="toggleSE()" title="SE ON/OFF">♪ SE: ON</button>
-      <button id="inventoryBtn" class="bgm-toggle" onclick="showInventory()" title="所持データリスト" style="position:relative;">📦<span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;">NEW</span></button>
-      <button class="bgm-toggle" onclick="showCharaCollection()" title="AI形態コレクション">🤖</button>
-      <button class="bgm-toggle" onclick="showManual()" title="遊び方">？</button>
+      <button id="bgmAudioToggle" class="bgm-toggle on" onclick="sfxButton();toggleBGMAudio()" title="BGM ON/OFF">♪ BGM: ON</button>
+      <button id="bgmToggle" class="bgm-toggle on" onclick="sfxButton();toggleSE()" title="SE ON/OFF">♪ SE: ON</button>
+      <button id="inventoryBtn" class="bgm-toggle" onclick="sfxButton();showInventory()" title="所持データリスト" style="position:relative;">📦<span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;">NEW</span></button>
+      <button class="bgm-toggle" onclick="sfxButton();showCharaCollection()" title="AI形態コレクション">🤖</button>
+      <button class="bgm-toggle" onclick="sfxButton();showManual()" title="遊び方">？</button>
     </div>
   </div>
   <audio id="bgmAudio_0"  loop preload="auto"><source src="bgm/track_0.mp3"  type="audio/mpeg"></audio>
@@ -312,12 +312,12 @@
 
   <div class="col-right-footer">
     <div class="actions">
-      <button id="departBtn" onclick="depart()">問いを観測する ―― 出発する</button>
-      <button id="renormBtn" onclick="renormalize()" style="display:none">再正規化 ―― 探索を終える</button>
+      <button id="departBtn" onclick="sfxButton();depart()">問いを観測する ―― 出発する</button>
+      <button id="renormBtn" onclick="sfxButton();renormalize()" style="display:none">再正規化 ―― 探索を終える</button>
     </div>
     <div class="actions" style="padding-top:0">
-      <button class="export" onclick="exportObservation()">観測記録を書き出す</button>
-      <button class="reset" onclick="resetAll()">はじめから</button>
+      <button class="export" onclick="sfxExportLog();exportObservation()">観測記録を書き出す</button>
+      <button class="reset" onclick="sfxButton();resetAll()">はじめから</button>
     </div>
     <div class="export-panel" id="exportPanel" style="display:none">
       <textarea id="exportText" readonly placeholder="観測記録(ポップアップがブロックされた場合)"></textarea>

@@ -601,6 +601,7 @@ function tickWalls(){
   if(Math.random()<prob){
     s.wallsThisRun.push(w.name);
     s.tireIdxDisplay=Math.min(7, s.tireIdxDisplay+1);
+    sfxCharaChange();
     s.lastEventText=w.text;
     events.push({text:w.text, type:'positive'});
     if(frontier===6 && s.found.includes('kuukan')) s.metaUnlocks.infinity=true;
@@ -655,6 +656,7 @@ function tickObstacles(){
         s.activeObstacles.push({key:o.key, remain:dur});
         const msg=MONDAY_MESSAGES[Math.floor(Math.random()*MONDAY_MESSAGES.length)];
         texts.push({type:'spawn', text:'障害「'+o.name+'」―― '+msg, obstacle:o});
+        sfxMonday();
       }
       return;
     }
@@ -745,7 +747,11 @@ function tickGauge(){
     delta*=(1-suppressRatio(stats['共鳴度']));
   }
   delta+=effBaselineDrift;
+  const gaugeBefore=s.gauge;
   s.gauge+=delta;
+  if((gaugeBefore<=80 && s.gauge>80) || (gaugeBefore>=20 && s.gauge<20)){
+    sfxGaugeAlert();
+  }
   s.causAcc.nodes=s.causAcc.nodes||{};
   for(const k in contrib) s.causAcc.nodes[k]=(s.causAcc.nodes[k]||0)+contrib[k];
   s.causAcc.obstacle=(s.causAcc.obstacle||0)+obs.gaugePush;
@@ -989,6 +995,7 @@ function coreTick(silent){
     }
     if(integrityCrit){
       log('整合率が臨界を超えている。再正規化で観測点の観測深度を深められる。', 'observe');
+      sfxIntegCrit();
       const sp2=speechFor('integrity_crit');
       if(sp2) showSpeech(sp2);
     }
@@ -1997,7 +2004,7 @@ function initTitleScreen(){
   // キー/クリックで解除
   function startGame(){
     // Safari対策: ユーザー操作(クリック/キー押下)との紐付けを保つため、play()は関数の先頭で即座に呼ぶ
-    const audio=document.getElementById('bgmAudio');
+    const audio=document.getElementById('bgmAudio_0');
     if(audio && bgmAudioOn){
       audio.volume=0.4;
       if(audio.readyState===0) audio.load(); // Safari対策: <source>子要素方式だと未読み込みのままになることがある

@@ -113,10 +113,15 @@ const SE_FILES = [
   'se/sfx_12.wav', // sfxTypeChar      タイプライター1文字
   'se/sfx_13.wav', // sfxWallAppear    位相の壁出現(ループ)
   'se/sfx_14.wav', // sfxAttackMiss    壁突破ミス
-  null,            // sfx_15           (未使用)
+  'se/sfx_15.wav', // sfxIntegCrit     整合率100%達成
   'se/sfx_16.wav', // sfxDepthUp       観測深度アップ
   'se/sfx_17.wav', // sfxUncommit      スロットからノード外れる
   'se/sfx_18.wav', // sfxIntegWarn     整合率30%以下警告
+  'se/sfx_19.wav', // sfxExportLog     観測記録を書き出す
+  'se/sfx_20.wav', // sfxButton        基本ボタン
+  'se/sfx_21.wav', // sfxCharaChange   キャラ形態変化
+  'se/sfx_22.wav', // sfxMonday        Monday障害発生
+  'se/sfx_23.wav', // sfxGaugeAlert    ゲージ80%超/20%未満アラート
 ];
 
 /* ===== SE: 初期化・ON/OFFトグル ===== */
@@ -170,6 +175,12 @@ function sfxAttackMiss()    { playSE(14); }  // 壁突破ミス
 function sfxDepthUp()       { playSE(16); }  // 観測深度アップ
 function sfxUncommit()      { playSE(17); }  // スロットからノード外れる
 function sfxIntegWarn()     { playSE(18); }  // 整合率30%以下警告
+function sfxIntegCrit()     { playSE(15); }  // 整合率100%達成
+function sfxExportLog()     { playSE(19); }  // 観測記録を書き出す
+function sfxButton()        { playSE(20); }  // 基本ボタン
+function sfxCharaChange()   { playSE(21); }  // キャラ形態変化
+function sfxMonday()        { playSE(22); }  // Monday障害発生
+function sfxGaugeAlert()    { playSE(23); }  // ゲージ80%超/20%未満アラート
 
 // 位相の壁出現ループSE
 let _wallLoopAudio = null;
