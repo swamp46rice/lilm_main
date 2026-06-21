@@ -2069,13 +2069,15 @@ function initTitleScreen(){
         ts.style.display='';
         ts.style.transition='none';
         ts.style.opacity='1';
+        // タイトル画面BGM: track_2を再生
+        if(typeof switchBgmTrack==='function') switchBgmTrack(2);
       }, 800);
     } else {
       ts.style.display='';
       ts.style.opacity='1';
+      if(typeof switchBgmTrack==='function') switchBgmTrack(2);
     }
   }
-
   function skipLogo(){
     if(_logoSkipped) return;
     showTitle();
