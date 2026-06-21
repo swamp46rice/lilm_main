@@ -828,7 +828,7 @@ function render(){
   const gl=document.getElementById('gaugeLabel');
   gl.textContent=zone.label; gl.style.color=zone.color;
   document.getElementById('lv').textContent=s.level;
-  document.getElementById('totalInfo').textContent= (s.inventory&&s.inventory[37])?'∞':Math.floor(s.totalInfo);
+  document.getElementById('totalInfo').textContent= s.metaUnlocks.infinity?'∞':Math.floor(s.totalInfo);
   document.getElementById('bestRunInfo').textContent= Math.floor(s.bestRunInfo);
   document.getElementById('depth').textContent=s.depth;
   document.getElementById('runStatusLabel').textContent=s.runStatus;
@@ -966,9 +966,10 @@ function render(){
     departBtn.textContent='探索結果を確認';
     departBtn.classList.add('result-pending-btn');
     departBtn.onclick=function(){
+      sfxButton();
       departBtn.classList.remove('result-pending-btn');
       showResultSequence();
-      departBtn.onclick=function(){ depart(); };
+      departBtn.onclick=function(){ sfxButton(); depart(); };
     };
     renormBtn.style.display='none';
   }else if(s.runStatus==='停止中'){
