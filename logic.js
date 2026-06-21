@@ -1287,6 +1287,7 @@ function grantTrack(trackKey){
   const track=TRACKS.find(t=>t.unlockKey===trackKey);
   const title=track?track.title:'楽曲';
   log('音の波を感知。'+title+'の音源を入手した！', 'observe');
+  sfxItemDrop();
   if(typeof updateBgmSelect==='function') updateBgmSelect();
   // 初回のみ自動切り替え対象トラックは獲得時にBGMを切り替える
   if(AUTO_SWITCH_TRACKS.includes(trackKey) && track){
