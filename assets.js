@@ -2,6 +2,7 @@
 const TITLE_IMG="assets/title_img.png";
 const COPYRIGHT_IMG="assets/copyright_img.png";
 const PRESS_START_IMG="assets/press_start_img.png";
+const SETTINGS_IMG="assets/settings_img.png";
 const BG_IMAGE="assets/bg_image_00.png";
 const TIRE_IMAGES=[
 "assets/tire_images_00.png",
