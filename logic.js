@@ -2040,16 +2040,17 @@ function initTitleScreen(){
   document.getElementById('titleChara').src=TIRE_IMAGES[0];
   // キー/クリックで解除
   function startGame(){
-    // Safari対策: ユーザー操作(クリック/キー押下)との紐付けを保つため、play()は関数の先頭で即座に呼ぶ
-    const audio=document.getElementById('bgmAudio_0');
-    if(audio && bgmAudioOn){
-      audio.volume=0.4;
-      if(audio.readyState===0) audio.load(); // Safari対策: <source>子要素方式だと未読み込みのままになることがある
-      const p=audio.play();
-      if(p && p.catch){
-        p.catch(err=>{
-          log('BGM再生に失敗した(再試行します): '+(err&&err.name?err.name:err));
-          // 読み込みが間に合っていない可能性があるため、少し待って再試行
+    // Safari対策: ユーザー操作との紐付けを保つため再生は先頭で行う
+    const trackIdx = (typeof s !== 'undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
+    if(typeof switchBgmTrack === 'function'){
+      switchBgmTrack(trackIdx);
+    } else {
+      // fallback: track_0を直接再生
+      const audio=document.getElementById('bgmAudio_0');
+      if(audio && bgmAudioOn){
+        audio.volume=0.4;
+        if(audio.readyState===0) audio.load();
+        audio.play().catch(err=>{
           setTimeout(()=>{ audio.play().catch(e2=>log('BGM再試行も失敗: '+(e2&&e2.name?e2.name:e2))); }, 500);
         });
       }
