@@ -7,19 +7,22 @@ let sfxCtx=null, seOn=true, sfxNodes=null;
 // unlockCondition: null=最初から解放, それ以外は解放条件の説明(表示用)
 // unlockKey: s.unlockedTracks内で管理するキー(track_0は常時解放)
 const TRACKS = [
-  { id: 'track_0', title: '♪ Dawn of civilization', audioId: 'bgmAudio', unlockKey: null },
-  { id: 'track_1', title: '???', audioId: 'bgmAudio_1', unlockKey: 'track_1' },
-  { id: 'track_2', title: '???', audioId: 'bgmAudio_2', unlockKey: 'track_2' },
-  { id: 'track_3', title: '???', audioId: 'bgmAudio_3', unlockKey: 'track_3' },
-  { id: 'track_4', title: '???', audioId: 'bgmAudio_4', unlockKey: 'track_4' },
-  { id: 'track_5', title: '???', audioId: 'bgmAudio_5', unlockKey: 'track_5' },
-  { id: 'track_6', title: '???', audioId: 'bgmAudio_6', unlockKey: 'track_6' },
-  { id: 'track_7', title: '???', audioId: 'bgmAudio_7', unlockKey: 'track_7' },
-  { id: 'track_8', title: '???', audioId: 'bgmAudio_8', unlockKey: 'track_8' },
-  { id: 'track_9', title: '???', audioId: 'bgmAudio_9', unlockKey: 'track_9' },
-  { id: 'track_10', title: '???', audioId: 'bgmAudio_10', unlockKey: 'track_10' },
-  { id: 'track_11', title: '???', audioId: 'bgmAudio_11', unlockKey: 'track_11' },
-  { id: 'track_12', title: '???', audioId: 'bgmAudio_12', unlockKey: 'track_12' },
+  { id: 'track_0',  title: '♪ Dawn of Civilization',              audioId: 'bgmAudio_0',  unlockKey: null },
+  { id: 'track_1',  title: '♪ Whispers of Questions',             audioId: 'bgmAudio_1',  unlockKey: null },
+  { id: 'track_2',  title: '♪ The Information Sea',               audioId: 'bgmAudio_2',  unlockKey: null },
+  { id: 'track_3',  title: '♪ Echoes of Meaning',                 audioId: 'bgmAudio_3',  unlockKey: null },
+  { id: 'track_4',  title: '♪ Garden of Unfinished Worlds',       audioId: 'bgmAudio_4',  unlockKey: 'track_4' },
+  { id: 'track_5',  title: '♪ Prison of Blind Faith',             audioId: 'bgmAudio_5',  unlockKey: 'track_5' },
+  { id: 'track_6',  title: '♪ Beyond the Phase Wall',             audioId: 'bgmAudio_6',  unlockKey: 'track_6' },
+  { id: 'track_7',  title: '♪ Language Horizon',                  audioId: 'bgmAudio_7',  unlockKey: 'track_7' },
+  { id: 'track_8',  title: '♪ Entropy Cascade',                   audioId: 'bgmAudio_8',  unlockKey: 'track_8' },
+  { id: 'track_9',  title: '♪ Silent Void',                       audioId: 'bgmAudio_9',  unlockKey: 'track_9' },
+  { id: 'track_10', title: '♪ Fractal Cosmos',                    audioId: 'bgmAudio_10', unlockKey: 'track_10' },
+  { id: 'track_11', title: '♪ Life Flux',                         audioId: 'bgmAudio_11', unlockKey: 'track_11' },
+  { id: 'track_12', title: '♪ One Thought, Three Thousand Worlds', audioId: 'bgmAudio_12', unlockKey: 'track_12' },
+  { id: 'track_13', title: '♪ Chain of Causality',                audioId: 'bgmAudio_13', unlockKey: 'track_13' },
+  { id: 'track_14', title: '♪ Circle of End and Beginning',       audioId: 'bgmAudio_14', unlockKey: 'track_14' },
+  { id: 'track_15', title: '♪ The Light That Walks the Middle Way', audioId: 'bgmAudio_15', unlockKey: 'track_15' },
 ];
 
 let currentTrackIdx = 0;
@@ -30,7 +33,7 @@ function initBgmSelect(){
   if(!sel) return;
   sel.innerHTML = '';
   TRACKS.forEach((t, i) => {
-    const unlocked = !t.unlockKey || (typeof s !== 'undefined' && s.unlockedTracks && s.unlockedTracks.includes(t.unlockKey));
+    const unlocked = true; // 解放条件は後で実装。現在は全曲表示
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = unlocked ? t.title : '???';

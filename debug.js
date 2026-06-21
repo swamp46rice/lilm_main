@@ -2,7 +2,14 @@
 // Steam販売時はindex.htmlからこのscriptタグを削除し、このファイルを同梱しない。
 
 /* ===== デバッグ関数 ===== */
-function debugUnlockAll(){
+function debugUnlockAllTracks(){
+  if(typeof s === 'undefined'){ log('DEBUG: s が未初期化です。'); return; }
+  if(!s.unlockedTracks) s.unlockedTracks=[];
+  TRACKS.forEach(t=>{ if(t.unlockKey && !s.unlockedTracks.includes(t.unlockKey)) s.unlockedTracks.push(t.unlockKey); });
+  if(typeof updateBgmSelect==='function') updateBgmSelect();
+  save();
+  log('DEBUG: 全BGMトラックを解放しました。');
+}
   s.found=NODE_IDS.slice();
   checkAllTierCompleteAchievements();
   render();
@@ -60,6 +67,7 @@ function initDebugMode(){
   panel.innerHTML=`
     <div style="color:#f55;font-weight:bold;margin-bottom:8px;">⚠ DEBUG MODE</div>
     <button onclick="debugUnlockAll()" style="${btnStyle()}">全ノード開放</button>
+    <button onclick="debugUnlockAllTracks()" style="${btnStyle()}">全BGM解放</button>
     <button onclick="debugWallCharge()" style="${btnStyle()}">壁を出現させる</button>
     <button onclick="debugWallBreak()" style="${btnStyle()}">壁を突破する</button>
     <button onclick="debugForceReady()" style="${btnStyle()}">次tick壁出現</button>
