@@ -1,6 +1,6 @@
 // information_breather v7_3 - サウンド (BGM制御 + Web Audio APIによるSE合成)
 /* ===== 音声(SFX/BGM): 効果音・BGM制御の宣言 ===== */
-let seOn=true, seVolume=0.7;
+let seOn=true, seVolume=0.7, seTypeCharOn=true;
 
 /* ===== BGM楽曲定義 ===== */
 // Base64音源は各トラックのaudioId要素として<audio>タグをindex.htmlに用意する
@@ -101,17 +101,18 @@ const SE_FILES = [
   'se/sfx_00.wav', // sfxDepart        出発
   'se/sfx_01.wav', // sfxDiscover      ノード発見
   'se/sfx_02.wav', // sfxWallBreak     位相の壁突破
-  'se/sfx_03.wav', // sfxAttackMiss    壁突破ミス
+  'se/sfx_03.wav', // sfxObstacle      障害発生
   'se/sfx_04.wav', // sfxRenormSuccess 再正規化成功
   'se/sfx_05.wav', // sfxRenormFail    再正規化失敗
   'se/sfx_06.wav', // sfxLevelUp       レベルアップ
   'se/sfx_07.wav', // sfxAbsorb        アイテム吸収
   'se/sfx_08.wav', // sfxItemDrop      アイテムドロップ
-  'se/sfx_09.wav', // sfxObstacle      障害発生
+  'se/sfx_09.wav', // sfxItemLost      アイテム消失
   'se/sfx_10.wav', // sfxDamage        ダメージ
   'se/sfx_11.wav', // sfxCommit        スロットへノード設定
   'se/sfx_12.wav', // sfxTypeChar      タイプライター1文字
   'se/sfx_13.wav', // sfxWallAppear    位相の壁出現(ループ)
+  'se/sfx_14.wav', // sfxAttackMiss    壁突破ミス
 ];
 
 /* ===== SE: 初期化・ON/OFFトグル ===== */
@@ -125,6 +126,15 @@ function toggleSE(){
   if(btn){
     btn.textContent='♪ SE: '+(seOn?'ON':'OFF');
     btn.classList.toggle('on', seOn);
+  }
+}
+
+function toggleTypeCharSE(){
+  const btn=document.getElementById('typecharSeToggle');
+  seTypeCharOn=!seTypeCharOn;
+  if(btn){
+    btn.textContent='タイプ音: '+(seTypeCharOn?'ON':'OFF');
+    btn.classList.toggle('on', seTypeCharOn);
   }
 }
 
@@ -142,18 +152,17 @@ function playSE(idx){
 function sfxDepart()        { playSE(0); }   // 出発
 function sfxDiscover()      { playSE(1); }   // ノード発見
 function sfxWallBreak()     { playSE(2); }   // 位相の壁突破
-function sfxAttackMiss()    { playSE(3); }   // 壁突破ミス
+function sfxObstacle()      { playSE(3); }   // 障害発生
 function sfxRenormSuccess() { playSE(4); }   // 再正規化成功
 function sfxRenormFail()    { playSE(5); }   // 再正規化失敗
 function sfxLevelUp()       { playSE(6); }   // レベルアップ
 function sfxAbsorb()        { playSE(7); }   // アイテム吸収
 function sfxItemDrop()      { playSE(8); }   // アイテムドロップ
-function sfxObstacle()      { playSE(9); }   // 障害発生
+function sfxItemLost()      { playSE(9); }   // アイテム消失
 function sfxDamage()        { playSE(10); }  // ダメージ
 function sfxCommit()        { playSE(11); }  // スロットへノード設定
-
-// タイプライター1文字SE
-function sfxTypeChar()      { playSE(12); }  // タイプライター1文字
+function sfxTypeChar()      { if(seTypeCharOn) playSE(12); } // タイプライター1文字
+function sfxAttackMiss()    { playSE(14); }  // 壁突破ミス
 
 // 位相の壁出現ループSE
 let _wallLoopAudio = null;

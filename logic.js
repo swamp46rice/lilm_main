@@ -379,6 +379,7 @@ function _logProcessQueue(){
       return;
     }
     body.textContent=item.text.slice(0,i);
+    sfxTypeChar();
     el.scrollTop=el.scrollHeight;
     setTimeout(step, 26);
   }
@@ -1610,7 +1611,7 @@ function showResultSequence(){
         render();
         if(!s._resultSkipRequested){
           if(item.anim==='absorb') absorbStars([item.drop], startAngle);
-          else if(item.anim==='flow') flowAwayStars([item.drop], startAngle);
+          else if(item.anim==='flow'){ flowAwayStars([item.drop], startAngle); sfxItemLost(); }
         }
       }
 
