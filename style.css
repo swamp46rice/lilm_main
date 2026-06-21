@@ -308,7 +308,7 @@ button[disabled]:hover{background:transparent;}
 #titleCopyright{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:260px;opacity:0.65;}
 #titleVersion{position:absolute;bottom:20px;right:24px;font-family:var(--font-mono);font-size:11px;color:#6ab8d8;opacity:0.75;letter-spacing:.08em;}
 /* SETTINGSボタン (タイトル画面) */
-#titleSettingsBtn{display:block;width:100px;margin-top:18px;opacity:0.75;cursor:pointer;transition:opacity .2s,filter .2s;filter:drop-shadow(0 0 6px #30d0f055);}
+#titleSettingsBtn{display:block;width:200px;margin-top:18px;opacity:0.75;cursor:pointer;transition:opacity .2s,filter .2s;filter:drop-shadow(0 0 6px #30d0f055);}
 #titleSettingsBtn:hover{opacity:1;filter:drop-shadow(0 0 12px #30d0f0aa);}
 
 /* セッティング画面オーバーレイ */
