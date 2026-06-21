@@ -113,6 +113,10 @@ const SE_FILES = [
   'se/sfx_12.wav', // sfxTypeChar      タイプライター1文字
   'se/sfx_13.wav', // sfxWallAppear    位相の壁出現(ループ)
   'se/sfx_14.wav', // sfxAttackMiss    壁突破ミス
+  null,            // sfx_15           (未使用)
+  'se/sfx_16.wav', // sfxDepthUp       観測深度アップ
+  'se/sfx_17.wav', // sfxUncommit      スロットからノード外れる
+  'se/sfx_18.wav', // sfxIntegWarn     整合率30%以下警告
 ];
 
 /* ===== SE: 初期化・ON/OFFトグル ===== */
@@ -163,6 +167,9 @@ function sfxDamage()        { playSE(10); }  // ダメージ
 function sfxCommit()        { playSE(11); }  // スロットへノード設定
 function sfxTypeChar()      { if(seTypeCharOn) playSE(12); } // タイプライター1文字
 function sfxAttackMiss()    { playSE(14); }  // 壁突破ミス
+function sfxDepthUp()       { playSE(16); }  // 観測深度アップ
+function sfxUncommit()      { playSE(17); }  // スロットからノード外れる
+function sfxIntegWarn()     { playSE(18); }  // 整合率30%以下警告
 
 // 位相の壁出現ループSE
 let _wallLoopAudio = null;

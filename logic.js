@@ -913,6 +913,7 @@ function renormalize(){
       resultLogs.unshift({text:'観測深度が、'+s.depth+'になった。', type:'observe'});
     }
     sfxRenormSuccess();
+    sfxDepthUp();
     dreamEvent(1.0);
   }else{
     s.lastFailType='renorm_partial';
@@ -1179,12 +1180,14 @@ function toggleCommit(id){
   const observing=s.runStatus==='観測中';
   if(observing && s.integrity<=30){
     log('整合が取れない ―― これ以上、観測点の形を変えられない。', 'negative');
+    sfxIntegWarn();
     return;
   }
   const readyBefore=observing?hasReadyDiscovery():false;
   const idx=s.committed.indexOf(id);
   if(idx>=0){
     s.committed.splice(idx,1);
+    sfxUncommit();
     log('「'+n.name+'」を探索から外した。');
   }else{
     if(s.committed.length>=maxSlots()){ log('探索スロットがいっぱいだ(最大'+maxSlots()+')。'); return; }
