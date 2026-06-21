@@ -8,6 +8,7 @@ function showSpeech(text){
   if(!el) return;
   el.textContent=text;
   el.classList.add('show');
+  sfxDepart();
   if(_speechTimer && typeof clearTimeout==='function') clearTimeout(_speechTimer);
   if(typeof setTimeout==='function'){
     _speechTimer=setTimeout(()=>{ el.classList.remove('show'); }, 2800);
