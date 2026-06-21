@@ -2050,7 +2050,7 @@ function initTitleScreen(){
 
   // タイトル画面は最初非表示
   ts.style.opacity='0';
-  ts.style.display='';
+  ts.style.display='none';
 
   // メーカーロゴ → タイトルのフロー
   const logoScreen=document.getElementById('makerLogoScreen');
@@ -2061,17 +2061,17 @@ function initTitleScreen(){
     _logoSkipped=true;
     document.removeEventListener('keydown', skipLogo);
     document.removeEventListener('click', skipLogo);
-    // ロゴフェードアウト
     if(logoScreen){
       logoScreen.style.opacity='0';
       setTimeout(()=>{
         if(logoScreen) logoScreen.style.display='none';
-        // タイトルフェードイン
-        ts.style.transition='opacity 0.8s';
+        // タイトルを即表示（インゲーム画面が透けないよう遷移なし）
+        ts.style.display='';
+        ts.style.transition='none';
         ts.style.opacity='1';
       }, 800);
     } else {
-      ts.style.transition='opacity 0.8s';
+      ts.style.display='';
       ts.style.opacity='1';
     }
   }
@@ -2083,17 +2083,16 @@ function initTitleScreen(){
 
   if(logoScreen){
     logoScreen.style.display='flex';
-    // フェードイン
     requestAnimationFrame(()=>{
       requestAnimationFrame(()=>{
         logoScreen.style.opacity='1';
       });
     });
-    // 3秒表示後にフェードアウト → タイトル
-    setTimeout(showTitle, 3800); // 0.8s fade-in + 3s display
+    setTimeout(showTitle, 3800);
     document.addEventListener('keydown', skipLogo);
     document.addEventListener('click', skipLogo);
   } else {
+    ts.style.display='';
     ts.style.opacity='1';
   }
 
