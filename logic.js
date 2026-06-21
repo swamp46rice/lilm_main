@@ -1264,11 +1264,11 @@ function checkBestRecordAchievements(deferLog){
   if(s.bestRunInfo>=50000) pushIfGranted(20);
   if(s.bestRunInfo>=100000) pushIfGranted(21);
   if(s.bestRunInfo>=500000) pushIfGranted(22);
-  if(s.bestRunInfo>=800000) pushIfGranted(23);
+  if(s.bestRunInfo>=2000000) pushIfGranted(23);
   return granted;
 }
 // BEST系実績のしきい値(リスト表示で「：BEST N達成」を付け加えるために使用)
-const BEST_RECORD_THRESHOLD={18:6000, 19:10000, 20:50000, 21:100000, 22:500000, 23:800000, 37:10000000};
+const BEST_RECORD_THRESHOLD={18:6000, 19:10000, 20:50000, 21:100000, 22:500000, 23:2000000, 37:10000000};
 // 属性で壁7(縁起面、frontierIdx===6)を突破した時点のdetectAttr()結果で実績を付与
 const ATTR_LIMIT_ITEM_MAP={
   structural:32, semantic:33, resonant:34, active:35, insight:36
