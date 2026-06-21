@@ -2070,10 +2070,14 @@ function initTitleScreen(){
   setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined' ? SETTINGS_IMG    : '');
   setImg('titleChara', TIRE_IMAGES[0]);
   setImg('makerLogoImg', typeof SWAMP_LOGO_IMG!=='undefined' ? SWAMP_LOGO_IMG : '');
-  setImg('iconData',    typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
-  setImg('iconAi',      typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
-  setImg('iconHowto',   typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
-  setImg('iconSetting', typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
+  setImg('iconData',       typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
+  setImg('iconAi',         typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
+  setImg('iconHowto',      typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
+  setImg('iconSetting',    typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
+  setImg('iconDataInv',    typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
+  setImg('iconAiColl',     typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
+  setImg('iconHowtoMan',   typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
+  setImg('iconSettingWin', typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
 
   // タイトル画面はロゴの裏で最初から表示
   ts.style.opacity='1';

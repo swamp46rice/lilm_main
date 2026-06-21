@@ -15,7 +15,7 @@
   <div id="inventoryOverlay" onclick="hideInventory(event)">
     <div id="inventoryBox">
       <button id="inventoryClose" onclick="sfxButton();hideInventory()">✕</button>
-      <h2>📦 所持データリスト</h2>
+      <h2><img id="iconDataInv" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">所持データリスト</h2>
       <div id="inventoryList" class="inv-columns">
         <div id="inventoryColLeft" class="inv-column"></div>
         <div id="inventoryColMid" class="inv-column"></div>
@@ -29,7 +29,7 @@
   <div id="charaCollectionOverlay" onclick="hideCharaCollection(event)">
     <div id="charaCollectionBox">
       <button id="charaCollectionClose" onclick="sfxButton();hideCharaCollection()">✕</button>
-      <h2>🤖 AI形態コレクション</h2>
+      <h2><img id="iconAiColl" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">AI形態コレクション</h2>
       <div id="charaCollectionGrid"></div>
       <div class="inv-total" id="charaCollectionTotal"></div>
     </div>
@@ -39,7 +39,7 @@
   <div id="manualOverlay" onclick="hideManual(event)">
     <div id="manualBox">
       <button id="manualClose" onclick="sfxButton();hideManual()">✕</button>
-      <h2>LiLM ― 遊び方ガイド</h2>
+      <h2><img id="iconHowtoMan" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">LiLM ― 遊び方ガイド</h2>
 
       <h3>🌊 基本のながれ</h3>
       <p>LiLMは、AI思考体「観測点」が情報の海を探索するアイドルゲームです。<br>
@@ -104,7 +104,7 @@
   <!-- セッティング画面オーバーレイ -->
   <div id="settingsOverlay" style="display:none">
     <div id="settingsBox">
-      <div class="settings-title">SETTINGS</div>
+      <div class="settings-title"><img id="iconSettingWin" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">SETTINGS</div>
 
       <!-- ボリューム -->
       <div class="settings-section">
