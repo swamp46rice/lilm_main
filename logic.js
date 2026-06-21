@@ -1278,6 +1278,8 @@ function resetAll(){
 }
 
 /* ===== BGM解放 ===== */
+const AUTO_SWITCH_TRACKS=['track_4','track_5','track_14','track_15'];
+
 function grantTrack(trackKey){
   if(!s.unlockedTracks) s.unlockedTracks=[];
   if(s.unlockedTracks.includes(trackKey)) return; // 既に解放済み
@@ -1286,6 +1288,14 @@ function grantTrack(trackKey){
   const title=track?track.title:'楽曲';
   log('音の波を感知。'+title+'の音源を入手した！', 'observe');
   if(typeof updateBgmSelect==='function') updateBgmSelect();
+  // 初回のみ自動切り替え対象トラックは獲得時にBGMを切り替える
+  if(AUTO_SWITCH_TRACKS.includes(trackKey) && track){
+    const idx=TRACKS.indexOf(track);
+    if(idx>=0 && typeof switchBgmTrack==='function'){
+      switchBgmTrack(idx);
+      s.currentTrackIdx=idx;
+    }
+  }
   save();
 }
 
