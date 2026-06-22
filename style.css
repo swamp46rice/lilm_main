@@ -34,8 +34,8 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
 .bgm-title{font-family:var(--font-mono);font-size:10px;color:var(--text-dim);letter-spacing:.05em;margin-right:4px;}
 .bgm-toggle{flex:none;font-family:var(--font-mono);font-size:11px;padding:3px 9px;margin:0;
   border:1px solid var(--line);color:var(--text-dim);background:transparent;border-radius:10px;cursor:pointer;transition:color .3s,border-color .3s;}
-.bgm-toggle.icon-btn{padding:2px 4px;line-height:0;}
-.bgm-toggle.icon-btn img{height:20px;width:auto;display:block;}
+.bgm-toggle.icon-btn{padding:2px 4px;line-height:0;overflow:visible;position:relative;}
+.bgm-toggle.icon-btn img{height:14px;width:auto;display:block;}
 .bgm-toggle:hover{background:rgba(255,255,255,.05);}
 .bgm-toggle.on{color:var(--breath);border-color:var(--breath);}
 
@@ -236,7 +236,7 @@ button[disabled]:hover{background:transparent;}
 .inv-new{font-size:9px;background:var(--rare);color:var(--bg-deep);padding:1px 4px;border-radius:3px;margin-left:6px;font-weight:bold;vertical-align:middle;}
 .inv-pending{font-size:9px;background:var(--text-dim);color:var(--bg-deep);padding:1px 4px;border-radius:3px;margin-left:6px;font-weight:bold;vertical-align:middle;opacity:0.85;}
 .inv-pending-rank{font-size:10px;color:var(--text-dim);margin-left:5px;vertical-align:middle;}
-.inv-btn-new-badge{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:3px;font-size:8px;background:var(--rare);color:var(--bg-deep);padding:1px 4px;border-radius:3px;font-weight:bold;white-space:nowrap;animation:invBadgePulse 1.4s ease-in-out infinite;}
+.inv-btn-new-badge{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:3px;font-size:8px;background:var(--rare);color:var(--bg-deep);padding:1px 4px;border-radius:3px;font-weight:bold;white-space:nowrap;animation:invBadgePulse 1.4s ease-in-out infinite;z-index:10;pointer-events:none;}
 #charaCollectionOverlay{
   display:none;position:absolute;top:0;left:0;width:860px;height:660px;
   background:rgba(2,6,18,0.88);z-index:200;border-radius:10px;
