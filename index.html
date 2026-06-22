@@ -190,7 +190,7 @@
   <div class="titlebar">
     <h1>LiLM</h1>
     <div class="title-buttons">
-      <select id="bgmTrackSelect" class="bgm-title" title="楽曲を選択"></select>
+      <select id="bgmTrackSelect" class="bgm-title"></select>
       <button id="bgmAudioToggle" class="bgm-toggle on" onclick="sfxButton();toggleBGMAudio()" title="BGM ON/OFF">♪ BGM: ON</button>
       <button id="bgmToggle" class="bgm-toggle on" onclick="sfxButton();toggleSE()" title="SE ON/OFF">♪ SE: ON</button>
       <button id="inventoryBtn" class="bgm-toggle icon-btn" onclick="sfxButton();showInventory()" title="所持データリスト" style="position:relative;"><img id="iconData" src="" alt="所持データリスト"><span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;">NEW</span></button>
@@ -323,7 +323,7 @@
       <button class="reset" onclick="sfxButton();resetAll()">はじめから</button>
     </div>
     <div class="export-panel" id="exportPanel" style="display:none">
-      <textarea id="exportText" readonly placeholder="観測記録(ポップアップがブロックされた場合)"></textarea>
+      <textarea id="exportText" readonly></textarea>
     </div>
   </div>
 

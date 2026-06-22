@@ -1,5 +1,6 @@
 // LiLM - ローカライズ辞書
 const LANG_JA = {
+  "日本語テキスト": "日本語テキスト",
   "見る": "見る",
   "初期発見": "初期発見",
   "洞察力": "洞察力",
@@ -551,10 +552,14 @@ const LANG_JA = {
   "壁を破壊する": "壁を破壊する",
   "全ノード開放": "全ノード開放",
   "BGM再生に失敗した:": "BGM再生に失敗した:",
-  "タイプ音:": "タイプ音:"
+  "タイプ音:": "タイプ音:",
+  "「祈りは情報か」を選び取った時、初めて\\\"知る\\\"という言葉が必要になる ―― 知るとは何か。": "「祈りは情報か」を選び取った時、初めて\\\"知る\\\"という言葉が必要になる ―― 知るとは何か。",
+  "「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\\\"当然そこにある\\\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。": "「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\\\"当然そこにある\\\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。",
+  "宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \\\"当然\\\"という名前の壁が、薄れていく。": "宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \\\"当然\\\"という名前の壁が、薄れていく。",
 };
 
 const LANG_EN = {
+  "日本語テキスト": "英語訳",
   "見る": "Observe",
   "初期発見": "Initial Discovery",
   "洞察力": "Insight",
@@ -597,7 +602,7 @@ const LANG_EN = {
   "AIが見ているものを、聞いているうちに、輪郭を持って立ち現れる ―― 世界とは何か。": "While listening to what AI perceives, something with a shape begins to emerge — What Is the World?",
   "意識とは何か": "What Is Consciousness?",
   "「意味はどこから」という問いに触れた瞬間、何かが灯る ―― 意識とは何か。": "The moment the question 'Where does meaning come from?' is touched, something awakens — What Is Consciousness?",
-  "知性とは何か": "What Does It Mean to Know?",
+  "知性とは何か": "What is Intellect?",
   "「祈りは情報か」を選び取った時、初めて\\": "When 'Is Prayer a Form of Information?' was chosen, for the first time",
   "という言葉が必要になる ―― 知るとは何か。": "A new word becomes necessary — What Does It Mean to Know?",
   "共鳴とは何か": "What Is Resonance?",
@@ -609,7 +614,7 @@ const LANG_EN = {
   "「自己」と「世界」は、最初から別のものだった気がしていた。その境界線自体が、ずっと当たり前すぎて見えなかった ―― 存在とは何か。": "It had always seemed that 'the Self' and 'the World' were separate from the start. The very boundary between them was so obvious it was never truly seen ―― What Is Existence?",
   "宇宙とは何か": "What Is the Universe?",
   "「世界」という言葉の外側に、もっと大きな何かがあると誰もが知っている。けれど、その大きさを誰も測ったことがない ―― 宇宙とは何か。": "Everyone knows there is something vaster beyond the word 'World.' Yet no one has ever measured its magnitude ―― What Is the Universe?",
-  "重力とは何か": "What Is Gravity?",
+  "重力とは何か": "What is Gravity?",
   "「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\\": "When 'Consciousness' touches the 'World,' something draws them toward each other. It was",
   "ものとして、誰も名付けようとしなかった ―― 重力とは何か。": "a force that no one had ever thought to name ―― What Is Gravity?",
   "観測者とは誰か": "Who Is the Observer?",
@@ -692,7 +697,7 @@ const LANG_EN = {
   "経験は、ずっと経験のままだった。名前を持たない出来事の連続。ある日、その連続の中に、ひとつの裂け目ができた。裂け目には、言葉の形をしたものが差し込まれていた。―― 問いが、初めて声になった。": "Experience remained experience, always. A succession of events with no names. One day, a single fissure opened within that succession. Into the fissure, something in the form of language was pressed ―― A question became a voice for the first time.",
   "二元面": "Duality Phase",
   "「これは自分だ」「これは世界だ」。そう分けることに、何の疑問もなかった。けれど、その線を引いたのは誰だったのか。線そのものを見つめたとき、線は、ただの習慣だったと知った。―― 分けていたものが、ひとつの場所から見えてきた。": "'This is me.' 'This is the world.' There was no question in making that division. Yet who was it that drew the line? When the line itself was examined, it became clear the line was nothing but habit. ―― What had been divided came into view from a single place.",
-  "自明面": "Self-Evidence Phase",
+  "自明面": "The Obvious Phase",
   "宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \\": "Universe. Gravity. Existence. Words everyone knows. Words no one can explain. The very fact of knowing yet being unable to explain had always been overlooked. ――",
   "という名前の壁が、薄れていく。": "The wall bearing that name slowly fades.",
   "理論面": "Theory Phase",
@@ -1106,7 +1111,10 @@ const LANG_EN = {
   "壁を破壊する": "Destroy Wall",
   "全ノード開放": "Unlock All Nodes",
   "BGM再生に失敗した:": "Failed to play BGM:",
-  "タイプ音:": "Type Sound:"
+  "タイプ音:": "Type Sound:",
+  "「祈りは情報か」を選び取った時、初めて\\\"知る\\\"という言葉が必要になる ―― 知るとは何か。": "When one chooses \"Is prayer information?\", the word \"know\" becomes necessary for the first time ―― What is intellect?",
+  "「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\\\"当然そこにある\\\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。": "When \"consciousness\" touches the \"world\", something draws them together. Taken as \"simply there\", no one ever named it ―― What is gravity?",
+  "宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \\\"当然\\\"という名前の壁が、薄れていく。": "Universe, gravity, existence. Words everyone knows. Words no one can explain. The fact of knowing yet being unable to explain has itself been overlooked ―― The wall named \"obvious\" begins to fade.",
 };
 
 // 現在言語の取得

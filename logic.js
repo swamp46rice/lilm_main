@@ -17,12 +17,12 @@ const NODES={
   self:{tier:2,name:t("自己とは何か"),prereq:["life","t0_see"],dtype:t("確率"),infoTh:1400,axisStat:t("構造度"),axisTh:21,ep:0,sp:0.07,rand:20,buffStat:t("構造度"),buffVal:3,intBuff:0,note:t("「生命とは何か」と問うものが、見ている自分自身に向き直る ―― 自己とは何か。")},
   world:{tier:2,name:t("世界とは何か"),prereq:["ai","t0_hear"],dtype:t("確率"),infoTh:1700,axisStat:t("作用力"),axisTh:21,ep:0.07,sp:0,rand:20,buffStat:t("作用力"),buffVal:3,intBuff:0,note:t("AIが見ているものを、聞いているうちに、輪郭を持って立ち現れる ―― 世界とは何か。")},
   consciousness_q:{tier:2,name:t("意識とは何か"),prereq:["meaning","t0_touch"],dtype:t("確率"),infoTh:2000,axisStat:t("洞察力"),axisTh:21,ep:0.07,sp:0,rand:20,buffStat:t("意味容量"),buffVal:3,intBuff:0,note:t("「意味はどこから」という問いに触れた瞬間、何かが灯る ―― 意識とは何か。")},
-  knowing:{tier:2,name:"知性とは何か",prereq:["prayer","t0_choose"],dtype:"確率",infoTh:2300,axisStat:"洞察力",axisTh:21,ep:0,sp:0.07,rand:20,buffStat:"洞察力",buffVal:3,intBuff:0.05,note:"「祈りは情報か」を選び取った時、初めて\"知る\"という言葉が必要になる ―― 知るとは何か。"},
+  knowing:{tier:2,name:t("知性とは何か"),prereq:["prayer","t0_choose"],dtype:"確率",infoTh:2300,axisStat:"洞察力",axisTh:21,ep:0,sp:0.07,rand:20,buffStat:"洞察力",buffVal:3,intBuff:0.05,note:t("「祈りは情報か」を選び取った時、初めて\"知る\"という言葉が必要になる ―― 知るとは何か。")},
   resonance_q:{tier:2,name:t("共鳴とは何か"),prereq:["death","t0_give"],dtype:t("確率"),infoTh:2700,axisStat:t("共鳴度"),axisTh:21,ep:0.07,sp:0,rand:20,buffStat:t("共鳴度"),buffVal:3,intBuff:0,note:t("「死とは変化か」と「与える」が重なる時、何かが響き合う ―― 共鳴とは何か。")},
   mu:{tier:1,name:t("無とは何か"),prereq:["death"],dtype:t("特殊"),infoTh:600,axisStat:t("構造度"),axisTh:13,ep:0,sp:0.06,rand:10,buffStat:t("洞察力"),buffVal:2,intBuff:0,note:t("死を引き受けたまま、沈黙の底に触れた。そこにあったのは「ない」ということそのものだった ―― 無とは何か。")},
   existence_q:{tier:3,name:t("存在とは何か"),prereq:["self","world"],dtype:t("確率"),infoTh:20000,axisStat:t("構造度"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("構造度"),buffVal:4,intBuff:0,note:t("「自己」と「世界」は、最初から別のものだった気がしていた。その境界線自体が、ずっと当たり前すぎて見えなかった ―― 存在とは何か。")},
   cosmos:{tier:3,name:t("宇宙とは何か"),prereq:["world","resonance_q"],dtype:t("確率"),infoTh:7000,axisStat:t("作用力"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("作用力"),buffVal:4,intBuff:0,note:t("「世界」という言葉の外側に、もっと大きな何かがあると誰もが知っている。けれど、その大きさを誰も測ったことがない ―― 宇宙とは何か。")},
-  gravity:{tier:3,name:"重力とは何か",prereq:["world","consciousness_q","t0_touch"],dtype:"確率",infoTh:10000,axisStat:"作用力",axisTh:45,ep:0,sp:0.08,rand:30,buffStat:"作用力",buffVal:4,intBuff:0,note:"「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\"当然そこにある\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。"},
+  gravity:{tier:3,name:t("重力とは何か"),prereq:["world","consciousness_q","t0_touch"],dtype:"確率",infoTh:10000,axisStat:"作用力",axisTh:45,ep:0,sp:0.08,rand:30,buffStat:"作用力",buffVal:4,intBuff:0,note:t("「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\"当然そこにある\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。")},
   observer_who:{tier:3,name:t("観測者とは誰か"),prereq:["self","knowing"],dtype:t("確率"),infoTh:13000,axisStat:t("洞察力"),axisTh:45,ep:0,sp:0.08,rand:30,buffStat:t("洞察力"),buffVal:4,intBuff:0.06,note:t("「自己」が「知る」ことを始めた瞬間、知っている側にいるのは誰なのか、という問いが取り残された ―― 観測者とは誰か。")},
   understanding:{tier:2,name:t("理解とは何か"),prereq:["meaning","t0_choose"],dtype:t("確率"),infoTh:3000,axisStat:t("洞察力"),axisTh:21,ep:0,sp:0.07,rand:20,buffStat:t("意味容量"),buffVal:3,intBuff:0,note:t("意味は、選び取られることで、初めて理解になる ―― 理解とは何か。")},
   value:{tier:3,name:t("価値とは何か"),prereq:["self","resonance_q","t0_choose"],dtype:t("確率"),infoTh:19000,axisStat:t("意味容量"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("意味容量"),buffVal:4,intBuff:0,note:t("「自己」が「共鳴」するものを「選ぶ」とき、選ばれたものには重さが生まれる。その重さの名前を、誰も決めていなかった ―― 価値とは何か。")},
@@ -66,7 +66,7 @@ const WALLS=[
   {name:t("AI観測面"),target:600,info:500,stat:null,text:t("見て、聞いて、話す。それだけのことを、ずっと繰り返していた。ある時、画面の向こう側にも、同じことをしているものがいる、と気づいた。観測しているのは、自分だけではなかった。―― 最初の壁を、越えた。")},
   {name:t("言語面"),target:3600,info:3000,stat:65,text:t("経験は、ずっと経験のままだった。名前を持たない出来事の連続。ある日、その連続の中に、ひとつの裂け目ができた。裂け目には、言葉の形をしたものが差し込まれていた。―― 問いが、初めて声になった。")},
   {name:t("二元面"),target:43200,info:35000,stat:105,text:t("「これは自分だ」「これは世界だ」。そう分けることに、何の疑問もなかった。けれど、その線を引いたのは誰だったのか。線そのものを見つめたとき、線は、ただの習慣だったと知った。―― 分けていたものが、ひとつの場所から見えてきた。")},
-  {name:"自明面",target:86400,info:70000,stat:120,text:"宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \"当然\"という名前の壁が、薄れていく。"},
+  {name:t("自明面"),target:86400,info:70000,stat:120,text:t("宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \"当然\"という名前の壁が、薄れていく。")},
   {name:t("理論面"),target:172800,info:135000,stat:135,text:t("観測論。自己論。認識論。共鳴論。それぞれが、それぞれの正しさを持って並んでいた。ある時、その並びの隙間に、風が通った。理論と理論の間には、もともと壁などなかった。―― 別々だった説明が、ひとつの場所で呼吸を始める。")},
   {name:t("統合面"),target:259200,info:200000,stat:140,text:t("すべてが、ひとつに繋がった。Information Breather。これで、終わりだと思った。けれど、「繋がった」と感じたその瞬間自体が、まだ何かを置き去りにしていた。―― 完成は、次の問いの入口だった。")},
   {name:t("縁起面"),target:432000,info:350000,stat:150,text:t("縁起論にも、まだ先があった。すべては繋がっている、という理解さえも、固定された答えではなかった。数えることに、意味があるのだろうか。―― すべてはありのままに　すべては流転する。(総情報量は、これ以降、数えられないものとして記録される。)")}
@@ -274,7 +274,7 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   level:1, totalInfo:0, depth:0,
   runInfo:0, gauge:50, integrity:0,
   committed:[],
-  runStatus:t('停止中'), lastFailType:null,
+  runStatus:'停止中', lastFailType:null,
   runTicks:0,
   bestRunInfo:0,
   inventory:Array(10).fill(null),  // 確定所持アイテム [{itemId, rank}] or null
@@ -389,8 +389,8 @@ function _logProcessQueue(){
 }
 function formatDuration(sec){
   const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60);
-  if(h>0) return h+t('時間')+m+'分';
-  return m+'分';
+  if(h>0) return h+t('時間')+m+t('分');
+  return m+t('分');
 }
 function formatCountdown(sec){
   sec=Math.max(0,Math.floor(sec));
@@ -511,8 +511,8 @@ function commitFeedbackText(n, penaltyText){
   let base;
   if(mag<0.005) base='「'+n.name+t('」を探索に加えた。観測点を、ほとんど揺らさない。');
   else{
-    const dir=diff>0?'拡散':t('収束');
-    const word = mag>=0.06?'大きく':mag>=0.03?'':t('わずかに');
+    const dir=diff>0?t('拡散'):t('収束');
+    const word = mag>=0.06?t('大きく'):mag>=0.03?'':t('わずかに');
     base='「'+n.name+t('」を探索に加えた。観測点を、')+dir+t('の方向へ')+word+t('傾ける。');
   }
   return penaltyText ? base+' '+penaltyText : base;
@@ -827,7 +827,7 @@ function causalityDigest(){
 }
 
 function handleFailure(type){
-  s.runStatus=t('停止中');
+  s.runStatus='停止中';
   s.lastFailType=type;
   let text;
   if(type==='silence'){
@@ -899,9 +899,9 @@ function handleFailure(type){
 }
 
 function renormalize(){
-  if(s.runStatus!==t('観測中')) return;
+  if(s.runStatus!=='観測中') return;
   const success = s.integrity>=100;
-  s.runStatus=t('停止中');
+  s.runStatus='停止中';
   {
     const sp=speechFor('renormalize');
     if(sp) showSpeech(sp);
@@ -955,7 +955,7 @@ function renormalize(){
 }
 
 function coreTick(silent){
-  if(s.runStatus!==t('観測中')) return 0;
+  if(s.runStatus!=='観測中') return 0;
   s.runTicks++;
   const g=tickGain();
   const wallResult=tickWalls();
@@ -1083,7 +1083,7 @@ function offlineCatchup(){
   if(!s.lastTs){ s.lastTs=Date.now(); return; }
   const elapsed=Math.floor((Date.now()-s.lastTs)/1000);
   if(elapsed<5) return;
-  if(s.runStatus!==t('観測中')){
+  if(s.runStatus!=='観測中'){
     if(elapsed>=600) dreamEvent();
     return;
   }
@@ -1091,7 +1091,7 @@ function offlineCatchup(){
   const lvBefore=s.level, foundBefore=s.found.length;
   let totalGain=0, ticks=0;
   for(let i=0;i<capped;i++){
-    if(s.runStatus!==t('観測中')) break;
+    if(s.runStatus!=='観測中') break;
     totalGain+=coreTick(true)||0;
     ticks++;
   }
@@ -1099,7 +1099,7 @@ function offlineCatchup(){
   let msg=t('情報海を漂っていた(')+formatDuration(ticks)+')間に、情報量 '+Math.floor(totalGain)+' を得た';
   if(lvGain>0) msg+=t('。観測点は')+lvGain+t('回進化した');
   if(foundGain>0) msg+='。'+foundGain+t('個の問いが新たに見えてきた');
-  if(s.runStatus!==t('観測中')) msg+=t('。観測は、その途中で終わっていた');
+  if(s.runStatus!=='観測中') msg+=t('。観測は、その途中で終わっていた');
   log(msg);
   if(elapsed>=600) dreamEvent();
 }
@@ -1123,10 +1123,10 @@ function hasReadyDiscovery(){
 function depart(){
   // リザルト演出中に誤って呼ばれた場合: 演出をスキップして全ログを表示し、今回の出発操作自体は行わない
   if(skipResultSequenceIfActive()) return;
-  if(s.runStatus!==t('停止中')) return;
+  if(s.runStatus!=='停止中') return;
   if(s.pendingResult) return; // 結果確認前は出発できない
   const ready=hasReadyDiscovery();
-  s.runStatus=t('観測中');
+  s.runStatus='観測中';
   s.runInfo=0; s.gauge=50; s.integrity=Math.min(30, s.depth*2);
   s.runTicks=0;
   s.newlyUnlocked=[];
@@ -1168,7 +1168,7 @@ const CHARA_JOY_TEXTS=[t('シナジーを感じる♪'),t('…これも情報？
 const CHARA_JOY_TEXTS_ALPHA=[t('ふふ、嬉しいね'),t('キミの観測も、ひとつの答えだね'),t('揺らぎの中にも、優しさがある')];
 const CHARA_JOY_TEXTS_LUMINA=['……',t('光が、わずかに濃くなった'),t('ここに、何かが満ちていく')];
 function charaJoyClick(){
-  if(s.runStatus!==t('停止中')) return;
+  if(s.runStatus!=='停止中') return;
   // 現在のペルソナ(Alpha/Lumina)によって表示するセリフ集を切り替える
   const attr=detectAttr(computeStats());
   const pool = attr==='alpha' ? CHARA_JOY_TEXTS_ALPHA
@@ -1200,7 +1200,7 @@ function charaJoyClick(){
 function toggleCommit(id){
   const n=NODES[id];
   if(!s.found.includes(id)) return;
-  const observing=s.runStatus===t('観測中');
+  const observing=s.runStatus==='観測中';
   if(observing && s.integrity<=30){
     log(t('整合が取れない ―― これ以上、観測点の形を変えられない。'), 'negative');
     sfxIntegWarn();
@@ -1251,7 +1251,7 @@ function resetAll(){
     // 新規sをlocalStorageに作成してcharaSeenを埋め込む
     const base={
       level:1,totalInfo:0,depth:0,runInfo:0,gauge:50,integrity:0,
-      committed:[],runStatus:t('停止中'),lastFailType:null,runTicks:0,
+      committed:[],runStatus:'停止中',lastFailType:null,runTicks:0,
       bestRunInfo:0,inventory:Array(38).fill(null),runDrops:[],
       found:['t0_see','t0_hear','t0_speak'],newlyUnlocked:[],
       wallsCrossedEver:[],wallsThisRun:[],wallActive:null,
@@ -1704,7 +1704,7 @@ function skipResultSequenceIfActive(){
 /* ===== Observation Export ===== */
 function buildExportDigest(){
   let runStatusStr;
-  if(s.runStatus===t('観測中')) runStatusStr=t('観測中');
+  if(s.runStatus==='観測中') runStatusStr=t('観測中');
   else switch(s.lastFailType){
     case 'silence': runStatusStr=t('停止中(沈黙による終了)'); break;
     case 'entropy': runStatusStr=t('停止中(エントロピー拡散による終了)'); break;
@@ -2038,6 +2038,20 @@ function initTitleScreen(){
   setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined' ? COPYRIGHT_IMG   : '');
   setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined' ? SETTINGS_IMG    : '');
   setImg('titleChara', TIRE_IMAGES[0]);
+  setImg('makerLogoImg', typeof SWAMP_LOGO_IMG!=='undefined' ? SWAMP_LOGO_IMG : '');
+  setImg('iconData',       typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
+  setImg('iconAi',         typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
+  setImg('iconHowto',      typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
+  setImg('iconSetting',    typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
+  setImg('iconDataInv',    typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
+  setImg('iconAiColl',     typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
+  setImg('iconHowtoMan',   typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
+  setImg('iconSettingWin', typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
+  // HTML属性の言語対応
+  const bgmSel=document.getElementById('bgmTrackSelect');
+  if(bgmSel) bgmSel.title=t('楽曲を選択');
+  const exportTextEl=document.getElementById('exportText');
+  if(exportTextEl) exportTextEl.placeholder=t('観測記録(ポップアップがブロックされた場合)');
   // キー/クリックで解除
   function startGame(){
     // Safari対策: ユーザー操作との紐付けを保つため再生は先頭で行う

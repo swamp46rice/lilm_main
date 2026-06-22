@@ -36,7 +36,7 @@ function drawWave(){
   const ctx=canvas.getContext('2d');
   const W=canvas.width, H=canvas.height;
   ctx.clearRect(0,0,W,H);
-  if(s.runStatus!==t('観測中')) return;
+  if(s.runStatus!=='観測中') return;
 
   const g=s.gauge/100;
   const amp=H*0.12+H*0.22*Math.abs(g-0.5)*2;
@@ -382,15 +382,15 @@ function buildWalls(){
 }
 function buildWallCountdown(){
   const el=document.getElementById('wallCountdown');
-  if(s.runStatus!==t('観測中')){ el.style.visibility='hidden'; return; }
+  if(s.runStatus!=='観測中'){ el.style.visibility='hidden'; return; }
   const frontier=s.wallsThisRun.length;
   if(frontier>=7){ el.style.visibility='hidden'; return; }
   const w=WALLS[frontier];
   el.style.visibility='visible';
   if(s.wallActive){
-    el.innerHTML=t('壁「')+w.name+'」出現中 ―― <span class="ready">突破を試みている(残り'+s.wallActive.remain+t('秒)</span>');
+    el.innerHTML=t('壁「')+w.name+t('」出現中 ―― <span class="ready">突破を試みている(残り')+s.wallActive.remain+t('秒)</span>');
   }else{
-    el.textContent=t('次の位相「')+w.name+'」まで、情報量 '+Math.floor(s.runInfo)+' / '+w.info;
+    el.textContent=t('次の位相「')+w.name+t('」まで、情報量 ')+Math.floor(s.runInfo)+' / '+w.info;
   }
 }
 
@@ -762,7 +762,7 @@ function buildSlots(){
     div.className='slot '+(id?'filled':'empty');
     if(id) div.style.borderColor=TIER_COLOR[NODES[id].tier];
     const extra=id?'<div class="eff">'+effText(NODES[id])+'</div>'+dirText(NODES[id]):'';
-    div.innerHTML='<div class="tag">探索 '+(i+1)+'</div><div class="name">'+(id?NODES[id].name:t('(空き)'))+'</div>'+extra;
+    div.innerHTML='<div class="tag">'+t('探索 ')+(i+1)+'</div><div class="name">'+(id?NODES[id].name:t('(空き)'))+'</div>'+extra;
     if(id) div.onclick=()=>toggleCommit(id);
     slots.appendChild(div);
   }
@@ -832,7 +832,7 @@ function render(){
   document.getElementById('totalInfo').textContent= s.metaUnlocks.infinity?'∞':Math.floor(s.totalInfo);
   document.getElementById('bestRunInfo').textContent= Math.floor(s.bestRunInfo);
   document.getElementById('depth').textContent=s.depth;
-  document.getElementById('runStatusLabel').textContent=s.runStatus;
+  document.getElementById('runStatusLabel').textContent=t(s.runStatus);
   document.getElementById('maxSlotsLabel').textContent=maxSlots();
 
   // 属性条件を満たすパラメータを黄色で強調(キャラ判定と完全同期)
@@ -973,7 +973,7 @@ function render(){
       departBtn.onclick=function(){ sfxButton(); depart(); };
     };
     renormBtn.style.display='none';
-  }else if(s.runStatus===t('停止中')){
+  }else if(s.runStatus==='停止中'){
     departBtn.style.display='';
     departBtn.disabled=false;
     departBtn.textContent=t('問いを観測する ―― 出発する');
