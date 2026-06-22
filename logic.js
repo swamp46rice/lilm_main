@@ -2028,6 +2028,12 @@ function playOpening(){
   next();
 }
 
+let _tickInterval=null;
+function startTick(){
+  if(_tickInterval) return;
+  _tickInterval=setInterval(tick, 1000);
+}
+
 function initTitleScreen(){
   const ts=document.getElementById('titleScreen');
   if(!ts) return;
@@ -2052,14 +2058,61 @@ function initTitleScreen(){
   if(bgmSel) bgmSel.title=t('楽曲を選択');
   const exportTextEl=document.getElementById('exportText');
   if(exportTextEl) exportTextEl.placeholder=t('観測記録(ポップアップがブロックされた場合)');
+
+  // タイトル画面はロゴの裏で最初から表示
+  ts.style.opacity='1';
+  ts.style.display='';
+  ts.style.transition='none';
+
+  // メーカーロゴ → タイトルのフロー
+  const logoScreen=document.getElementById('makerLogoScreen');
+  let _logoSkipped=false;
+
+  function showTitle(){
+    if(_logoSkipped) return;
+    _logoSkipped=true;
+    document.removeEventListener('keydown', skipLogo);
+    document.removeEventListener('click', skipLogo);
+    if(logoScreen){
+      // ロゴ画像だけフェードアウト（白背景は維持）
+      const logoImg=document.getElementById('makerLogoImg');
+      if(logoImg) logoImg.style.opacity='0';
+      setTimeout(()=>{
+        if(logoScreen) logoScreen.style.display='none';
+        if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+      }, 800);
+    } else {
+      if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+    }
+  }
+
+  function skipLogo(){
+    if(_logoSkipped) return;
+    showTitle();
+  }
+
+  if(logoScreen){
+    // ロゴ画面（白背景）は即表示、ロゴ画像だけフェードイン
+    logoScreen.style.display='flex';
+    const logoImg=document.getElementById('makerLogoImg');
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        if(logoImg) logoImg.style.opacity='1';
+      });
+    });
+    setTimeout(showTitle, 3800);
+    document.addEventListener('keydown', skipLogo);
+    document.addEventListener('click', skipLogo);
+  } else {
+    if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+  }
+
   // キー/クリックで解除
   function startGame(){
-    // Safari対策: ユーザー操作との紐付けを保つため再生は先頭で行う
-    const trackIdx = (typeof s !== 'undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
-    if(typeof switchBgmTrack === 'function'){
+    const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
+    if(typeof switchBgmTrack==='function'){
       switchBgmTrack(trackIdx);
     } else {
-      // fallback: track_0を直接再生
       const audio=document.getElementById('bgmAudio_0');
       if(audio && bgmAudioOn){
         audio.volume=0.4;
@@ -2069,6 +2122,7 @@ function initTitleScreen(){
         });
       }
     }
+    startTick();
     ts.style.transition='opacity .6s';
     ts.style.opacity='0';
     setTimeout(()=>{
@@ -2082,10 +2136,7 @@ function initTitleScreen(){
   // SETTINGSボタン（stopPropagationでstartGame発火を防ぐ）
   const _settingsBtn=document.getElementById('titleSettingsBtn');
   if(_settingsBtn){
-    _settingsBtn.addEventListener('click', e=>{
-      e.stopPropagation();
-      showSettings();
-    });
+    _settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); showSettings(); });
   }
   ts.addEventListener('click', startGame);
   document.addEventListener('keydown', startGame);
