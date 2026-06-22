@@ -1119,8 +1119,10 @@ const LANG_EN = {
 
 // 現在言語の取得
 function t(key){
-  if(typeof s !== 'undefined' && s.lang === 'en'){
-    return LANG_EN[key] !== undefined ? LANG_EN[key] : key;
-  }
+  try {
+    if(typeof s !== 'undefined' && s && s.lang === 'en'){
+      return LANG_EN[key] !== undefined ? LANG_EN[key] : key;
+    }
+  } catch(e) {}
   return key;
 }

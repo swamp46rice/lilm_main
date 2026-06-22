@@ -696,8 +696,8 @@ function buildGraph(scrollToNew){
         if(tier>=5 && committed) cls+=' active';
         else if(committed) cls+=' committed';
         if(isNew) cls+=' is-new';
-        div.innerHTML = n.name + (isNew?'<span class="new-badge">NEW</span>':'');
-        div.title=n.note;
+        div.innerHTML = t(n.name) + (isNew?'<span class="new-badge">NEW</span>':'');
+        div.title=t(n.note);
         div.onclick=()=>toggleCommit(id);
         div.className=cls;
         div.style.borderLeftColor=TIER_COLOR[tier]||'var(--text-dim)';
@@ -762,7 +762,7 @@ function buildSlots(){
     div.className='slot '+(id?'filled':'empty');
     if(id) div.style.borderColor=TIER_COLOR[NODES[id].tier];
     const extra=id?'<div class="eff">'+effText(NODES[id])+'</div>'+dirText(NODES[id]):'';
-    div.innerHTML='<div class="tag">'+t('探索 ')+(i+1)+'</div><div class="name">'+(id?NODES[id].name:t('(空き)'))+'</div>'+extra;
+    div.innerHTML='<div class="tag">'+t('探索 ')+(i+1)+'</div><div class="name">'+(id?t(NODES[id].name):t('(空き)'))+'</div>'+extra;
     if(id) div.onclick=()=>toggleCommit(id);
     slots.appendChild(div);
   }

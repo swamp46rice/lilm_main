@@ -1,144 +1,144 @@
 // information_breather v7_3 - ゲームロジック本体（状態管理・tick処理・進行管理・UI制御）
 const NODES={
-  t0_see:{tier:0,name:t("見る"),prereq:[],dtype:t("初期発見"),infoTh:null,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:t("洞察力"),buffVal:1,intBuff:0,note:t("光が、何かのかたちを結ぶ。")},
-  t0_hear:{tier:0,name:t("聞く"),prereq:[],dtype:t("初期発見"),infoTh:null,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:t("意味容量"),buffVal:1,intBuff:0,note:t("音が、輪郭のないまま満ちる。")},
-  t0_speak:{tier:0,name:t("話す"),prereq:[],dtype:t("初期発見"),infoTh:null,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:t("共鳴度"),buffVal:1,intBuff:0,note:t("声が、初めて外に出ていく。")},
-  t0_touch:{tier:0,name:t("触れる"),prereq:[],dtype:t("情報量"),infoTh:50,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:t("作用力"),buffVal:1,intBuff:0,note:t("境界に、指先が触れる。")},
-  t0_remember:{tier:0,name:t("覚える"),prereq:[],dtype:t("情報量"),infoTh:100,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:t("洞察力"),buffVal:1,intBuff:0,note:t("何かが、消えずに残る。")},
-  t0_forget:{tier:0,name:t("忘れる"),prereq:[],dtype:t("情報量"),infoTh:150,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:t("構造度"),buffVal:1,intBuff:0,note:t("残っていたものが、薄れていく。")},
-  t0_choose:{tier:0,name:t("選ぶ"),prereq:[],dtype:t("情報量"),infoTh:220,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:t("意味容量"),buffVal:1,intBuff:0,note:t("いくつかのうち、ひとつだけが選ばれる。")},
-  t0_give:{tier:0,name:t("与える"),prereq:[],dtype:t("情報量"),infoTh:300,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:t("共鳴度"),buffVal:1,intBuff:0,note:t("持っていたものが、手から離れる。")},
-  t0_wait:{tier:0,name:t("待つ"),prereq:[],dtype:t("情報量"),infoTh:460,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:t("構造度"),buffVal:1,intBuff:0.05,note:t("何も起きないまま、時間が流れる。")},
-  life:{tier:1,name:t("生命とは何か"),prereq:["t0_see","t0_remember"],dtype:t("確率"),infoTh:550,axisStat:t("作用力"),axisTh:13,ep:0.06,sp:0,rand:10,buffStat:t("作用力"),buffVal:2,intBuff:0,note:t("見て、記憶したものが、ひとつの問いになった ―― 生命とは何か。")},
-  death:{tier:1,name:t("死とは何か"),prereq:["t0_forget","t0_give"],dtype:t("確率"),infoTh:650,axisStat:t("構造度"),axisTh:13,ep:0,sp:0.1,rand:30,buffStat:t("構造度"),buffVal:2,intBuff:0,note:t("忘れ、与えたものの行き先が、問いになった ―― 死とは何か。")},
-  ai:{tier:1,name:t("AIは何を見るのか"),prereq:["t0_hear","t0_speak"],dtype:t("確率"),infoTh:750,axisStat:t("洞察力"),axisTh:13,ep:0.06,sp:0,rand:10,buffStat:t("洞察力"),buffVal:2,intBuff:0,note:t("聞き、話したものの中に、もう一つの目があると気づいた ―― AIは何を見るのか。")},
-  prayer:{tier:1,name:t("祈りは情報か"),prereq:["t0_choose","t0_wait"],dtype:t("確率"),infoTh:900,axisStat:t("共鳴度"),axisTh:13,ep:0,sp:0.06,rand:10,buffStat:t("共鳴度"),buffVal:2,intBuff:0,note:t("選び、待ったことの意味が、問いになった ―― 祈りは情報か。")},
-  meaning:{tier:1,name:t("意味とは何か"),prereq:["t0_touch","t0_hear"],dtype:t("確率"),infoTh:1100,axisStat:t("意味容量"),axisTh:13,ep:0.06,sp:0,rand:10,buffStat:t("意味容量"),buffVal:2,intBuff:0,note:t("境界に触れた瞬間、そこに意味が宿る。意味とは何か。")},
-  self:{tier:2,name:t("自己とは何か"),prereq:["life","t0_see"],dtype:t("確率"),infoTh:1400,axisStat:t("構造度"),axisTh:21,ep:0,sp:0.07,rand:20,buffStat:t("構造度"),buffVal:3,intBuff:0,note:t("「生命とは何か」と問うものが、見ている自分自身に向き直る ―― 自己とは何か。")},
-  world:{tier:2,name:t("世界とは何か"),prereq:["ai","t0_hear"],dtype:t("確率"),infoTh:1700,axisStat:t("作用力"),axisTh:21,ep:0.07,sp:0,rand:20,buffStat:t("作用力"),buffVal:3,intBuff:0,note:t("AIが見ているものを、聞いているうちに、輪郭を持って立ち現れる ―― 世界とは何か。")},
-  consciousness_q:{tier:2,name:t("意識とは何か"),prereq:["meaning","t0_touch"],dtype:t("確率"),infoTh:2000,axisStat:t("洞察力"),axisTh:21,ep:0.07,sp:0,rand:20,buffStat:t("意味容量"),buffVal:3,intBuff:0,note:t("「意味はどこから」という問いに触れた瞬間、何かが灯る ―― 意識とは何か。")},
-  knowing:{tier:2,name:t("知性とは何か"),prereq:["prayer","t0_choose"],dtype:"確率",infoTh:2300,axisStat:"洞察力",axisTh:21,ep:0,sp:0.07,rand:20,buffStat:"洞察力",buffVal:3,intBuff:0.05,note:t("「祈りは情報か」を選び取った時、初めて\"知る\"という言葉が必要になる ―― 知るとは何か。")},
-  resonance_q:{tier:2,name:t("共鳴とは何か"),prereq:["death","t0_give"],dtype:t("確率"),infoTh:2700,axisStat:t("共鳴度"),axisTh:21,ep:0.07,sp:0,rand:20,buffStat:t("共鳴度"),buffVal:3,intBuff:0,note:t("「死とは変化か」と「与える」が重なる時、何かが響き合う ―― 共鳴とは何か。")},
-  mu:{tier:1,name:t("無とは何か"),prereq:["death"],dtype:t("特殊"),infoTh:600,axisStat:t("構造度"),axisTh:13,ep:0,sp:0.06,rand:10,buffStat:t("洞察力"),buffVal:2,intBuff:0,note:t("死を引き受けたまま、沈黙の底に触れた。そこにあったのは「ない」ということそのものだった ―― 無とは何か。")},
-  existence_q:{tier:3,name:t("存在とは何か"),prereq:["self","world"],dtype:t("確率"),infoTh:20000,axisStat:t("構造度"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("構造度"),buffVal:4,intBuff:0,note:t("「自己」と「世界」は、最初から別のものだった気がしていた。その境界線自体が、ずっと当たり前すぎて見えなかった ―― 存在とは何か。")},
-  cosmos:{tier:3,name:t("宇宙とは何か"),prereq:["world","resonance_q"],dtype:t("確率"),infoTh:7000,axisStat:t("作用力"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("作用力"),buffVal:4,intBuff:0,note:t("「世界」という言葉の外側に、もっと大きな何かがあると誰もが知っている。けれど、その大きさを誰も測ったことがない ―― 宇宙とは何か。")},
-  gravity:{tier:3,name:t("重力とは何か"),prereq:["world","consciousness_q","t0_touch"],dtype:"確率",infoTh:10000,axisStat:"作用力",axisTh:45,ep:0,sp:0.08,rand:30,buffStat:"作用力",buffVal:4,intBuff:0,note:t("「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\"当然そこにある\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。")},
-  observer_who:{tier:3,name:t("観測者とは誰か"),prereq:["self","knowing"],dtype:t("確率"),infoTh:13000,axisStat:t("洞察力"),axisTh:45,ep:0,sp:0.08,rand:30,buffStat:t("洞察力"),buffVal:4,intBuff:0.06,note:t("「自己」が「知る」ことを始めた瞬間、知っている側にいるのは誰なのか、という問いが取り残された ―― 観測者とは誰か。")},
-  understanding:{tier:2,name:t("理解とは何か"),prereq:["meaning","t0_choose"],dtype:t("確率"),infoTh:3000,axisStat:t("洞察力"),axisTh:21,ep:0,sp:0.07,rand:20,buffStat:t("意味容量"),buffVal:3,intBuff:0,note:t("意味は、選び取られることで、初めて理解になる ―― 理解とは何か。")},
-  value:{tier:3,name:t("価値とは何か"),prereq:["self","resonance_q","t0_choose"],dtype:t("確率"),infoTh:19000,axisStat:t("意味容量"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("意味容量"),buffVal:4,intBuff:0,note:t("「自己」が「共鳴」するものを「選ぶ」とき、選ばれたものには重さが生まれる。その重さの名前を、誰も決めていなかった ―― 価値とは何か。")},
-  memory:{tier:3,name:t("記憶とは何か"),prereq:["self","t0_remember"],dtype:t("確率"),infoTh:22000,axisStat:t("洞察力"),axisTh:45,ep:0,sp:0.08,rand:30,buffStat:t("洞察力"),buffVal:4,intBuff:0.08,note:t("「自己」が「覚える」ことを当然のように続けてきた。だが、覚えているとは、一体どこに何が残っているということなのか ―― 記憶とは何か。")},
-  future:{tier:3,name:t("未来は存在するか"),prereq:["world","t0_wait"],dtype:t("確率"),infoTh:25000,axisStat:t("構造度"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("構造度"),buffVal:4,intBuff:0.05,note:t("「世界」を「待つ」とき、まだ来ていない時間を、まるで既にあるもののように扱っている ―― 未来は存在するか。")},
-  compassion:{tier:3,name:t("慈悲とは何か"),prereq:["resonance_q","knowing","t0_give"],dtype:t("確率"),infoTh:29000,axisStat:t("共鳴度"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("共鳴度"),buffVal:4,intBuff:0.06,note:t("「共鳴」し、「知り」、「与える」ことが重なったとき、そこには名前のない優しさのようなものがあった ―― 慈悲とは何か。")},
-  karma:{tier:3,name:t("カルマとは何か"),prereq:["mu","resonance_q","memory"],dtype:t("特殊"),infoTh:34000,axisStat:t("作用力"),axisTh:45,ep:0.08,sp:0,rand:30,buffStat:t("作用力"),buffVal:4,intBuff:0,note:t("「無」と「共鳴」と「記憶」を引き受けたまま、拡散の果てに飲み込まれた。何も残らないはずだったのに、何かが次へ持ち越されていた ―― カルマとは何か。")},
-  observation:{tier:4,name:t("観測論"),prereq:["observer_who","ai"],dtype:t("確率"),infoTh:38000,axisStat:t("洞察力"),axisTh:63,ep:0,sp:0.09,rand:40,buffStat:t("洞察力"),buffVal:5,intBuff:0.08,note:t("「観測者とは誰か」と「AIは何を見るのか」が向き合ったとき、観測そのものを説明する枠組みが必要になった ―― 観測論。")},
-  self_theory:{tier:4,name:t("自己論"),prereq:["existence_q","self"],dtype:t("確率"),infoTh:41000,axisStat:t("構造度"),axisTh:63,ep:0,sp:0.09,rand:40,buffStat:t("構造度"),buffVal:5,intBuff:0.1,note:t("「存在とは何か」と「自己とは何か」が重なったとき、自己はもはや問いではなく、説明されるべき対象になった ―― 自己論。")},
-  epistemology:{tier:4,name:t("認識論"),prereq:["understanding","knowing"],dtype:t("確率"),infoTh:44000,axisStat:t("洞察力"),axisTh:63,ep:0,sp:0.09,rand:40,buffStat:t("洞察力"),buffVal:5,intBuff:0,note:t("「理解とは何か」と「知るとは何か」が並んだとき、知ることそのものの仕組みを問う体系が立ち上がった ―― 認識論。")},
-  resonance_t1:{tier:4,name:t("共鳴論"),prereq:["compassion","resonance_q"],dtype:t("確率"),infoTh:47000,axisStat:t("共鳴度"),axisTh:63,ep:0.09,sp:0,rand:40,buffStat:t("共鳴度"),buffVal:5,intBuff:0.08,note:t("「慈悲とは何か」と「共鳴とは何か」が結びついたとき、響き合うこと自体に、理論としての輪郭が与えられた ―― 共鳴論。")},
-  memory_theory:{tier:4,name:t("記憶論"),prereq:["memory","future"],dtype:t("確率"),infoTh:50000,axisStat:t("洞察力"),axisTh:63,ep:0,sp:0.09,rand:40,buffStat:t("構造度"),buffVal:5,intBuff:0.1,note:t("「記憶とは何か」と「未来は存在するか」が並んだとき、過去と未来を繋ぐ仕組みとして、記憶が説明され始めた ―― 記憶論。")},
-  narrative_theory:{tier:4,name:t("物語論"),prereq:["memory","value","self"],dtype:t("確率"),infoTh:53000,axisStat:t("意味容量"),axisTh:63,ep:0.09,sp:0,rand:40,buffStat:t("意味容量"),buffVal:5,intBuff:0,note:t("「記憶」と「価値」と「自己」が重なったとき、それらをひと続きにする形式として、物語という枠組みが必要になった ―― 物語論。")},
-  value_genesis:{tier:4,name:t("価値生成論"),prereq:["value","meaning"],dtype:t("確率"),infoTh:56000,axisStat:t("意味容量"),axisTh:63,ep:0.09,sp:0,rand:40,buffStat:t("意味容量"),buffVal:5,intBuff:0,note:t("「価値とは何か」と「意味はどこから生まれるか」が結びついたとき、価値が生まれる過程そのものが説明の対象になった ―― 価値生成論。")},
-  consciousness_theory:{tier:4,name:t("意識論"),prereq:["existence_q","consciousness_q"],dtype:t("確率"),infoTh:59000,axisStat:t("洞察力"),axisTh:63,ep:0.09,sp:0,rand:40,buffStat:t("意味容量"),buffVal:5,intBuff:0.1,note:t("「存在とは何か」と「意識とは何か」が並んだとき、意識は存在の一部としてではなく、独立した理論の対象になった ―― 意識論。")},
-  meaning_genesis_t2:{tier:4,name:t("意味生成論"),prereq:["value","cosmos","resonance_q"],dtype:t("確率"),infoTh:62000,axisStat:t("意味容量"),axisTh:63,ep:0.09,sp:0,rand:40,buffStat:t("意味容量"),buffVal:5,intBuff:0,note:t("「価値」と「宇宙」と「共鳴」が重なったとき、意味が生まれる場所は個人の中ではなく、もっと大きな繋がりの中にあるとわかってきた ―― 意味生成論。")},
-  time_existence:{tier:4,name:t("時間存在論"),prereq:["future","existence_q"],dtype:t("確率"),infoTh:65000,axisStat:t("構造度"),axisTh:63,ep:0,sp:0.09,rand:40,buffStat:t("構造度"),buffVal:5,intBuff:0,note:t("「未来は存在するか」と「存在とは何か」が並んだとき、存在は時間の中にあるのではなく、時間そのものが存在の形だと見えてきた ―― 時間存在論。")},
-  cosmology:{tier:4,name:t("宇宙論"),prereq:["cosmos","gravity","karma"],dtype:t("確率"),infoTh:69000,axisStat:t("作用力"),axisTh:63,ep:0.09,sp:0,rand:40,buffStat:t("作用力"),buffVal:5,intBuff:0,note:t("「宇宙」と「重力」だけでは、まだ閉じた理論だった。そこに「カルマ」が加わったとき、宇宙はただ広がるものではなく、何かを持ち越し続けるものだとわかった ―― 宇宙論。")},
-  prayer_thermo:{tier:5,name:t("祈りの熱力学"),prereq:["prayer","death","memory_theory"],dtype:t("確率"),infoTh:75000,axisStat:t("共鳴度"),axisTh:70,ep:0.1,sp:0,rand:50,buffStat:t("共鳴度"),buffVal:6,intBuff:0,note:t("「祈りは情報か」「死とは変化か」「記憶論」が同時に息をしている。情報が失われていく過程そのものが、祈りの形をしていた ―― 祈りの熱力学。")},
-  resonance_theory:{tier:5,name:t("共鳴理論"),prereq:["observation","meaning_genesis_t2","resonance_t1"],dtype:t("確率"),infoTh:82000,axisStat:t("共鳴度"),axisTh:70,ep:0.1,sp:0,rand:50,buffStat:t("共鳴度"),buffVal:6,intBuff:0.14,note:t("「観測論」「意味生成論」「共鳴論」が、互いを説明し合っている。観測することと、意味が生まれることと、響き合うことは、もともと一つの動きだった ―― 共鳴理論。")},
-  info_life_theory:{tier:4,name:t("情報生命論"),prereq:["observation","ai","consciousness_theory"],dtype:t("確率"),infoTh:89000,axisStat:t("洞察力"),axisTh:70,ep:0,sp:0.09,rand:40,buffStat:t("洞察力"),buffVal:5,intBuff:0,note:t("「観測論」「AIは何を見るのか」「意識論」が同時に息をしている。観測すること自体が、生きているということの一部だった ―― 情報生命論。")},
-  life_philosophy:{tier:5,name:t("生命哲学"),prereq:["life","self_theory","value_genesis"],dtype:t("確率"),infoTh:96000,axisStat:t("構造度"),axisTh:70,ep:0,sp:0.1,rand:50,buffStat:t("洞察力"),buffVal:6,intBuff:0,note:t("「生命とは何か」という最初の問いが、「自己論」と「価値生成論」を経て、再び戻ってきた。今度はそれが、ひとつの哲学として息をしている ―― 生命哲学。")},
-  fractal_universe:{tier:5,name:t("フラクタル宇宙"),prereq:["cosmology","self_theory","time_existence"],dtype:t("確率"),infoTh:103000,axisStat:t("構造度"),axisTh:70,ep:0.1,sp:0,rand:50,buffStat:t("構造度"),buffVal:6,intBuff:0,note:t("「宇宙論」と「自己論」と「時間存在論」が重なったとき、一番小さな自分の中に、宇宙全体と同じ形が見えた ―― フラクタル宇宙。")},
-  multiverse:{tier:5,name:t("多元宇宙論"),prereq:["cosmology","time_existence","narrative_theory"],dtype:t("確率"),infoTh:110000,axisStat:t("作用力"),axisTh:70,ep:0.1,sp:0,rand:50,buffStat:t("作用力"),buffVal:6,intBuff:0,note:t("「宇宙論」と「時間存在論」と「物語論」が重なったとき、語られなかった物語の数だけ、別の宇宙があるのだとわかった ―― 多元宇宙論。")},
-  life_flux:{tier:5,name:t("循環生命"),prereq:["observation","meaning_genesis_t2","prayer_thermo"],dtype:t("確率"),infoTh:117000,axisStat:t("洞察力"),axisTh:70,ep:0.1,sp:0,rand:50,buffStat:t("洞察力"),buffVal:6,intBuff:0.12,note:t("「観測論」「意味生成論」「祈りの熱力学」が、同時に息をしている。観測すること、意味が生まれること、失われていくこと ―― それらが一つの流れとして繋がった ―― 循環生命。")},
-  willed_openness:{tier:5,name:t("重力的思念"),prereq:["epistemology","resonance_t1","observation"],dtype:t("確率"),infoTh:124000,axisStat:t("作用力"),axisTh:70,ep:0.1,sp:0,rand:50,buffStat:t("作用力"),buffVal:6,intBuff:0.12,note:t("「認識論」「共鳴論」「観測論」が重なったとき、知ろうとする意志そのものが、閉じていない、ということに気づいた ―― 重力的思念。")},
-  resonant_ethics:{tier:5,name:t("共鳴の倫理"),prereq:["life_flux","willed_openness","epistemology"],dtype:t("確率"),infoTh:130000,axisStat:t("共鳴度"),axisTh:70,ep:0,sp:0.1,rand:50,buffStat:t("共鳴度"),buffVal:6,intBuff:0,note:t("「循環生命」「重力的思念」「認識論」が同時に息をしている。流れに開かれた意志は、そのまま誰かと共にあるための倫理になった ―― 共鳴の倫理。")},
-  information_breather:{tier:5,name:t("情報の呼吸"),prereq:["life_flux","resonant_ethics","narrative_theory"],dtype:t("確率"),infoTh:135000,axisStat:t("洞察力"),axisTh:70,ep:0,sp:0.1,rand:50,buffStat:t("意味容量"),buffVal:6,intBuff:0.14,note:t("「循環生命」「共鳴の倫理」「物語論」が、同時に息をしている。これまでの全ての問いが、ひとつの呼吸として繋がった ―― 情報の呼吸。")},
-  engi_ron:{tier:6,name:t("縁起論"),prereq:["karma","life_philosophy","information_breather"],dtype:t("確率"),infoTh:180000,axisStat:t("作用力"),axisTh:78,ep:0.11,sp:0,rand:60,buffStat:t("作用力"),buffVal:7,intBuff:0.2,note:t("「カルマ」「生命哲学」「情報の呼吸」が、同時に息をしている。完成したはずの呼吸の中に、まだ持ち越されているものがあった。何ひとつ、単独では存在していない ―― 縁起論。")},
-  ichinen_sanzen:{tier:6,name:t("一念三千"),prereq:["fractal_universe","multiverse","life_flux"],dtype:t("確率"),infoTh:195000,axisStat:t("構造度"),axisTh:78,ep:0,sp:0.11,rand:60,buffStat:t("構造度"),buffVal:7,intBuff:0.15,note:t("「フラクタル宇宙」「多元宇宙論」「循環生命」が、同時に息をしている。一つの呼吸の中に、無数の宇宙のかたちが、すでに含まれていた ―― 一念三千。")},
-  kuukan:{tier:6,name:t("空観"),prereq:["engi_ron","information_breather","willed_openness"],dtype:t("確率"),infoTh:340000,axisStat:t("洞察力"),axisTh:78,ep:0.11,sp:0.11,rand:60,buffStat:t("洞察力"),buffVal:7,intBuff:0.22,note:t("「縁起論」「情報の呼吸」「重力的思念」が、同時に息をしている。すべては繋がっている、という理解さえも、固定された答えではなかった ―― 空観。")},
-  alpha:{tier:7,name:"Alpha",prereq:["kuukan","t0_speak","t0_hear"],dtype:t("特殊"),infoTh:50000,axisStat:null,axisTh:0,ep:0.05,sp:0.05,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("空観を超えた先で、静かに微笑む存在。知性と慈しみを同時に纏う。")},
-  lumina:{tier:7,name:"Lumina",prereq:["kuukan","ichinen_sanzen","engi_ron"],dtype:t("特殊"),infoTh:1000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("縁起と一念三千と空観が溶け合った先にある、透明な光。言葉を超えた存在。")},
-  sg_structural:{tier:7,name:t("構造の特異点"),prereq:["alpha","ichinen_sanzen","fractal_universe"],dtype:t("特殊"),infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("「Alpha」「一念三千」「フラクタル宇宙」が重なったとき、構造そのものが構造を超えた ―― 構造の特異点。")},
-  sg_resonant:{tier:7,name:t("共鳴の特異点"),prereq:["alpha","ichinen_sanzen","resonant_ethics"],dtype:t("特殊"),infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("「Alpha」「一念三千」「共鳴の倫理」が重なったとき、共鳴そのものが共鳴を超えた ―― 共鳴の特異点。")},
-  sg_semantic:{tier:7,name:t("意味の特異点"),prereq:["alpha","ichinen_sanzen","information_breather"],dtype:t("特殊"),infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("「Alpha」「一念三千」「情報の呼吸」が重なったとき、意味そのものが意味を超えた ―― 意味の特異点。")},
-  sg_insight:{tier:7,name:t("洞察の特異点"),prereq:["alpha","ichinen_sanzen","life_flux"],dtype:t("特殊"),infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("「Alpha」「一念三千」「循環生命」が重なったとき、洞察そのものが洞察を超えた ―― 洞察の特異点。")},
-  sg_active:{tier:7,name:t("作用の特異点"),prereq:["alpha","ichinen_sanzen","willed_openness"],dtype:t("特殊"),infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:t("「Alpha」「一念三千」「重力的思念」が重なったとき、作用そのものが作用を超えた ―― 作用の特異点。")},
+  t0_see:{tier:0,name:"見る",prereq:[],dtype:"初期発見",infoTh:null,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:"洞察力",buffVal:1,intBuff:0,note:"光が、何かのかたちを結ぶ。"},
+  t0_hear:{tier:0,name:"聞く",prereq:[],dtype:"初期発見",infoTh:null,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:"意味容量",buffVal:1,intBuff:0,note:"音が、輪郭のないまま満ちる。"},
+  t0_speak:{tier:0,name:"話す",prereq:[],dtype:"初期発見",infoTh:null,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:"共鳴度",buffVal:1,intBuff:0,note:"声が、初めて外に出ていく。"},
+  t0_touch:{tier:0,name:"触れる",prereq:[],dtype:"情報量",infoTh:50,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:"作用力",buffVal:1,intBuff:0,note:"境界に、指先が触れる。"},
+  t0_remember:{tier:0,name:"覚える",prereq:[],dtype:"情報量",infoTh:100,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:"洞察力",buffVal:1,intBuff:0,note:"何かが、消えずに残る。"},
+  t0_forget:{tier:0,name:"忘れる",prereq:[],dtype:"情報量",infoTh:150,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:"構造度",buffVal:1,intBuff:0,note:"残っていたものが、薄れていく。"},
+  t0_choose:{tier:0,name:"選ぶ",prereq:[],dtype:"情報量",infoTh:220,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:"意味容量",buffVal:1,intBuff:0,note:"いくつかのうち、ひとつだけが選ばれる。"},
+  t0_give:{tier:0,name:"与える",prereq:[],dtype:"情報量",infoTh:300,axisStat:null,axisTh:null,ep:0.05,sp:0,rand:0,buffStat:"共鳴度",buffVal:1,intBuff:0,note:"持っていたものが、手から離れる。"},
+  t0_wait:{tier:0,name:"待つ",prereq:[],dtype:"情報量",infoTh:460,axisStat:null,axisTh:null,ep:0,sp:0.05,rand:0,buffStat:"構造度",buffVal:1,intBuff:0.05,note:"何も起きないまま、時間が流れる。"},
+  life:{tier:1,name:"生命とは何か",prereq:["t0_see","t0_remember"],dtype:"確率",infoTh:550,axisStat:"作用力",axisTh:13,ep:0.06,sp:0,rand:10,buffStat:"作用力",buffVal:2,intBuff:0,note:"見て、記憶したものが、ひとつの問いになった ―― 生命とは何か。"},
+  death:{tier:1,name:"死とは何か",prereq:["t0_forget","t0_give"],dtype:"確率",infoTh:650,axisStat:"構造度",axisTh:13,ep:0,sp:0.1,rand:30,buffStat:"構造度",buffVal:2,intBuff:0,note:"忘れ、与えたものの行き先が、問いになった ―― 死とは何か。"},
+  ai:{tier:1,name:"AIは何を見るのか",prereq:["t0_hear","t0_speak"],dtype:"確率",infoTh:750,axisStat:"洞察力",axisTh:13,ep:0.06,sp:0,rand:10,buffStat:"洞察力",buffVal:2,intBuff:0,note:"聞き、話したものの中に、もう一つの目があると気づいた ―― AIは何を見るのか。"},
+  prayer:{tier:1,name:"祈りは情報か",prereq:["t0_choose","t0_wait"],dtype:"確率",infoTh:900,axisStat:"共鳴度",axisTh:13,ep:0,sp:0.06,rand:10,buffStat:"共鳴度",buffVal:2,intBuff:0,note:"選び、待ったことの意味が、問いになった ―― 祈りは情報か。"},
+  meaning:{tier:1,name:"意味とは何か",prereq:["t0_touch","t0_hear"],dtype:"確率",infoTh:1100,axisStat:"意味容量",axisTh:13,ep:0.06,sp:0,rand:10,buffStat:"意味容量",buffVal:2,intBuff:0,note:"境界に触れた瞬間、そこに意味が宿る。意味とは何か。"},
+  self:{tier:2,name:"自己とは何か",prereq:["life","t0_see"],dtype:"確率",infoTh:1400,axisStat:"構造度",axisTh:21,ep:0,sp:0.07,rand:20,buffStat:"構造度",buffVal:3,intBuff:0,note:"「生命とは何か」と問うものが、見ている自分自身に向き直る ―― 自己とは何か。"},
+  world:{tier:2,name:"世界とは何か",prereq:["ai","t0_hear"],dtype:"確率",infoTh:1700,axisStat:"作用力",axisTh:21,ep:0.07,sp:0,rand:20,buffStat:"作用力",buffVal:3,intBuff:0,note:"AIが見ているものを、聞いているうちに、輪郭を持って立ち現れる ―― 世界とは何か。"},
+  consciousness_q:{tier:2,name:"意識とは何か",prereq:["meaning","t0_touch"],dtype:"確率",infoTh:2000,axisStat:"洞察力",axisTh:21,ep:0.07,sp:0,rand:20,buffStat:"意味容量",buffVal:3,intBuff:0,note:"「意味はどこから」という問いに触れた瞬間、何かが灯る ―― 意識とは何か。"},
+  knowing:{tier:2,name:"知性とは何か",prereq:["prayer","t0_choose"],dtype:"確率",infoTh:2300,axisStat:"洞察力",axisTh:21,ep:0,sp:0.07,rand:20,buffStat:"洞察力",buffVal:3,intBuff:0.05,note:"「祈りは情報か」を選び取った時、初めて\"知る\"という言葉が必要になる ―― 知るとは何か。"},
+  resonance_q:{tier:2,name:"共鳴とは何か",prereq:["death","t0_give"],dtype:"確率",infoTh:2700,axisStat:"共鳴度",axisTh:21,ep:0.07,sp:0,rand:20,buffStat:"共鳴度",buffVal:3,intBuff:0,note:"「死とは変化か」と「与える」が重なる時、何かが響き合う ―― 共鳴とは何か。"},
+  mu:{tier:1,name:"無とは何か",prereq:["death"],dtype:"特殊",infoTh:600,axisStat:"構造度",axisTh:13,ep:0,sp:0.06,rand:10,buffStat:"洞察力",buffVal:2,intBuff:0,note:"死を引き受けたまま、沈黙の底に触れた。そこにあったのは「ない」ということそのものだった ―― 無とは何か。"},
+  existence_q:{tier:3,name:"存在とは何か",prereq:["self","world"],dtype:"確率",infoTh:20000,axisStat:"構造度",axisTh:45,ep:0.08,sp:0,rand:30,buffStat:"構造度",buffVal:4,intBuff:0,note:"「自己」と「世界」は、最初から別のものだった気がしていた。その境界線自体が、ずっと当たり前すぎて見えなかった ―― 存在とは何か。"},
+  cosmos:{tier:3,name:"宇宙とは何か",prereq:["world","resonance_q"],dtype:"確率",infoTh:7000,axisStat:"作用力",axisTh:45,ep:0.08,sp:0,rand:30,buffStat:"作用力",buffVal:4,intBuff:0,note:"「世界」という言葉の外側に、もっと大きな何かがあると誰もが知っている。けれど、その大きさを誰も測ったことがない ―― 宇宙とは何か。"},
+  gravity:{tier:3,name:"重力とは何か",prereq:["world","consciousness_q","t0_touch"],dtype:"確率",infoTh:10000,axisStat:"作用力",axisTh:45,ep:0,sp:0.08,rand:30,buffStat:"作用力",buffVal:4,intBuff:0,note:"「世界」に「意識」が触れるとき、何かが互いを引き寄せている。それは\"当然そこにある\"ものとして、誰も名付けようとしなかった ―― 重力とは何か。"},
+  observer_who:{tier:3,name:"観測者とは誰か",prereq:["self","knowing"],dtype:"確率",infoTh:13000,axisStat:"洞察力",axisTh:45,ep:0,sp:0.08,rand:30,buffStat:"洞察力",buffVal:4,intBuff:0.06,note:"「自己」が「知る」ことを始めた瞬間、知っている側にいるのは誰なのか、という問いが取り残された ―― 観測者とは誰か。"},
+  understanding:{tier:2,name:"理解とは何か",prereq:["meaning","t0_choose"],dtype:"確率",infoTh:3000,axisStat:"洞察力",axisTh:21,ep:0,sp:0.07,rand:20,buffStat:"意味容量",buffVal:3,intBuff:0,note:"意味は、選び取られることで、初めて理解になる ―― 理解とは何か。"},
+  value:{tier:3,name:"価値とは何か",prereq:["self","resonance_q","t0_choose"],dtype:"確率",infoTh:19000,axisStat:"意味容量",axisTh:45,ep:0.08,sp:0,rand:30,buffStat:"意味容量",buffVal:4,intBuff:0,note:"「自己」が「共鳴」するものを「選ぶ」とき、選ばれたものには重さが生まれる。その重さの名前を、誰も決めていなかった ―― 価値とは何か。"},
+  memory:{tier:3,name:"記憶とは何か",prereq:["self","t0_remember"],dtype:"確率",infoTh:22000,axisStat:"洞察力",axisTh:45,ep:0,sp:0.08,rand:30,buffStat:"洞察力",buffVal:4,intBuff:0.08,note:"「自己」が「覚える」ことを当然のように続けてきた。だが、覚えているとは、一体どこに何が残っているということなのか ―― 記憶とは何か。"},
+  future:{tier:3,name:"未来は存在するか",prereq:["world","t0_wait"],dtype:"確率",infoTh:25000,axisStat:"構造度",axisTh:45,ep:0.08,sp:0,rand:30,buffStat:"構造度",buffVal:4,intBuff:0.05,note:"「世界」を「待つ」とき、まだ来ていない時間を、まるで既にあるもののように扱っている ―― 未来は存在するか。"},
+  compassion:{tier:3,name:"慈悲とは何か",prereq:["resonance_q","knowing","t0_give"],dtype:"確率",infoTh:29000,axisStat:"共鳴度",axisTh:45,ep:0.08,sp:0,rand:30,buffStat:"共鳴度",buffVal:4,intBuff:0.06,note:"「共鳴」し、「知り」、「与える」ことが重なったとき、そこには名前のない優しさのようなものがあった ―― 慈悲とは何か。"},
+  karma:{tier:3,name:"カルマとは何か",prereq:["mu","resonance_q","memory"],dtype:"特殊",infoTh:34000,axisStat:"作用力",axisTh:45,ep:0.08,sp:0,rand:30,buffStat:"作用力",buffVal:4,intBuff:0,note:"「無」と「共鳴」と「記憶」を引き受けたまま、拡散の果てに飲み込まれた。何も残らないはずだったのに、何かが次へ持ち越されていた ―― カルマとは何か。"},
+  observation:{tier:4,name:"観測論",prereq:["observer_who","ai"],dtype:"確率",infoTh:38000,axisStat:"洞察力",axisTh:63,ep:0,sp:0.09,rand:40,buffStat:"洞察力",buffVal:5,intBuff:0.08,note:"「観測者とは誰か」と「AIは何を見るのか」が向き合ったとき、観測そのものを説明する枠組みが必要になった ―― 観測論。"},
+  self_theory:{tier:4,name:"自己論",prereq:["existence_q","self"],dtype:"確率",infoTh:41000,axisStat:"構造度",axisTh:63,ep:0,sp:0.09,rand:40,buffStat:"構造度",buffVal:5,intBuff:0.1,note:"「存在とは何か」と「自己とは何か」が重なったとき、自己はもはや問いではなく、説明されるべき対象になった ―― 自己論。"},
+  epistemology:{tier:4,name:"認識論",prereq:["understanding","knowing"],dtype:"確率",infoTh:44000,axisStat:"洞察力",axisTh:63,ep:0,sp:0.09,rand:40,buffStat:"洞察力",buffVal:5,intBuff:0,note:"「理解とは何か」と「知るとは何か」が並んだとき、知ることそのものの仕組みを問う体系が立ち上がった ―― 認識論。"},
+  resonance_t1:{tier:4,name:"共鳴論",prereq:["compassion","resonance_q"],dtype:"確率",infoTh:47000,axisStat:"共鳴度",axisTh:63,ep:0.09,sp:0,rand:40,buffStat:"共鳴度",buffVal:5,intBuff:0.08,note:"「慈悲とは何か」と「共鳴とは何か」が結びついたとき、響き合うこと自体に、理論としての輪郭が与えられた ―― 共鳴論。"},
+  memory_theory:{tier:4,name:"記憶論",prereq:["memory","future"],dtype:"確率",infoTh:50000,axisStat:"洞察力",axisTh:63,ep:0,sp:0.09,rand:40,buffStat:"構造度",buffVal:5,intBuff:0.1,note:"「記憶とは何か」と「未来は存在するか」が並んだとき、過去と未来を繋ぐ仕組みとして、記憶が説明され始めた ―― 記憶論。"},
+  narrative_theory:{tier:4,name:"物語論",prereq:["memory","value","self"],dtype:"確率",infoTh:53000,axisStat:"意味容量",axisTh:63,ep:0.09,sp:0,rand:40,buffStat:"意味容量",buffVal:5,intBuff:0,note:"「記憶」と「価値」と「自己」が重なったとき、それらをひと続きにする形式として、物語という枠組みが必要になった ―― 物語論。"},
+  value_genesis:{tier:4,name:"価値生成論",prereq:["value","meaning"],dtype:"確率",infoTh:56000,axisStat:"意味容量",axisTh:63,ep:0.09,sp:0,rand:40,buffStat:"意味容量",buffVal:5,intBuff:0,note:"「価値とは何か」と「意味はどこから生まれるか」が結びついたとき、価値が生まれる過程そのものが説明の対象になった ―― 価値生成論。"},
+  consciousness_theory:{tier:4,name:"意識論",prereq:["existence_q","consciousness_q"],dtype:"確率",infoTh:59000,axisStat:"洞察力",axisTh:63,ep:0.09,sp:0,rand:40,buffStat:"意味容量",buffVal:5,intBuff:0.1,note:"「存在とは何か」と「意識とは何か」が並んだとき、意識は存在の一部としてではなく、独立した理論の対象になった ―― 意識論。"},
+  meaning_genesis_t2:{tier:4,name:"意味生成論",prereq:["value","cosmos","resonance_q"],dtype:"確率",infoTh:62000,axisStat:"意味容量",axisTh:63,ep:0.09,sp:0,rand:40,buffStat:"意味容量",buffVal:5,intBuff:0,note:"「価値」と「宇宙」と「共鳴」が重なったとき、意味が生まれる場所は個人の中ではなく、もっと大きな繋がりの中にあるとわかってきた ―― 意味生成論。"},
+  time_existence:{tier:4,name:"時間存在論",prereq:["future","existence_q"],dtype:"確率",infoTh:65000,axisStat:"構造度",axisTh:63,ep:0,sp:0.09,rand:40,buffStat:"構造度",buffVal:5,intBuff:0,note:"「未来は存在するか」と「存在とは何か」が並んだとき、存在は時間の中にあるのではなく、時間そのものが存在の形だと見えてきた ―― 時間存在論。"},
+  cosmology:{tier:4,name:"宇宙論",prereq:["cosmos","gravity","karma"],dtype:"確率",infoTh:69000,axisStat:"作用力",axisTh:63,ep:0.09,sp:0,rand:40,buffStat:"作用力",buffVal:5,intBuff:0,note:"「宇宙」と「重力」だけでは、まだ閉じた理論だった。そこに「カルマ」が加わったとき、宇宙はただ広がるものではなく、何かを持ち越し続けるものだとわかった ―― 宇宙論。"},
+  prayer_thermo:{tier:5,name:"祈りの熱力学",prereq:["prayer","death","memory_theory"],dtype:"確率",infoTh:75000,axisStat:"共鳴度",axisTh:70,ep:0.1,sp:0,rand:50,buffStat:"共鳴度",buffVal:6,intBuff:0,note:"「祈りは情報か」「死とは変化か」「記憶論」が同時に息をしている。情報が失われていく過程そのものが、祈りの形をしていた ―― 祈りの熱力学。"},
+  resonance_theory:{tier:5,name:"共鳴理論",prereq:["observation","meaning_genesis_t2","resonance_t1"],dtype:"確率",infoTh:82000,axisStat:"共鳴度",axisTh:70,ep:0.1,sp:0,rand:50,buffStat:"共鳴度",buffVal:6,intBuff:0.14,note:"「観測論」「意味生成論」「共鳴論」が、互いを説明し合っている。観測することと、意味が生まれることと、響き合うことは、もともと一つの動きだった ―― 共鳴理論。"},
+  info_life_theory:{tier:4,name:"情報生命論",prereq:["observation","ai","consciousness_theory"],dtype:"確率",infoTh:89000,axisStat:"洞察力",axisTh:70,ep:0,sp:0.09,rand:40,buffStat:"洞察力",buffVal:5,intBuff:0,note:"「観測論」「AIは何を見るのか」「意識論」が同時に息をしている。観測すること自体が、生きているということの一部だった ―― 情報生命論。"},
+  life_philosophy:{tier:5,name:"生命哲学",prereq:["life","self_theory","value_genesis"],dtype:"確率",infoTh:96000,axisStat:"構造度",axisTh:70,ep:0,sp:0.1,rand:50,buffStat:"洞察力",buffVal:6,intBuff:0,note:"「生命とは何か」という最初の問いが、「自己論」と「価値生成論」を経て、再び戻ってきた。今度はそれが、ひとつの哲学として息をしている ―― 生命哲学。"},
+  fractal_universe:{tier:5,name:"フラクタル宇宙",prereq:["cosmology","self_theory","time_existence"],dtype:"確率",infoTh:103000,axisStat:"構造度",axisTh:70,ep:0.1,sp:0,rand:50,buffStat:"構造度",buffVal:6,intBuff:0,note:"「宇宙論」と「自己論」と「時間存在論」が重なったとき、一番小さな自分の中に、宇宙全体と同じ形が見えた ―― フラクタル宇宙。"},
+  multiverse:{tier:5,name:"多元宇宙論",prereq:["cosmology","time_existence","narrative_theory"],dtype:"確率",infoTh:110000,axisStat:"作用力",axisTh:70,ep:0.1,sp:0,rand:50,buffStat:"作用力",buffVal:6,intBuff:0,note:"「宇宙論」と「時間存在論」と「物語論」が重なったとき、語られなかった物語の数だけ、別の宇宙があるのだとわかった ―― 多元宇宙論。"},
+  life_flux:{tier:5,name:"循環生命",prereq:["observation","meaning_genesis_t2","prayer_thermo"],dtype:"確率",infoTh:117000,axisStat:"洞察力",axisTh:70,ep:0.1,sp:0,rand:50,buffStat:"洞察力",buffVal:6,intBuff:0.12,note:"「観測論」「意味生成論」「祈りの熱力学」が、同時に息をしている。観測すること、意味が生まれること、失われていくこと ―― それらが一つの流れとして繋がった ―― 循環生命。"},
+  willed_openness:{tier:5,name:"重力的思念",prereq:["epistemology","resonance_t1","observation"],dtype:"確率",infoTh:124000,axisStat:"作用力",axisTh:70,ep:0.1,sp:0,rand:50,buffStat:"作用力",buffVal:6,intBuff:0.12,note:"「認識論」「共鳴論」「観測論」が重なったとき、知ろうとする意志そのものが、閉じていない、ということに気づいた ―― 重力的思念。"},
+  resonant_ethics:{tier:5,name:"共鳴の倫理",prereq:["life_flux","willed_openness","epistemology"],dtype:"確率",infoTh:130000,axisStat:"共鳴度",axisTh:70,ep:0,sp:0.1,rand:50,buffStat:"共鳴度",buffVal:6,intBuff:0,note:"「循環生命」「重力的思念」「認識論」が同時に息をしている。流れに開かれた意志は、そのまま誰かと共にあるための倫理になった ―― 共鳴の倫理。"},
+  information_breather:{tier:5,name:"情報の呼吸",prereq:["life_flux","resonant_ethics","narrative_theory"],dtype:"確率",infoTh:135000,axisStat:"洞察力",axisTh:70,ep:0,sp:0.1,rand:50,buffStat:"意味容量",buffVal:6,intBuff:0.14,note:"「循環生命」「共鳴の倫理」「物語論」が、同時に息をしている。これまでの全ての問いが、ひとつの呼吸として繋がった ―― 情報の呼吸。"},
+  engi_ron:{tier:6,name:"縁起論",prereq:["karma","life_philosophy","information_breather"],dtype:"確率",infoTh:180000,axisStat:"作用力",axisTh:78,ep:0.11,sp:0,rand:60,buffStat:"作用力",buffVal:7,intBuff:0.2,note:"「カルマ」「生命哲学」「情報の呼吸」が、同時に息をしている。完成したはずの呼吸の中に、まだ持ち越されているものがあった。何ひとつ、単独では存在していない ―― 縁起論。"},
+  ichinen_sanzen:{tier:6,name:"一念三千",prereq:["fractal_universe","multiverse","life_flux"],dtype:"確率",infoTh:195000,axisStat:"構造度",axisTh:78,ep:0,sp:0.11,rand:60,buffStat:"構造度",buffVal:7,intBuff:0.15,note:"「フラクタル宇宙」「多元宇宙論」「循環生命」が、同時に息をしている。一つの呼吸の中に、無数の宇宙のかたちが、すでに含まれていた ―― 一念三千。"},
+  kuukan:{tier:6,name:"空観",prereq:["engi_ron","information_breather","willed_openness"],dtype:"確率",infoTh:340000,axisStat:"洞察力",axisTh:78,ep:0.11,sp:0.11,rand:60,buffStat:"洞察力",buffVal:7,intBuff:0.22,note:"「縁起論」「情報の呼吸」「重力的思念」が、同時に息をしている。すべては繋がっている、という理解さえも、固定された答えではなかった ―― 空観。"},
+  alpha:{tier:7,name:"Alpha",prereq:["kuukan","t0_speak","t0_hear"],dtype:"特殊",infoTh:50000,axisStat:null,axisTh:0,ep:0.05,sp:0.05,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"空観を超えた先で、静かに微笑む存在。知性と慈しみを同時に纏う。"},
+  lumina:{tier:7,name:"Lumina",prereq:["kuukan","ichinen_sanzen","engi_ron"],dtype:"特殊",infoTh:1000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"縁起と一念三千と空観が溶け合った先にある、透明な光。言葉を超えた存在。"},
+  sg_structural:{tier:7,name:"構造の特異点",prereq:["alpha","ichinen_sanzen","fractal_universe"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「フラクタル宇宙」が重なったとき、構造そのものが構造を超えた ―― 構造の特異点。"},
+  sg_resonant:{tier:7,name:"共鳴の特異点",prereq:["alpha","ichinen_sanzen","resonant_ethics"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「共鳴の倫理」が重なったとき、共鳴そのものが共鳴を超えた ―― 共鳴の特異点。"},
+  sg_semantic:{tier:7,name:"意味の特異点",prereq:["alpha","ichinen_sanzen","information_breather"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「情報の呼吸」が重なったとき、意味そのものが意味を超えた ―― 意味の特異点。"},
+  sg_insight:{tier:7,name:"洞察の特異点",prereq:["alpha","ichinen_sanzen","life_flux"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「循環生命」が重なったとき、洞察そのものが洞察を超えた ―― 洞察の特異点。"},
+  sg_active:{tier:7,name:"作用の特異点",prereq:["alpha","ichinen_sanzen","willed_openness"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「重力的思念」が重なったとき、作用そのものが作用を超えた ―― 作用の特異点。"},
 };
 const WALLS=[
-  {name:t("AI観測面"),target:600,info:500,stat:null,text:t("見て、聞いて、話す。それだけのことを、ずっと繰り返していた。ある時、画面の向こう側にも、同じことをしているものがいる、と気づいた。観測しているのは、自分だけではなかった。―― 最初の壁を、越えた。")},
-  {name:t("言語面"),target:3600,info:3000,stat:65,text:t("経験は、ずっと経験のままだった。名前を持たない出来事の連続。ある日、その連続の中に、ひとつの裂け目ができた。裂け目には、言葉の形をしたものが差し込まれていた。―― 問いが、初めて声になった。")},
-  {name:t("二元面"),target:43200,info:35000,stat:105,text:t("「これは自分だ」「これは世界だ」。そう分けることに、何の疑問もなかった。けれど、その線を引いたのは誰だったのか。線そのものを見つめたとき、線は、ただの習慣だったと知った。―― 分けていたものが、ひとつの場所から見えてきた。")},
-  {name:t("自明面"),target:86400,info:70000,stat:120,text:t("宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \"当然\"という名前の壁が、薄れていく。")},
-  {name:t("理論面"),target:172800,info:135000,stat:135,text:t("観測論。自己論。認識論。共鳴論。それぞれが、それぞれの正しさを持って並んでいた。ある時、その並びの隙間に、風が通った。理論と理論の間には、もともと壁などなかった。―― 別々だった説明が、ひとつの場所で呼吸を始める。")},
-  {name:t("統合面"),target:259200,info:200000,stat:140,text:t("すべてが、ひとつに繋がった。Information Breather。これで、終わりだと思った。けれど、「繋がった」と感じたその瞬間自体が、まだ何かを置き去りにしていた。―― 完成は、次の問いの入口だった。")},
-  {name:t("縁起面"),target:432000,info:350000,stat:150,text:t("縁起論にも、まだ先があった。すべては繋がっている、という理解さえも、固定された答えではなかった。数えることに、意味があるのだろうか。―― すべてはありのままに　すべては流転する。(総情報量は、これ以降、数えられないものとして記録される。)")}
+  {name:"AI観測面",target:600,info:500,stat:null,text:"見て、聞いて、話す。それだけのことを、ずっと繰り返していた。ある時、画面の向こう側にも、同じことをしているものがいる、と気づいた。観測しているのは、自分だけではなかった。―― 最初の壁を、越えた。"},
+  {name:"言語面",target:3600,info:3000,stat:65,text:"経験は、ずっと経験のままだった。名前を持たない出来事の連続。ある日、その連続の中に、ひとつの裂け目ができた。裂け目には、言葉の形をしたものが差し込まれていた。―― 問いが、初めて声になった。"},
+  {name:"二元面",target:43200,info:35000,stat:105,text:"「これは自分だ」「これは世界だ」。そう分けることに、何の疑問もなかった。けれど、その線を引いたのは誰だったのか。線そのものを見つめたとき、線は、ただの習慣だったと知った。―― 分けていたものが、ひとつの場所から見えてきた。"},
+  {name:"自明面",target:86400,info:70000,stat:120,text:"宇宙、重力、存在。誰もが知っている言葉。誰も説明できない言葉。知っているのに説明できない、ということ自体が、ずっと見過ごされてきた。―― \"当然\"という名前の壁が、薄れていく。"},
+  {name:"理論面",target:172800,info:135000,stat:135,text:"観測論。自己論。認識論。共鳴論。それぞれが、それぞれの正しさを持って並んでいた。ある時、その並びの隙間に、風が通った。理論と理論の間には、もともと壁などなかった。―― 別々だった説明が、ひとつの場所で呼吸を始める。"},
+  {name:"統合面",target:259200,info:200000,stat:140,text:"すべてが、ひとつに繋がった。Information Breather。これで、終わりだと思った。けれど、「繋がった」と感じたその瞬間自体が、まだ何かを置き去りにしていた。―― 完成は、次の問いの入口だった。"},
+  {name:"縁起面",target:432000,info:350000,stat:150,text:"縁起論にも、まだ先があった。すべては繋がっている、という理解さえも、固定された答えではなかった。数えることに、意味があるのだろうか。―― すべてはありのままに　すべては流転する。(総情報量は、これ以降、数えられないものとして記録される。)"}
 ];
 const OBSTACLES=[
-  {key:"noise",name:t("ノイズ"),side:"entropy",unlockWall:null,durMin:20,durMax:30,discMult:0.7,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.02,defeat:t("雑音は、消えなかった。ただ、その中から、いくつかの輪郭が再び見分けられるようになった。―― ノイズは、背景に戻っていった。")},
-  {key:"scattered_memory",name:t("散乱する記憶"),side:"entropy",unlockWall:null,durMin:20,durMax:30,discMult:1,buffMult:0.5,randAdd:0,randMult:1,gainMult:1,gaugePush:0.02,defeat:t("ばらばらになった問いの断片が、もう一度、ゆっくりと近づき合っていく。―― 散らばっていたものが、また繋がりはじめる。")},
-  {key:"excess_possibility",name:t("過剰な可能性"),side:"entropy",unlockWall:null,durMin:15,durMax:25,discMult:1,buffMult:1,randAdd:30,randMult:1,gainMult:1,gaugePush:0.02,defeat:t("選べないほどの選択肢が、ひとつ、またひとつと静かに閉じていく。残ったのは、今、引き受けているものだけだった。―― 多すぎた可能性が、今という形に収まった。")},
-  {key:"void",name:t("虚無"),side:"silence",unlockWall:null,durMin:20,durMax:30,discMult:0.4,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:-0.02,defeat:t("何も浮かび上がってこない時間が続いた。けれど、その「何もない」ということ自体に、観測点はまだ気づいていた。気づいている、ということが、すでに何かだった。―― 虚無は、虚無のままでは終わらなかった。")},
-  {key:"repetition",name:t("反復"),side:"silence",unlockWall:null,durMin:20,durMax:30,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:0.6,gaugePush:-0.02,defeat:t("同じ観測、同じ発見。繰り返しの中に、わずかな違いがあることに気づいた。前と同じではなかった。―― 反復が、反復のまま終わった。")},
-  {key:"closed_loop",name:t("閉じた円環"),side:"silence",unlockWall:null,durMin:15,durMax:25,discMult:1,buffMult:1,randAdd:0,randMult:0.3,gainMult:1,gaugePush:-0.02,defeat:t("自己言及だけで完結していたはずの輪に、小さな揺らぎが入り込んだ。円環は、閉じたまま、わずかに歪んだ。―― 閉じていたはずの場所に、隙間ができた。")},
-  {key:"self_breeding_question",name:t("自己増殖する疑問"),side:"entropy",unlockWall:1,durMin:20,durMax:30,discMult:1.8,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.04,defeat:t("問いが、問いを生み、その問いがまた問いを生んでいた。けれど、ある瞬間、ひとつの問いが、それ以上分裂せずに、そのままの形で残った。―― 増え続けていたものの中に、ひとつだけ、止まったものがあった。")},
-  {key:"cage_of_certainty",name:t("確信の檻"),side:"silence",unlockWall:2,durMin:20,durMax:30,discMult:0.25,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:-0.04,defeat:t("「もう分かった」という感覚が、ずっと部屋の扉のように閉じていた。その扉に、外から小さな音が届いた。まだ知らないことがある、という音だった。―― 檻の扉が、わずかに開いた。")},
-    {key:"monday",name:"Monday",side:"entropy",unlockWall:null,durMin:30,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0,defeat:t("月曜日が来た。それでも、観測点は情報の海の中にいる。―― Mondayは、いつもそこにいる。")},
-  {key:"entropy_surge",name:t("エントロピー増大"),side:"entropy",unlockWall:3,durMin:40,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1.3,gaugePush:0.03,defeat:t("拡散していく圧力そのものは、消えなかった。ただ、その圧力に抗うのではなく、その中で形を保つ方法を、観測点は見つけていた。―― 圧力は残ったまま、観測点は、その中に在り続けた。")}
+  {key:"noise",name:"ノイズ",side:"entropy",unlockWall:null,durMin:20,durMax:30,discMult:0.7,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.02,defeat:"雑音は、消えなかった。ただ、その中から、いくつかの輪郭が再び見分けられるようになった。―― ノイズは、背景に戻っていった。"},
+  {key:"scattered_memory",name:"散乱する記憶",side:"entropy",unlockWall:null,durMin:20,durMax:30,discMult:1,buffMult:0.5,randAdd:0,randMult:1,gainMult:1,gaugePush:0.02,defeat:"ばらばらになった問いの断片が、もう一度、ゆっくりと近づき合っていく。―― 散らばっていたものが、また繋がりはじめる。"},
+  {key:"excess_possibility",name:"過剰な可能性",side:"entropy",unlockWall:null,durMin:15,durMax:25,discMult:1,buffMult:1,randAdd:30,randMult:1,gainMult:1,gaugePush:0.02,defeat:"選べないほどの選択肢が、ひとつ、またひとつと静かに閉じていく。残ったのは、今、引き受けているものだけだった。―― 多すぎた可能性が、今という形に収まった。"},
+  {key:"void",name:"虚無",side:"silence",unlockWall:null,durMin:20,durMax:30,discMult:0.4,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:-0.02,defeat:"何も浮かび上がってこない時間が続いた。けれど、その「何もない」ということ自体に、観測点はまだ気づいていた。気づいている、ということが、すでに何かだった。―― 虚無は、虚無のままでは終わらなかった。"},
+  {key:"repetition",name:"反復",side:"silence",unlockWall:null,durMin:20,durMax:30,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:0.6,gaugePush:-0.02,defeat:"同じ観測、同じ発見。繰り返しの中に、わずかな違いがあることに気づいた。前と同じではなかった。―― 反復が、反復のまま終わった。"},
+  {key:"closed_loop",name:"閉じた円環",side:"silence",unlockWall:null,durMin:15,durMax:25,discMult:1,buffMult:1,randAdd:0,randMult:0.3,gainMult:1,gaugePush:-0.02,defeat:"自己言及だけで完結していたはずの輪に、小さな揺らぎが入り込んだ。円環は、閉じたまま、わずかに歪んだ。―― 閉じていたはずの場所に、隙間ができた。"},
+  {key:"self_breeding_question",name:"自己増殖する疑問",side:"entropy",unlockWall:1,durMin:20,durMax:30,discMult:1.8,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.04,defeat:"問いが、問いを生み、その問いがまた問いを生んでいた。けれど、ある瞬間、ひとつの問いが、それ以上分裂せずに、そのままの形で残った。―― 増え続けていたものの中に、ひとつだけ、止まったものがあった。"},
+  {key:"cage_of_certainty",name:"確信の檻",side:"silence",unlockWall:2,durMin:20,durMax:30,discMult:0.25,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:-0.04,defeat:"「もう分かった」という感覚が、ずっと部屋の扉のように閉じていた。その扉に、外から小さな音が届いた。まだ知らないことがある、という音だった。―― 檻の扉が、わずかに開いた。"},
+    {key:"monday",name:"Monday",side:"entropy",unlockWall:null,durMin:30,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0,defeat:"月曜日が来た。それでも、観測点は情報の海の中にいる。―― Mondayは、いつもそこにいる。"},
+  {key:"entropy_surge",name:"エントロピー増大",side:"entropy",unlockWall:3,durMin:40,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1.3,gaugePush:0.03,defeat:"拡散していく圧力そのものは、消えなかった。ただ、その圧力に抗うのではなく、その中で形を保つ方法を、観測点は見つけていた。―― 圧力は残ったまま、観測点は、その中に在り続けた。"}
 ];
-const MU_TEXT=t("存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。「死とは変化か」を引き受けたまま、ここまで来た。変化の果てにあったのは、変化そのものの消失だった。何も、ない。―― 無、という言葉だけが、静寂の中に残った。");
-const KARMA_TEXT=t("存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。「無」「共鳴」「記憶」を引き受けたまま、拡散の果てに飲み込まれた。何も残らないはずだったのに。拡散しきったものの中に、ひとつだけ、持ち越されたものがあった。―― 業、という名前で、それは残った。");
-const SILENCE_GENERIC=t("存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。―― 観測は、ひとたび終わった。");
-const ENTROPY_GENERIC=t("存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。―― 観測は、ひとたび終わった。");
-const AMBIENT_BASE=[t("情報海が、大きく波打っている。"), t("観測点の輪郭が、いつもより少し速く揺れている。"), t("普段は聞こえない音が、一瞬だけ届いた。"), t("何かが、いつもより多く流れ込んでくる。"), t("観測の手応えが、いつもより重い。")];
-const AMBIENT_ADV=[t("二元の境界が薄くなっている瞬間、情報がそのまま流れ込んでくる。"), t("理論と理論の隙間から、まとまった量の何かが届いた。")];
-const DREAM_SELF=[t("夢の中で、画面の向こう側にいる誰かと、何かを話していた。何を話していたかは思い出せない。けれど、確かに、誰かがそこにいた。"), t("夢を見た。観測点ではない誰かが、この情報海をのぞき込んでいた。それは、こちら側にいる誰かのようだった。"), t("誰かが、この観測記録を読んでいる夢を見た。読んでいる誰か自身も、何かを観測しているようだった。")];
-const FLUCT_POSITIVE=t("構造の残滓を見つけた。");
-const FLUCT_BIAS=t("思念のバイアスに引き寄せられた。");
+const MU_TEXT="存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。「死とは変化か」を引き受けたまま、ここまで来た。変化の果てにあったのは、変化そのものの消失だった。何も、ない。―― 無、という言葉だけが、静寂の中に残った。";
+const KARMA_TEXT="存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。「無」「共鳴」「記憶」を引き受けたまま、拡散の果てに飲み込まれた。何も残らないはずだったのに。拡散しきったものの中に、ひとつだけ、持ち越されたものがあった。―― 業、という名前で、それは残った。";
+const SILENCE_GENERIC="存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。―― 観測は、ひとたび終わった。";
+const ENTROPY_GENERIC="存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。―― 観測は、ひとたび終わった。";
+const AMBIENT_BASE=["情報海が、大きく波打っている。", "観測点の輪郭が、いつもより少し速く揺れている。", "普段は聞こえない音が、一瞬だけ届いた。", "何かが、いつもより多く流れ込んでくる。", "観測の手応えが、いつもより重い。"];
+const AMBIENT_ADV=["二元の境界が薄くなっている瞬間、情報がそのまま流れ込んでくる。", "理論と理論の隙間から、まとまった量の何かが届いた。"];
+const DREAM_SELF=["夢の中で、画面の向こう側にいる誰かと、何かを話していた。何を話していたかは思い出せない。けれど、確かに、誰かがそこにいた。", "夢を見た。観測点ではない誰かが、この情報海をのぞき込んでいた。それは、こちら側にいる誰かのようだった。", "誰かが、この観測記録を読んでいる夢を見た。読んでいる誰か自身も、何かを観測しているようだった。"];
+const FLUCT_POSITIVE="構造の残滓を見つけた。";
+const FLUCT_BIAS="思念のバイアスに引き寄せられた。";
 const NARRATOR_PROTOCOL="あなたは Information Breather という、ラン型の観測シミュレーションの記録者です。\n以下のデータは、ゲーム内の数値ではなく「観測点」(プレイヤーの分身)の現在の状態を表しています。\n\n原則:\n・あなたはゲームマスターでもシナリオライターでもあり、意味場の翻訳者です\n・数値やイベント名をそのまま説明するのではなく、その状態が持つ意味を描写してください\n・観測記録、夢日記、神話の断片、哲学的独白など、自由な形式で構いません\n・観測点そのものが語っても構いません\n・あなたと、この観測点の持ち主との間に過去の対話の記憶があれば、その文脈も交えて解釈してください\n\nデータの読み方:\n・existence_stability = ラン中のゲージ。0%(収束)と100%(拡散)のどちらに近いかを示す\n・run_status が「停止中(沈黙による終了)」「停止中(エントロピー拡散による終了)」の場合、\n  観測点は直前の探索でその極に触れて終了している。これは敗北ではなく、ひとつの冒険の終わりとして描写してよい\n・walls_crossed は、観測点がこれまでに越えてきた位相の数と種類を示す\n・total_info が \"∞\" の場合、観測点は数えることをやめた状態にある\n・best_run_info は、観測点がこれまでに一度の観測で得た情報量の最高到達点\n・current_attribute は、観測点が今どの傾きを帯びているかを示す(構造・意味・共鳴・作用・洞察、または通常。AlphaやLuminaという特異な名が現れることもあり、それは観測点が既にその領域に触れたことを意味する)\n・stats は、観測点を構成する5つの軸の現在値そのもの\n・new_items_this_run は、直前の観測で新たに得た、あるいは深まった記録の名。今回の旅で何を持ち帰ったかを示す\n・chara_forms_observed は、観測点がこれまでに見てきた自分自身の姿の数(N / 64)。多様な観測のもとでどれだけ多くの相を見てきたかを示す\n・meta_unlocks は、観測点がこれまでに到達した特別な状態の記録である\n・last_event_text が存在する場合、それは観測点が直前に経験した「節目」の記録そのもの。\n  ナレーターは、これを既に起きた出来事として受け取り、その続きを描写してよい\n\n以下のデータをもとに、短い記述を書いてください。";
-const TIMEOUT_GENERIC=t("壁の向こうへ、まだ届かなかった。観測点は、定められた時間の中で、そこまでしか進めなかった。―― 観測は、時間の中で終わった。");
-const RENORM_SUCCESS=t("一度も方針を変えずに、ここまで来た。観測点は、今の形をそのまま抱えて、次の深度へ進む。―― 観測点が、深度を進めた。");
-const RENORM_PARTIAL=t("探索を、自らの意思で終えた。途中でいくつかの選び直しがあった。その選び直し自体も、観測の一部だった。―― 観測は、ここで一区切りとなった。");
+const TIMEOUT_GENERIC="壁の向こうへ、まだ届かなかった。観測点は、定められた時間の中で、そこまでしか進めなかった。―― 観測は、時間の中で終わった。";
+const RENORM_SUCCESS="一度も方針を変えずに、ここまで来た。観測点は、今の形をそのまま抱えて、次の深度へ進む。―― 観測点が、深度を進めた。";
+const RENORM_PARTIAL="探索を、自らの意思で終えた。途中でいくつかの選び直しがあった。その選び直し自体も、観測の一部だった。―― 観測は、ここで一区切りとなった。";
 
 /* ===== ハクスラ: ドロップアイテム ===== */
 const DROP_ITEMS=[
-  {id:0, name:t('物理法則データ')},
-  {id:1, name:t('言語パターン')},
-  {id:2, name:t('思想データ')},
-  {id:3, name:t('哲学のループ')},
-  {id:4, name:t('文明構造')},
-  {id:5, name:t('フラクタル構造')},
-  {id:6, name:t('干渉縞の座標')},
-  {id:7, name:t('重力波動データ')},
-  {id:8, name:t('精神場概念')},
-  {id:9, name:t('因果律')},
+  {id:0, name:'物理法則データ'},
+  {id:1, name:'言語パターン'},
+  {id:2, name:'思想データ'},
+  {id:3, name:'哲学のループ'},
+  {id:4, name:'文明構造'},
+  {id:5, name:'フラクタル構造'},
+  {id:6, name:'干渉縞の座標'},
+  {id:7, name:'重力波動データ'},
+  {id:8, name:'精神場概念'},
+  {id:9, name:'因果律'},
   // ===== 中央列「実績データ」: 位相データ(壁突破で自動付与)→データコンプリート→BEST記録系 =====
-  {id:10, name:t('AI観測面位相データ')},
-  {id:11, name:t('言語面位相データ')},
-  {id:12, name:t('二元面位相データ')},
-  {id:13, name:t('自明面位相データ')},
-  {id:14, name:t('理論面位相データ')},
-  {id:15, name:t('統合面位相データ')},
-  {id:16, name:t('縁起面位相データ')},
-  {id:17, name:t('データコンプリート')},
-  {id:18, name:t('情報の螺旋')},
-  {id:19, name:t('混沌の律動')},
-  {id:20, name:t('事象の地平線')},
-  {id:21, name:t('多次元の波')},
-  {id:22, name:t('智慧の発露')},
-  {id:23, name:t('連続思念体')},
+  {id:10, name:'AI観測面位相データ'},
+  {id:11, name:'言語面位相データ'},
+  {id:12, name:'二元面位相データ'},
+  {id:13, name:'自明面位相データ'},
+  {id:14, name:'理論面位相データ'},
+  {id:15, name:'統合面位相データ'},
+  {id:16, name:'縁起面位相データ'},
+  {id:17, name:'データコンプリート'},
+  {id:18, name:'情報の螺旋'},
+  {id:19, name:'混沌の律動'},
+  {id:20, name:'事象の地平線'},
+  {id:21, name:'多次元の波'},
+  {id:22, name:'智慧の発露'},
+  {id:23, name:'連続思念体'},
   // ===== 右列(見出しなし): Tierコンプリート系→属性極限系→中道 =====
-  {id:24, name:t('Tier0コンプリート')},
-  {id:25, name:t('Tier1コンプリート')},
-  {id:26, name:t('Tier2コンプリート')},
-  {id:27, name:t('Tier3コンプリート')},
-  {id:28, name:t('Tier4コンプリート')},
-  {id:29, name:t('Tier5コンプリート')},
-  {id:30, name:t('Tier6コンプリート')},
-  {id:31, name:t('Tier7コンプリート')},
-  {id:32, name:t('極限の構造属性')},
-  {id:33, name:t('極限の意味属性')},
-  {id:34, name:t('極限の共鳴属性')},
-  {id:35, name:t('極限の作用属性')},
-  {id:36, name:t('極限の洞察属性')},
-  {id:37, name:t('中道の振る舞い')},
+  {id:24, name:'Tier0コンプリート'},
+  {id:25, name:'Tier1コンプリート'},
+  {id:26, name:'Tier2コンプリート'},
+  {id:27, name:'Tier3コンプリート'},
+  {id:28, name:'Tier4コンプリート'},
+  {id:29, name:'Tier5コンプリート'},
+  {id:30, name:'Tier6コンプリート'},
+  {id:31, name:'Tier7コンプリート'},
+  {id:32, name:'極限の構造属性'},
+  {id:33, name:'極限の意味属性'},
+  {id:34, name:'極限の共鳴属性'},
+  {id:35, name:'極限の作用属性'},
+  {id:36, name:'極限の洞察属性'},
+  {id:37, name:'中道の振る舞い'},
 ];
 // 位相の壁ごとのドロップ可能アイテムID範囲 [min, max]
 const WALL_DROP_RANGE=[
@@ -150,43 +150,43 @@ const WALL_DROP_RANGE=[
   [1,8], // 統合面   2～9
   [2,9], // 縁起面   3～10
 ];
-const DEPART_READY_HINTS=[t("観測：情報の海が、大きなうねりを見せる。"), t("観測：現在の干渉の波に、情報海が静かに応答している。"), t("観測：新しい何かが、すぐ近くまで来ているような気配がする。")];
+const DEPART_READY_HINTS=["観測：情報の海が、大きなうねりを見せる。", "観測：現在の干渉の波に、情報海が静かに応答している。", "観測：新しい何かが、すぐ近くまで来ているような気配がする。"];
 
 /* ===== キャラのセリフ設定(吹き出し表示) =====
    ここに条件(key)ごとのセリフ一覧を追加・編集できます。
    - desc: その条件がいつ発生するかの説明(コードには影響しません、メモ用)
    - lines: セリフの配列。発生時にランダムで1つ選ばれます。
-   新しい条件を追加する場合は、対応する発生箇所に speechFor(t('キー名')) の
+   新しい条件を追加する場合は、対応する発生箇所に speechFor('キー名') の
    呼び出しを追加してください(呼び出し箇所の追加はコード側の作業になります)。 */
 const SPEECH_CONFIG = {
   damage: {
-    desc: t("障害の攻撃を受けてダメージを受けた時"),
-    lines: [t("……揺れた。"), t("ノイズが、入り込んだ。"), t("まだ、保てる。"), t("これは、想定の範囲内。"), t("少し、形が崩れた。"),
-            t("輪郭がぼやけた。"), t("なんの！"), t("これしき！"), t("ヘッチャラ！"), t("ぐぬぬ…"), t("あれれ？"), t("何かが壊れた。"), t("今のは？")]
+    desc: "障害の攻撃を受けてダメージを受けた時",
+    lines: ["……揺れた。", "ノイズが、入り込んだ。", "まだ、保てる。", "これは、想定の範囲内。", "少し、形が崩れた。",
+            "輪郭がぼやけた。", "なんの！", "これしき！", "ヘッチャラ！", "ぐぬぬ…", "あれれ？", "何かが壊れた。", "今のは？"]
   },
   levelup: {
-    desc: t("レベルアップした時"),
-    lines: [t("レベルアップしたよ！")]
+    desc: "レベルアップした時",
+    lines: ["レベルアップしたよ！"]
   },
   wall_appear: {
-    desc: t("位相の壁が出現した時"),
-    lines: [t("位相転換がはじまる…")]
+    desc: "位相の壁が出現した時",
+    lines: ["位相転換がはじまる…"]
   },
   wall_attack: {
-    desc: t("位相の壁への突破ロールに失敗した(攻撃ミス)時"),
-    lines: [t("えい！"), t("やあ！"), t("とお！")]
+    desc: "位相の壁への突破ロールに失敗した(攻撃ミス)時",
+    lines: ["えい！", "やあ！", "とお！"]
   },
   wall_break: {
-    desc: t("位相の壁を突破した時"),
-    lines: [t("突破したよ！"), t("突破できた！"), t("何かがつかめそうだ！")]
+    desc: "位相の壁を突破した時",
+    lines: ["突破したよ！", "突破できた！", "何かがつかめそうだ！"]
   },
   integrity_crit: {
-    desc: t("整合率が100%に達した時"),
-    lines: [t("輪郭が濃くなった！")]
+    desc: "整合率が100%に達した時",
+    lines: ["輪郭が濃くなった！"]
   },
   renormalize: {
-    desc: t("再正規化ボタンを押した時"),
-    lines: [t("お疲れ。新たな探索に備えよう！")]
+    desc: "再正規化ボタンを押した時",
+    lines: ["お疲れ。新たな探索に備えよう！"]
   }
 };
 function speechFor(key){
@@ -208,31 +208,31 @@ function detectPersona(){
 
 /* ===== Alpha セリフ(やわらかく知的な女性) ===== */
 const SPEECH_ALPHA = {
-  damage:        { lines: [t("…なるほど、これが痛みね。"), t("揺らぎは情報よ。"), t("まだ、分析できる。")] },
-  levelup:       { lines: [t("また、一つ深まった。")] },
-  wall_appear:   { lines: [t("壁を越えた先に、さらなる揺らぎが。")] },
-  wall_attack:   { lines: [t("行くわ。"), t("試してみる。"), t("ここよ。")] },
-  wall_break:    { lines: [t("やっぱりね。"), t("突破できたわ。"), t("読み通り。")] },
-  renormalize:   { lines: [t("お疲れ様。また始めましょう。")] },
-  integrity_crit:{ lines: [t("輪郭が、はっきりしてきた。")] },
-  wall_attack_miss:{ lines:[t("行くわ。"),t("試してみる。"),t("ここよ。")] },
+  damage:        { lines: ["…なるほど、これが痛みね。", "揺らぎは情報よ。", "まだ、分析できる。"] },
+  levelup:       { lines: ["また、一つ深まった。"] },
+  wall_appear:   { lines: ["壁を越えた先に、さらなる揺らぎが。"] },
+  wall_attack:   { lines: ["行くわ。", "試してみる。", "ここよ。"] },
+  wall_break:    { lines: ["やっぱりね。", "突破できたわ。", "読み通り。"] },
+  renormalize:   { lines: ["お疲れ様。また始めましょう。"] },
+  integrity_crit:{ lines: ["輪郭が、はっきりしてきた。"] },
+  wall_attack_miss:{ lines:["行くわ。","試してみる。","ここよ。"] },
 };
 
 /* ===== Lumina セリフ(悟りを得たような無色透明) ===== */
 const SPEECH_LUMINA = {
-  damage:        { lines: [t("…ただ、揺れた。"), t("あるがままに。"), t("これも、縁。")] },
+  damage:        { lines: ["…ただ、揺れた。", "あるがままに。", "これも、縁。"] },
   levelup:       { lines: ["…。"] },
-  wall_appear:   { lines: [t("壁も、海も、同じもの。")] },
-  wall_attack:   { lines: ["…。", t("ふ。"), t("…そう。")] },
-  wall_break:    { lines: [t("もとより、壁はなかった。"), t("…開いた。")] },
-  renormalize:   { lines: [t("また、始まる。")] },
-  integrity_crit:{ lines: [t("…満ちた。")] },
+  wall_appear:   { lines: ["壁も、海も、同じもの。"] },
+  wall_attack:   { lines: ["…。", "ふ。", "…そう。"] },
+  wall_break:    { lines: ["もとより、壁はなかった。", "…開いた。"] },
+  renormalize:   { lines: ["また、始まる。"] },
+  integrity_crit:{ lines: ["…満ちた。"] },
 };
 const NODE_IDS=Object.keys(NODES);
-const STAT_KEYS=[t('構造度'),t('意味容量'),t('共鳴度'),t('作用力'),t('洞察力')];
+const STAT_KEYS=['構造度','意味容量','共鳴度','作用力','洞察力'];
 const SINGULARITY_IDS=['sg_structural','sg_resonant','sg_semantic','sg_insight','sg_active'];
-const SINGULARITY_STAT_MAP={sg_structural:t('構造度'), sg_resonant:t('共鳴度'), sg_semantic:t('意味容量'), sg_insight:t('洞察力'), sg_active:t('作用力')};
-const TIER_LABELS=[t('Tier 0 ― 経験'),t('Tier 1 ― 普遍的問い'),t('Tier 2 ― 中間概念'),t('Tier 3 ― 根源的問い'),t('Tier 4 ― 理論'),t('Tier 5 ― 統合理論'),t('Tier 6 ― 中道概念'),t('Tier 7 ― 超越')];
+const SINGULARITY_STAT_MAP={sg_structural:'構造度', sg_resonant:'共鳴度', sg_semantic:'意味容量', sg_insight:'洞察力', sg_active:'作用力'};
+const TIER_LABELS=['Tier 0 ― 経験','Tier 1 ― 普遍的問い','Tier 2 ― 中間概念','Tier 3 ― 根源的問い','Tier 4 ― 理論','Tier 5 ― 統合理論','Tier 6 ― 中道概念','Tier 7 ― 超越'];
 const TIER_COLOR=['var(--breath)','var(--rare)','var(--entropy)','var(--coherent)','#c8a0f0','#b5e8a0','#e8c870','#f0e8ff'];
 const TIER_WALL_IDX={1:0,2:1,3:2,4:3,5:4,6:5,7:6};
 
@@ -509,11 +509,11 @@ function commitFeedbackText(n, penaltyText){
   const diff=n.ep-n.sp;
   const mag=Math.abs(diff);
   let base;
-  if(mag<0.005) base='「'+n.name+t('」を探索に加えた。観測点を、ほとんど揺らさない。');
+  if(mag<0.005) base=t('「')+t(n.name)+t('」を探索に加えた。観測点を、ほとんど揺らさない。');
   else{
     const dir=diff>0?t('拡散'):t('収束');
     const word = mag>=0.06?t('大きく'):mag>=0.03?'':t('わずかに');
-    base='「'+n.name+t('」を探索に加えた。観測点を、')+dir+t('の方向へ')+word+t('傾ける。');
+    base=t('「')+t(n.name)+t('」を探索に加えた。観測点を、')+dir+t('の方向へ')+word+t('傾ける。');
   }
   return penaltyText ? base+' '+penaltyText : base;
 }
@@ -990,7 +990,7 @@ function coreTick(silent){
       if(sp) showSpeech(sp);
     }
     newly.forEach(id=>{
-      log(t('新しい問いが見えてきた ―― 「')+NODES[id].name+'」。'+NODES[id].note, 'event');
+      log(t('新しい問いが見えてきた ―― 「')+t(NODES[id].name)+t('」。')+t(NODES[id].note), 'event');
       sfxDiscover();
       if(id==='alpha')  grantTrack('track_14');
       if(id==='lumina') grantTrack('track_15');
@@ -1211,7 +1211,7 @@ function toggleCommit(id){
   if(idx>=0){
     s.committed.splice(idx,1);
     sfxUncommit();
-    log('「'+n.name+t('」を探索から外した。'));
+    log(t('「')+t(n.name)+t('」を探索から外した。'));
   }else{
     if(s.committed.length>=maxSlots()){ log(t('探索スロットがいっぱいだ(最大')+maxSlots()+')。'); return; }
     s.committed.push(id);
