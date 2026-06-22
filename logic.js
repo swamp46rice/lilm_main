@@ -291,13 +291,15 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   lastTs:null,
   charaSeen:{},
   unlockedTracks:[],
-  currentTrackIdx:0
+  currentTrackIdx:0,
+  lang:'ja'
 };
 // 旧セーブからの移行
 if(!s.newlyUnlocked) s.newlyUnlocked=[];
 if(!s.charaSeen) s.charaSeen={};
 if(!s.unlockedTracks) s.unlockedTracks=[];
 if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
+if(!s.lang) s.lang='ja';
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
 if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
@@ -1256,6 +1258,7 @@ function resetAll(){
   const savedCharaSeen=s.charaSeen ? Object.assign({},s.charaSeen) : {};
   const savedUnlockedTracks=s.unlockedTracks ? s.unlockedTracks.slice() : [];
   const savedTrackIdx=s.currentTrackIdx||0;
+  const savedLang=s.lang||'ja';
   localStorage.removeItem('ib_v9');
   localStorage.removeItem('ib_v9_opening_done');
   // リセット後の新規sにcharaSeen・BGM情報を引き継ぐ
@@ -1273,7 +1276,8 @@ function resetAll(){
       metaUnlocks:{mu:false,karma:false,infinity:false},
       charaSeen:savedCharaSeen,
       unlockedTracks:savedUnlockedTracks,
-      currentTrackIdx:savedTrackIdx
+      currentTrackIdx:savedTrackIdx,
+      lang:savedLang
     };
     localStorage.setItem('ib_v9',JSON.stringify(base));
   }
@@ -2226,6 +2230,14 @@ function initImportButton(){
 }
 
 /* ===== セッティング画面 ===== */
+function toggleLang(){
+  s.lang = s.lang==='ja' ? 'en' : 'ja';
+  const btn=document.getElementById('langToggleBtn');
+  if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
+  save();
+  render();
+}
+
 function showSettings(){
   const ov=document.getElementById('settingsOverlay');
   if(ov) ov.style.display='flex';
@@ -2259,6 +2271,9 @@ function initSettings(){
     if(seVal) seVal.textContent=v;
     seVolume=v/100;
   });
+  // 言語ボタン初期状態
+  const langBtn=document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent = (s.lang==='en') ? '🌐 English' : '🌐 日本語';
   const closeBtn=document.getElementById('settingsCloseBtn');
   if(closeBtn) closeBtn.addEventListener('click',hideSettings);
   const creditBtn=document.getElementById('settingsCreditBtn');
