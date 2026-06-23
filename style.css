@@ -160,7 +160,7 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
   font-size:10.5px;font-family:var(--font-display);white-space:nowrap;}
 .wall-mark.new{border-color:var(--rare);color:var(--rare);animation:newpulse 1.6s ease-in-out infinite;}
 
-.wall-countdown{padding:1px 14px 2px;margin-top:1px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);min-height:14px;visibility:hidden;border-top:1px solid var(--line);}
+.wall-countdown{padding:1px 14px 2px;margin-top:1px;font-family:var(--font-mono);font-size:11px;color:var(--text-dim);min-height:14px;visibility:hidden;}
 .wall-countdown .ready{color:var(--rare);font-weight:bold;}
 
 .obstacles{padding:2px 14px 0;min-height:78px;}

@@ -737,8 +737,17 @@ function buildGraph(scrollToNew){
     prevTierHasFound = foundIds.length>0;
   }
   // NEWノードが見つかった場合、そこにスクロール
-  if(scrollToNew && firstNewEl && g.scrollTop!==undefined){
-    setTimeout(()=>{ firstNewEl.scrollIntoView({block:'nearest',behavior:'smooth'}); }, 50);
+  if(scrollToNew && firstNewEl){
+    setTimeout(()=>{
+      const container=document.querySelector('.col-right-graph');
+      if(container){
+        const containerTop=container.getBoundingClientRect().top;
+        const elTop=firstNewEl.getBoundingClientRect().top;
+        container.scrollTop+=elTop-containerTop-40;
+      } else {
+        firstNewEl.scrollIntoView({block:'nearest',behavior:'smooth'});
+      }
+    }, 50);
   }
 }
 function effText(n){
