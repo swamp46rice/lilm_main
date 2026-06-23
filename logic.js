@@ -996,6 +996,7 @@ function coreTick(silent){
       if(sp) showSpeech(sp);
     }
     newly.forEach(id=>{
+      s.newlyUnlocked.push(id);
       log(tf('MSG_DISCOVER_T',{name:t(NODES[id].name),note:t(NODES[id].note)}), 'event');
       sfxDiscover();
       if(id==='alpha')  grantTrack('track_14');
