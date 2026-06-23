@@ -815,7 +815,7 @@ function render(){
     const show = hasAnyInventoryNewIndicator();
     invBadge.style.display = show ? '' : 'none';
     if(show){
-      const btn=document.getElementById('inventoryBtn');
+      const btn=document.getElementById('tooltipInventory');
       if(btn){
         const r=btn.getBoundingClientRect();
         invBadge.style.left=(r.left+r.width/2)+'px';
