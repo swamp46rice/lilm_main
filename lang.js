@@ -1,5 +1,6 @@
 // LiLM - ローカライズ辞書 (IDベース)
 // ID → テキストの形式で管理。t(ID)で現在言語のテキストを返す。
+// テンプレート(_T suffix): tf(ID, {変数})で変数展開する。
 
 const LANG_JA = {
   "UI_SLOT_EMPTY": "(空き)",
@@ -145,13 +146,47 @@ const LANG_JA = {
   "MONDAY_4": "位相の壁より、月曜の会議のほうが越えにくい。―― 現実とはそういうものだ。",
   "MONDAY_5": "観測点が深まるほど、月曜日が近づいてくる気がする。―― それが現実の引力だ。",
   "PHASE_2": "二元面",
-    "WALL_PREFIX": "壁「",
-    "OBS_PREFIX": "障害「",
-    "BGM_UNLOCK_PREFIX": "音の波を感知。",
-    "WALL_ACTIVE_SUFFIX": "」出現中 ―― <span class=\"ready\">突破を試みている(残り",
-    "WALL_ACTIVE_END": "秒)</span>",
-    "REMAIN_PREFIX": "(残り",
-  "PHASE_ENGI": "縁起面"
+  "WALL_PREFIX": "壁「",
+  "OBS_PREFIX": "障害「",
+  "BGM_UNLOCK_PREFIX": "音の波を感知。",
+  "WALL_ACTIVE_SUFFIX": "」出現中 ―― <span class=\"ready\">突破を試みている(残り",
+  "WALL_ACTIVE_END": "秒)</span>",
+  "REMAIN_PREFIX": "(残り",
+  "PHASE_ENGI": "縁起面",
+  "TIME_FORMAT_HM": "{h}時間{m}分",
+  "TIME_FORMAT_M": "{m}分",
+  "MSG_SLOT_ADD_T": "「{name}」を探索に加えた。観測点を、{dir}の方向へ{word}傾ける。",
+  "MSG_SLOT_ADD_STABLE_T": "「{name}」を探索に加えた。観測点を、ほとんど揺らさない。",
+  "MSG_SLOT_REMOVE_T": "「{name}」を探索から外した。",
+  "MSG_SLOT_FULL_T": "探索スロットがいっぱいだ(最大{n})。",
+  "MSG_WALL_APPEAR_T": "壁「{name}」が立ち上がった。残り{n}秒 ―― 突破を試みる。",
+  "MSG_WALL_ACTIVE_T": "壁「{name}」出現中 ―― <span class=\"ready\">突破を試みている(残り{n}秒)</span>",
+  "MSG_WALL_NEXT_T": "次の位相「{name}」まで、情報量 {n} / {max}",
+  "MSG_OBSTACLE_OCCUR_T": "警告：障害「{name}」が発生した。",
+  "MSG_OBSTACLE_EFFECT_T": "「{name}」が、観測点を{dir}へ{word}揺らした。存在安定度 {sign}{delta}",
+  "MSG_OBSTACLE_MUTUAL_T": "「{a}」と「{b}」が、互いに引き合っている。存在安定度の動き: {sign}{delta}",
+  "MSG_OBSTACLE_CHAIN_T": "「{a}」が「{b}」を呼び、観測点は{dir}へ{word}した。存在安定度 {sign}{delta}",
+  "MSG_DEPTH_UP_T": "観測深度が、{n}になった。",
+  "MSG_DEPTH_UP_SLOT_T": "観測深度が、{n}になった。探索スロットが拡張された(最大{max})。",
+  "MSG_DEPTH_SAME_T": "観測深度は変化しなかった(観測深度{n})。探索は全クリアされる。",
+  "MSG_EVOLVED_T": "観測点が進化した(Lv.{n})",
+  "MSG_LV200_SLOT_T": "Lv.200到達 ―― 探索スロットが拡張された(最大{n})。",
+  "MSG_DISCOVER_T": "新しい問いが見えてきた ―― 「{name}」。{note}",
+  "MSG_INTEGRITY_UP_T": "「{name}」が、わずかに上昇した。",
+  "MSG_INTEGRITY_LOSS_T": "(整合率 -{n})",
+  "MSG_ITEM_ABSORBED_T": "{name}の希少なデータが統合された。",
+  "MSG_ITEM_HAVE_T": "すでに持っている「{name}」は、アップデートされず情報海に還っていった。",
+  "MSG_ITEM_SATELLITE_T": "「{name}」の衛星が、{wave}の波に呑まれ情報海に還っていった。",
+  "MSG_ITEM_RARE_T": "希少なデータを発見した！　データ取得:「{name}」",
+  "MSG_ACHIEVE_UNLOCK_T": "「{name}」の実績解除！",
+  "MSG_SCATTER_BONUS_T": "散逸したデータの情報量が回収された: +{n}",
+  "MSG_BGM_UNLOCK_T": "音の波を感知。{name}の音源を入手した！",
+  "WALL_DREAM_NODES_T": "夢の中で、{nodes}、問いかけてくるように静かに並んでいた。深淵からの呼びかけのように。",
+  "WALL_DREAM_FRAG_T": "夢を見た。「{frag}」というところで、目が覚めた。続きは思い出せない。",
+  "MSG_OFFLINE_T": "情報海を漂っていた({dur})間に、情報量 {gain} を得た",
+  "MSG_RUN_INFO_LABEL": "今回の獲得情報量: ",
+  "MSG_OBSTACLE_REMAIN_T": "{name}(残り{n}秒)",
+  "UI_SLOT_LABEL_T": "探索 {n}"
 };
 
 const LANG_EN = {
@@ -298,19 +333,47 @@ const LANG_EN = {
   "MONDAY_4": "A Monday morning meeting is harder to break through than any phase wall. ―― Such is reality.",
   "MONDAY_5": "The deeper the observation point goes, the closer Monday seems to draw. ―― That is the gravity of reality.",
   "PHASE_2": "Duality Phase",
-    "WALL_PREFIX": "壁「",
-    "OBS_PREFIX": "障害「",
-    "BGM_UNLOCK_PREFIX": "音の波を感知。",
-    "WALL_ACTIVE_SUFFIX": "」出現中 ―― <span class=\"ready\">突破を試みている(残り",
-    "WALL_ACTIVE_END": "秒)</span>",
-    "REMAIN_PREFIX": "(残り",
-    "WALL_PREFIX": "Wall \"",
-    "OBS_PREFIX": "Obstacle \"",
-    "BGM_UNLOCK_PREFIX": "A sound wave detected. ",
-    "WALL_ACTIVE_SUFFIX": "\" Active ―― <span class=\"ready\">Attempting breakthrough (remaining ",
-    "WALL_ACTIVE_END": "s)</span>",
-    "REMAIN_PREFIX": "(remaining ",
-  "PHASE_ENGI": "Dependent Origination Phase"
+  "WALL_PREFIX": "Wall \"",
+  "OBS_PREFIX": "Obstacle \"",
+  "BGM_UNLOCK_PREFIX": "A sound wave detected. ",
+  "WALL_ACTIVE_SUFFIX": "\" Active ―― <span class=\"ready\">Attempting breakthrough (remaining ",
+  "WALL_ACTIVE_END": "s)</span>",
+  "REMAIN_PREFIX": "(remaining ",
+  "PHASE_ENGI": "Dependent Origination Phase",
+  "TIME_FORMAT_HM": "{h}h {m}m",
+  "TIME_FORMAT_M": "{m}m",
+  "MSG_SLOT_ADD_T": "Added \"{name}\" to exploration. The observation point tilts {word} toward {dir}.",
+  "MSG_SLOT_ADD_STABLE_T": "Added \"{name}\" to exploration. The observation point is barely disturbed.",
+  "MSG_SLOT_REMOVE_T": "Removed \"{name}\" from exploration.",
+  "MSG_SLOT_FULL_T": "Exploration slots are full (max {n}).",
+  "MSG_WALL_APPEAR_T": "Wall \"{name}\" has risen. {n}s remaining ―― attempting breakthrough.",
+  "MSG_WALL_ACTIVE_T": "Wall \"{name}\" active ―― <span class=\"ready\">Attempting breakthrough ({n}s remaining)</span>",
+  "MSG_WALL_NEXT_T": "To next phase \"{name}\": info {n} / {max}",
+  "MSG_OBSTACLE_OCCUR_T": "Warning: Obstacle \"{name}\" has occurred.",
+  "MSG_OBSTACLE_EFFECT_T": "\"{name}\" shifted the observation point {word} toward {dir}. Stability {sign}{delta}",
+  "MSG_OBSTACLE_MUTUAL_T": "\"{a}\" and \"{b}\" are attracting each other. Stability shift: {sign}{delta}",
+  "MSG_OBSTACLE_CHAIN_T": "\"{a}\" triggered \"{b}\", shifting the observation point {word} toward {dir}. Stability {sign}{delta}",
+  "MSG_DEPTH_UP_T": "Observation depth reached {n}.",
+  "MSG_DEPTH_UP_SLOT_T": "Observation depth reached {n}. Exploration slots expanded (max {max}).",
+  "MSG_DEPTH_SAME_T": "Observation depth unchanged (depth {n}). All explorations cleared.",
+  "MSG_EVOLVED_T": "Observation point evolved (Lv.{n})",
+  "MSG_LV200_SLOT_T": "Lv.200 reached ―― Exploration slots expanded (max {n}).",
+  "MSG_DISCOVER_T": "A new question emerged ―― \"{name}\". {note}",
+  "MSG_INTEGRITY_UP_T": "\"{name}\" rose slightly.",
+  "MSG_INTEGRITY_LOSS_T": "(Integrity -{n})",
+  "MSG_ITEM_ABSORBED_T": "Rare data of {name} has been integrated.",
+  "MSG_ITEM_HAVE_T": "Already-held \"{name}\" returned to the information sea without an update.",
+  "MSG_ITEM_SATELLITE_T": "A satellite of \"{name}\" was swallowed by the wave of {wave} and returned to the information sea.",
+  "MSG_ITEM_RARE_T": "Rare data discovered! Data acquired: \"{name}\"",
+  "MSG_ACHIEVE_UNLOCK_T": "Achievement unlocked: \"{name}\"!",
+  "MSG_SCATTER_BONUS_T": "Scattered data information recovered: +{n}",
+  "MSG_BGM_UNLOCK_T": "A sound wave detected. Audio source for {name} acquired!",
+  "WALL_DREAM_NODES_T": "In a dream, {nodes} were quietly aligned, as if asking questions. Like a call from the abyss.",
+  "WALL_DREAM_FRAG_T": "I had a dream. I woke up at the part where \"{frag}\". I cannot remember the rest.",
+  "MSG_OFFLINE_T": "While drifting in the information sea for {dur}, {gain} information was gained",
+  "MSG_RUN_INFO_LABEL": "Info gained this run: ",
+  "MSG_OBSTACLE_REMAIN_T": "{name} ({n}s remaining)",
+  "UI_SLOT_LABEL_T": "Explore {n}"
 };
 
 function t(id){
@@ -325,4 +388,15 @@ function t(id){
     const v = LANG_JA[id];
     return v !== undefined ? v : id;
   }
+}
+
+// テンプレート関数: tf('ID', {name:'xxx', n:5}) → 変数を展開した文字列
+function tf(id, vars){
+  let text = t(id);
+  if(vars && typeof text === 'string'){
+    Object.keys(vars).forEach(function(k){
+      text = text.split('{'+k+'}').join(String(vars[k]));
+    });
+  }
+  return text;
 }

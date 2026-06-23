@@ -395,8 +395,8 @@ function _logProcessQueue(){
 }
 function formatDuration(sec){
   const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60);
-  if(h>0) return h+t('TIME_HOUR')+m+t('TIME_MIN');
-  return m+t('TIME_MIN');
+  if(h>0) return tf('TIME_FORMAT_HM',{h,m});
+  return tf('TIME_FORMAT_M',{m});
 }
 function formatCountdown(sec){
   sec=Math.max(0,Math.floor(sec));
@@ -515,11 +515,11 @@ function commitFeedbackText(n, penaltyText){
   const diff=n.ep-n.sp;
   const mag=Math.abs(diff);
   let base;
-  if(mag<0.005) base='「'+t(n.name)+t('MSG_SLOT_ADD_STABLE');
+  if(mag<0.005) base=tf('MSG_SLOT_ADD_STABLE_T',{name:t(n.name)});
   else{
     const dir=diff>0?t('DIR_DIFFUSE'):t('DIR_CONVERGE');
     const word = mag>=0.06?t('DIR_LARGE'):mag>=0.03?'':t('DIR_SLIGHT');
-    base='「'+t(n.name)+t('MSG_SLOT_ADD')+dir+t('DIR_DIRECTION')+word+t('DIR_TILT');
+    base=tf('MSG_SLOT_ADD_T',{name:t(n.name),dir,word});
   }
   return penaltyText ? base+' '+penaltyText : base;
 }
@@ -597,7 +597,7 @@ function tickWalls(){
       const deadline=Math.round(10+10*(s.integrity/100));
       s.wallActive={frontier, remain:deadline, deadline};
       _debugForceReady=false;
-      events.push({text:t('WALL_PREFIX')+w.name+t('MSG_WALL_APPEAR')+deadline+t('TIME_SEC_BREAK'), type:'event'});
+      events.push({text:tf('MSG_WALL_APPEAR_T',{name:w.name,n:deadline}), type:'event'});
       sfxWallAppear();
       // track_6: 初めて位相の壁に遭遇時
       grantTrack('track_6');
@@ -684,7 +684,7 @@ function tickObstacles(){
       const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
       const actualDur=(s.committed.includes('alpha')||s.committed.includes('lumina')) ? Math.max(1, Math.ceil(dur/2)) : dur;
       s.activeObstacles.push({key:o.key, remain:actualDur});
-      texts.push({type:'spawn', text:t('MSG_OBSTACLE_WARN')+o.name+t('MSG_OBSTACLE_OCCUR'), obstacle:o});
+      texts.push({type:'spawn', text:tf('MSG_OBSTACLE_OCCUR_T',{name:o.name}), obstacle:o});
     }
   });
   return texts;
@@ -815,11 +815,11 @@ function causalityDigest(){
   if(top && topMag>=obstacleMag && topMag>=0.3){
     const second=entries[1];
     if(second && Math.abs(second[1])>=0.3 && Math.sign(second[1])!==Math.sign(top[1])){
-      text='「'+NODES[top[0]].name+t('MSG_OBSTACLE_AND')+NODES[second[0]].name+'」が、互いに引き合っている。存在安定度の動き: '+sign+netDelta.toFixed(1);
+      text=tf('MSG_OBSTACLE_MUTUAL_T',{a:t(NODES[top[0]].name),b:t(NODES[second[0]].name),sign,delta:netDelta.toFixed(1)});
     }else if(second && Math.abs(second[1])>=0.3){
-      text='「'+NODES[top[0]].name+t('MSG_OBSTACLE_BETWEEN')+NODES[second[0]].name+t('MSG_OBSTACLE_CALLED')+word+dir+'した。存在安定度 '+sign+netDelta.toFixed(1);
+      text=tf('MSG_OBSTACLE_CHAIN_T',{a:t(NODES[top[0]].name),b:t(NODES[second[0]].name),word,dir,sign,delta:netDelta.toFixed(1)});
     }else{
-      text='「'+NODES[top[0]].name+t('MSG_OBSTACLE_EFFECT')+dir+'へ'+word+'揺らした。存在安定度 '+sign+netDelta.toFixed(1);
+      text=tf('MSG_OBSTACLE_EFFECT_T',{name:t(NODES[top[0]].name),dir,word,sign,delta:netDelta.toFixed(1)});
     }
   }else if(obstacleMag>=0.3 && s.activeObstacles.length>0){
     const name=OBSTACLES.find(o=>o.key===s.activeObstacles[0].key).name;
@@ -889,7 +889,7 @@ function handleFailure(type){
   const {absorbed, rejected}=loseDrops(resultLogs, type);
   const rejectBonus=rejected.reduce((sum,d)=>sum+500*(1+d.rank),0);
   s._pendingAbsorb=absorbed;
-  resultLogs.unshift({text:t('MSG_DEPTH_SAME')+s.depth+t('MSG_INTEGRITY_RESET'), type:'negative'});
+  resultLogs.unshift({text:tf('MSG_DEPTH_SAME_T',{n:s.depth}), type:'negative'});
   s.lastEventText=text;
   log(text, 'negative');
   s.committed=[];
@@ -934,9 +934,9 @@ function renormalize(){
     s.lastEventText=RENORM_SUCCESS;
     const newSlots=maxSlots();
     if(newSlots>prevSlots){
-      resultLogs.unshift({text:t('MSG_DEPTH_UP')+s.depth+t('MSG_DEPTH_SLOT')+newSlots+')。', type:'observe'});
+      resultLogs.unshift({text:tf('MSG_DEPTH_UP_SLOT_T',{n:s.depth,max:newSlots}), type:'observe'});
     }else{
-      resultLogs.unshift({text:t('MSG_DEPTH_UP')+s.depth+t('MSG_DEPTH_BECAME'), type:'observe'});
+      resultLogs.unshift({text:tf('MSG_DEPTH_UP_T',{n:s.depth}), type:'observe'});
     }
     sfxRenormSuccess();
     sfxDepthUp();
@@ -996,7 +996,7 @@ function coreTick(silent){
       if(sp) showSpeech(sp);
     }
     newly.forEach(id=>{
-      log(t('MSG_DISCOVER')+t(NODES[id].name)+'」。'+t(NODES[id].note), 'event');
+      log(tf('MSG_DISCOVER_T',{name:t(NODES[id].name),note:t(NODES[id].note)}), 'event');
       sfxDiscover();
       if(id==='alpha')  grantTrack('track_14');
       if(id==='lumina') grantTrack('track_15');
@@ -1009,8 +1009,8 @@ function coreTick(silent){
       if(r.type==='spawn') sfxObstacle();
     });
     if(leveled){
-      log(t('MSG_EVOLVED')+s.level+')', 'observe');
-      if(s.level===200 && maxSlots()>Math.min(5,2+(s.depth>=1?1:0)+(s.depth>=3?1:0)+(s.depth>=5?1:0))) log(t('MSG_LV200_SLOT')+maxSlots()+')。', 'positive');
+      log(tf('MSG_EVOLVED_T',{n:s.level}), 'observe');
+      if(s.level===200 && maxSlots()>Math.min(5,2+(s.depth>=1?1:0)+(s.depth>=3?1:0)+(s.depth>=5?1:0))) log(tf('MSG_LV200_SLOT_T',{n:maxSlots()}), 'positive');
       sfxLevelUp();
       const sp=speechFor('levelup');
       if(sp) showSpeech(sp);
@@ -1065,7 +1065,7 @@ function dreamEvent(chance){
       const shown=knownPrereqs.slice(0,2).map(p=>'「'+NODES[p].name+'」');
       const connector=shown.length>1?'と':'が';
       const suffixes=[
-        t('WALL_DREAM_PREFIX')+shown.join('と')+connector+t('WALL_DREAM_MIDDLE'),
+        tf('WALL_DREAM_NODES_T',{nodes:shown.join('と')+connector}),
       ];
       log(t('WALL_DREAM')+suffixes[Math.floor(Math.random()*suffixes.length)], 'dream');
     }else{
@@ -1074,7 +1074,7 @@ function dreamEvent(chance){
       if(undisc.length===0) return;
       const id=undisc[Math.floor(Math.random()*undisc.length)];
       const frag=NODES[id].note.split('――')[0].trim();
-      log(t('WALL_DREAM_QUOTE')+frag+t('WALL_DREAM_END'), 'dream');
+      log(tf('WALL_DREAM_FRAG_T',{frag}), 'dream');
     }
   }else{
     // 通常の断片系
@@ -1082,7 +1082,7 @@ function dreamEvent(chance){
     if(undisc.length===0) return;
     const id=undisc[Math.floor(Math.random()*undisc.length)];
     const frag=NODES[id].note.split('――')[0].trim();
-    log(t('WALL_DREAM_QUOTE')+frag+t('WALL_DREAM_END'), 'dream');
+    log(tf('WALL_DREAM_FRAG_T',{frag}), 'dream');
   }
 }
 function offlineCatchup(){
@@ -1102,9 +1102,9 @@ function offlineCatchup(){
     ticks++;
   }
   const lvGain=s.level-lvBefore, foundGain=s.found.length-foundBefore;
-  let msg=t('MSG_DRIFTING')+formatDuration(ticks)+')間に、情報量 '+Math.floor(totalGain)+' を得た';
-  if(lvGain>0) msg+=t('WALL_OBS_POINT')+lvGain+t('MSG_EVOLVED_COUNT');
-  if(foundGain>0) msg+='。'+foundGain+t('MSG_FOUND_COUNT');
+  let msg=tf('MSG_OFFLINE_T',{dur:formatDuration(ticks),gain:Math.floor(totalGain)});
+  if(lvGain>0) msg+=(s.lang==='en'?'. The observation point evolved '+lvGain+' times':'。観測点は'+lvGain+'回進化した');
+  if(foundGain>0) msg+=(s.lang==='en'?'. '+foundGain+' new questions came into view':'。'+foundGain+'個の問いが新たに見えてきた');
   if(s.runStatus!=='観測中') msg+=t('WALL_OBS_END');
   log(msg);
   if(elapsed>=600) dreamEvent();
@@ -1192,7 +1192,7 @@ function charaJoyClick(){
     if(minKeys.length===1){
       s.statGrowth[minKeys[0]]+=1;
       s.charaJoyBonusTotal+=1;
-      log('「'+minKeys[0]+t('MSG_INTEGRITY_UP'), 'observe');
+      log(tf('MSG_INTEGRITY_UP_T',{name:minKeys[0]}), 'observe');
       if(s.charaJoyBonusTotal>=30){
         s.charaJoyWallsAtCap=s.wallsThisRun.length;
         s.charaJoyResetTick=0;
@@ -1217,9 +1217,9 @@ function toggleCommit(id){
   if(idx>=0){
     s.committed.splice(idx,1);
     sfxUncommit();
-    log('「'+t(n.name)+t('MSG_SLOT_REMOVE'));
+    log(tf('MSG_SLOT_REMOVE_T',{name:t(n.name)}));
   }else{
-    if(s.committed.length>=maxSlots()){ log(t('MSG_SLOT_FULL')+maxSlots()+')。'); return; }
+    if(s.committed.length>=maxSlots()){ log(tf('MSG_SLOT_FULL_T',{n:maxSlots()})); return; }
     s.committed.push(id);
     sfxCommit();
     let penaltyText=null;
@@ -1235,7 +1235,7 @@ function applySwapPenalty(){
   const penalty=25+Math.random()*10; // 30±5
   const before=s.integrity;
   s.integrity=clamp01(s.integrity-penalty);
-  return t('MSG_INTEGRITY_LOSS')+(before-s.integrity).toFixed(1)+')';
+  return tf('MSG_INTEGRITY_LOSS_T',{n:(before-s.integrity).toFixed(1)});
 }
 let resetArmed=false;
 function resetAll(){
@@ -1286,7 +1286,7 @@ function grantTrack(trackKey){
   s.unlockedTracks.push(trackKey);
   const track=TRACKS.find(t=>t.unlockKey===trackKey);
   const title=track?track.title:t('UI_BGM_TRACK');
-  log(t('BGM_UNLOCK_PREFIX')+title+t('MSG_BGM_UNLOCK'), 'observe');
+  log(tf('MSG_BGM_UNLOCK_T',{name:title}), 'observe');
   if(typeof updateBgmSelect==='function') updateBgmSelect();
   save();
 }
@@ -1297,7 +1297,7 @@ function grantInstantItem(itemId, label, deferLog){
   s.inventory[itemId]={itemId, rank:0, isNew:true};
   const name=label||DROP_ITEMS[itemId].name;
   if(deferLog) return name; // ログ・SEは呼び出し元(リザルト演出シーケンス)が後でまとめて出す
-  log('「'+name+t('MSG_ACHIEVE_UNLOCK'), 'observe');
+  log(tf('MSG_ACHIEVE_UNLOCK_T',{name}), 'observe');
   sfxLevelUp();
   return name;
 }
@@ -1433,7 +1433,7 @@ function grantDrop(itemId, rank){
   s.runDrops.push(drop); // ラン中は常に追加(重複チェックなし)
   const name=DROP_ITEMS[itemId].name;
   const rankSuffix=rank===0?'':' +'+rank;
-  log(t('MSG_ITEM_RARE')+name+rankSuffix+'」', 'observe');
+  log(tf('MSG_ITEM_RARE_T',{name:name+rankSuffix}), 'observe');
   sfxItemDrop();
 }
 function wallDrop(wallIdx){
@@ -1492,10 +1492,10 @@ function confirmDrops(resultLogs){
     if(!cur || drop.rank>cur.rank){
       s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
       absorbed.push(drop);
-      resultLogs.push({text:name+rankSuffix+t('MSG_ITEM_ABSORBED'), type:'observe', anim:'absorb', drop:drop});
+      resultLogs.push({text:tf('MSG_ITEM_ABSORBED_T',{name:name+rankSuffix}), type:'observe', anim:'absorb', drop:drop});
     }else{
       rejected.push(drop);
-      resultLogs.push({text:t('MSG_ITEM_HAVE')+name+rankSuffix+t('MSG_ITEM_LOST'), type:null, anim:'flow', drop:drop});
+      resultLogs.push({text:tf('MSG_ITEM_HAVE_T',{name:name+rankSuffix}), type:null, anim:'flow', drop:drop});
     }
   });
   // 確定処理は完了したが、表示用にrunDropsは結果確認まで保持する(showResultSequence側でクリア)
@@ -1514,7 +1514,7 @@ function loseDrops(resultLogs, failType){
       const name=DROP_ITEMS[drop.itemId].name;
       const rankSuffix=drop.rank===0?'':' +'+drop.rank;
       if(Math.random()<0.5){
-        resultLogs.push({text:'「'+name+rankSuffix+t('MSG_ITEM_SATELLITE')+wave+t('MSG_ITEM_WAVE'), type:'negative', anim:'flow', drop:drop});
+        resultLogs.push({text:tf('MSG_ITEM_SATELLITE_T',{name:name+rankSuffix,wave}), type:'negative', anim:'flow', drop:drop});
       }else{
         survived.push(drop);
         resultLogs.push({text:'「'+name+rankSuffix+t('MSG_ITEM_HELD'), type:'observe', anim:null, drop:drop});
@@ -1528,10 +1528,10 @@ function loseDrops(resultLogs, failType){
       if(!cur || drop.rank>cur.rank){
         s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
         absorbed.push(drop);
-        resultLogs.push({text:name+rankSuffix+t('MSG_ITEM_ABSORBED'), type:'observe', anim:'absorb', drop:drop});
+        resultLogs.push({text:tf('MSG_ITEM_ABSORBED_T',{name:name+rankSuffix}), type:'observe', anim:'absorb', drop:drop});
       }else{
         rejected.push(drop);
-        resultLogs.push({text:t('MSG_ITEM_HAVE')+name+rankSuffix+t('MSG_ITEM_LOST'), type:null, anim:'flow', drop:drop});
+        resultLogs.push({text:tf('MSG_ITEM_HAVE_T',{name:name+rankSuffix}), type:null, anim:'flow', drop:drop});
       }
     });
     // s.runDropsは表示用に結果確認まで保持(showResultSequence側でクリア)
@@ -1638,9 +1638,9 @@ function showResultSequence(){
     seq.push({delay:i===0?0:400, text:rl.text, type:rl.type, anim:rl.anim, drop:rl.drop});
   });
   if(rejectBonus>0){
-    seq.push({delay:400, text:t('MSG_SCATTER_BONUS')+rejectBonus, type:'observe'});
+    seq.push({delay:400, text:tf('MSG_SCATTER_BONUS_T',{n:rejectBonus}), type:'observe'});
   }
-  seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:'今回の獲得情報量: '+Math.floor(finalRunInfo), type:'positive'});
+  seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:(s.lang==='en'?'Info gained this run: ':t('MSG_RUN_INFO_LABEL'))+Math.floor(finalRunInfo), type:'positive'});
   if(bestUpdated){
     seq.push({delay:300, text:t('MSG_BEST'), type:'observe'});
     bestAchievementsGranted.forEach(name=>{

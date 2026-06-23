@@ -388,9 +388,9 @@ function buildWallCountdown(){
   const w=WALLS[frontier];
   el.style.visibility='visible';
   if(s.wallActive){
-    el.innerHTML=t('WALL_PREFIX')+w.name+t('WALL_ACTIVE_SUFFIX')+s.wallActive.remain+t('WALL_ACTIVE_END');
+    el.innerHTML=tf('MSG_WALL_ACTIVE_T',{name:w.name,n:s.wallActive.remain});
   }else{
-    el.textContent=t('MSG_WALL_NEXT')+w.name+t('MSG_WALL_INFO')+Math.floor(s.runInfo)+' / '+w.info;
+    el.textContent=tf('MSG_WALL_NEXT_T',{name:w.name,n:Math.floor(s.runInfo),max:w.info});
   }
 }
 
@@ -663,7 +663,7 @@ function buildObstacles(){
     const o=OBSTACLES.find(x=>x.key===ao.key);
     const div=document.createElement('div');
     div.className='obstacle-pill '+o.side;
-    div.textContent=o.name+t(t('REMAIN_PREFIX'))+ao.remain+t('TIME_SEC_REMAIN');
+    div.textContent=tf('MSG_OBSTACLE_REMAIN_T',{name:o.name,n:ao.remain});
     g.appendChild(div);
   });
 }
@@ -762,7 +762,7 @@ function buildSlots(){
     div.className='slot '+(id?'filled':'empty');
     if(id) div.style.borderColor=TIER_COLOR[NODES[id].tier];
     const extra=id?'<div class="eff">'+effText(NODES[id])+'</div>'+dirText(NODES[id]):'';
-    div.innerHTML='<div class="tag">'+t('UI_EXPLORE')+(i+1)+'</div><div class="name">'+(id?t(NODES[id].name):t('UI_SLOT_EMPTY'))+'</div>'+extra;
+    div.innerHTML='<div class="tag">'+tf('UI_SLOT_LABEL_T',{n:i+1})+'</div><div class="name">'+(id?t(NODES[id].name):t('UI_SLOT_EMPTY'))+'</div>'+extra;
     if(id) div.onclick=()=>toggleCommit(id);
     slots.appendChild(div);
   }
