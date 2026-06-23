@@ -276,7 +276,7 @@ button[disabled]:hover{background:transparent;}
 .inv-new{font-size:9px;background:var(--rare);color:var(--bg-deep);padding:1px 4px;border-radius:3px;margin-left:6px;font-weight:bold;vertical-align:middle;}
 .inv-pending{font-size:9px;background:var(--text-dim);color:var(--bg-deep);padding:1px 4px;border-radius:3px;margin-left:6px;font-weight:bold;vertical-align:middle;opacity:0.85;}
 .inv-pending-rank{font-size:10px;color:var(--text-dim);margin-left:5px;vertical-align:middle;}
-.inv-btn-new-badge{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:3px;font-size:8px;background:var(--rare);color:var(--bg-deep);padding:1px 4px;border-radius:3px;font-weight:bold;white-space:nowrap;animation:invBadgePulse 1.4s ease-in-out infinite;z-index:10;pointer-events:none;}
+.inv-btn-new-badge{position:fixed;font-size:8px;background:var(--rare);color:var(--bg-deep);padding:1px 4px;border-radius:3px;font-weight:bold;white-space:nowrap;animation:invBadgePulse 1.4s ease-in-out infinite;z-index:1000;pointer-events:none;transform:translateX(-50%);}
 #charaCollectionOverlay{
   display:none;position:absolute;top:0;left:0;width:860px;height:660px;
   background:rgba(2,6,18,0.88);z-index:200;border-radius:10px;

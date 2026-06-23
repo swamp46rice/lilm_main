@@ -802,7 +802,18 @@ function render(){
   drawWave();
 
   const invBadge=document.getElementById('inventoryNewBadge');
-  if(invBadge) invBadge.style.display = hasAnyInventoryNewIndicator() ? '' : 'none';
+  if(invBadge){
+    const show = hasAnyInventoryNewIndicator();
+    invBadge.style.display = show ? '' : 'none';
+    if(show){
+      const btn=document.getElementById('inventoryBtn');
+      if(btn){
+        const r=btn.getBoundingClientRect();
+        invBadge.style.left=(r.left+r.width/2)+'px';
+        invBadge.style.top=(r.bottom+3)+'px';
+      }
+    }
+  }
 
   document.getElementById('runInfo').textContent=Math.floor(s.runInfo);
   // Gainボーナス率の表示(初期状態を0%基準にオフセット表示)
