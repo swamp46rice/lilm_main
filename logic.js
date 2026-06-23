@@ -806,8 +806,8 @@ function causalityDigest(){
   const acc=s.causAcc, nodes=acc.nodes||{};
   const entries=Object.entries(nodes).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]));
   const netDelta=s.gauge-s.causGaugeStart;
-  const word = Math.abs(netDelta)>=2?'大きく':Math.abs(netDelta)>=1?'':t('DIR_SLIGHT');
-  const dir = netDelta>=0?'拡散':t('DIR_CONVERGE');
+  const word = Math.abs(netDelta)>=2?t('DIR_LARGE'):Math.abs(netDelta)>=1?'':t('DIR_SLIGHT');
+  const dir = netDelta>=0?t('DIR_DIFFUSE'):t('DIR_CONVERGE');
   const sign = netDelta>=0?'+':'';
   const obstacleMag=Math.abs(acc.obstacle||0);
   let text;
@@ -823,9 +823,9 @@ function causalityDigest(){
     }
   }else if(obstacleMag>=0.3 && s.activeObstacles.length>0){
     const name=OBSTACLES.find(o=>o.key===s.activeObstacles[0].key).name;
-    text='「'+name+'」の影響が大きい。存在安定度 '+sign+netDelta.toFixed(1);
+    text=tf('OBS_IMPACT_T',{name,sign,delta:netDelta.toFixed(1)});
   }else{
-    text=t('MSG_OBS_EFFECT')+dir+'している。存在安定度 '+sign+netDelta.toFixed(1);
+    text=tf('OBS_EFFECT_T',{dir,sign,delta:netDelta.toFixed(1)});
   }
   s.causAcc={};
   s.causGaugeStart=s.gauge;
@@ -927,11 +927,11 @@ function renormalize(){
   const runInfoThisRun=s.runInfo; // ボーナス加算前の値
 
   if(success){
-    log(RENORM_SUCCESS, 'positive');
+    log(t('RENORM_SUCCESS_TXT'), 'positive');
     const prevSlots=maxSlots();
     s.depth=Math.min(LEVEL_CAP, s.depth+1);
     s.lastFailType='renorm_success';
-    s.lastEventText=RENORM_SUCCESS;
+    s.lastEventText=t('RENORM_SUCCESS_TXT');
     const newSlots=maxSlots();
     if(newSlots>prevSlots){
       resultLogs.unshift({text:tf('MSG_DEPTH_UP_SLOT_T',{n:s.depth,max:newSlots}), type:'observe'});
@@ -943,8 +943,8 @@ function renormalize(){
     dreamEvent(1.0);
   }else{
     s.lastFailType='renorm_partial';
-    s.lastEventText=RENORM_PARTIAL;
-    log(RENORM_PARTIAL);
+    s.lastEventText=t('RENORM_PARTIAL_TXT');
+    log(t('RENORM_PARTIAL_TXT'));
     sfxRenormFail();
     dreamEvent(0.25);
   }
@@ -1104,8 +1104,8 @@ function offlineCatchup(){
   }
   const lvGain=s.level-lvBefore, foundGain=s.found.length-foundBefore;
   let msg=tf('MSG_OFFLINE_T',{dur:formatDuration(ticks),gain:Math.floor(totalGain)});
-  if(lvGain>0) msg+=(s.lang==='en'?'. The observation point evolved '+lvGain+' times':'。観測点は'+lvGain+'回進化した');
-  if(foundGain>0) msg+=(s.lang==='en'?'. '+foundGain+' new questions came into view':'。'+foundGain+'個の問いが新たに見えてきた');
+  if(lvGain>0) msg+=tf('OFFLINE_EVOLVED_T',{n:lvGain});
+  if(foundGain>0) msg+=tf('OFFLINE_FOUND_T',{n:foundGain});
   if(s.runStatus!=='観測中') msg+=t('WALL_OBS_END');
   log(msg);
   if(elapsed>=600) dreamEvent();
@@ -1641,14 +1641,14 @@ function showResultSequence(){
   if(rejectBonus>0){
     seq.push({delay:400, text:tf('MSG_SCATTER_BONUS_T',{n:rejectBonus}), type:'observe'});
   }
-  seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:(s.lang==='en'?'Info gained this run: ':t('MSG_RUN_INFO_LABEL'))+Math.floor(finalRunInfo), type:'positive'});
+  seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:t('TOTAL_INFO_GAINED')+Math.floor(finalRunInfo), type:'positive'});
   if(bestUpdated){
     seq.push({delay:300, text:t('MSG_BEST'), type:'observe', sfx:'integcrit'});
     bestAchievementsGranted.forEach(name=>{
       seq.push({delay:400, text:'「'+name+t('MSG_ACHIEVE_UNLOCK'), type:'observe', sfx:'levelup'});
     });
   }
-  seq.push({delay:300, text:'総獲得情報量: '+Math.floor(finalTotalInfo), type:'positive'});
+  seq.push({delay:300, text:t('TOTAL_INFO_GRAND')+Math.floor(finalTotalInfo), type:'positive'});
 
   let step=0;
   function next(){

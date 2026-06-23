@@ -711,7 +711,7 @@ function buildGraph(scrollToNew){
         div.innerHTML='???';
         let hintText;
         if(tier===0){
-          hintText = n.infoTh!==null ? ('必要情報量: '+n.infoTh) : t('UI_COND_UNSET');
+          hintText = n.infoTh!==null ? (t('HINT_INFO_TH')+n.infoTh) : t('UI_COND_UNSET');
         }else if(tier===7){
           const tier7hints={
             alpha:t('WALL_EMPTY'),
@@ -725,11 +725,11 @@ function buildGraph(scrollToNew){
           hintText = tier7hints[id] || t('WALL_BEYOND');
         }else{
           const prereqNames=n.prereq.map(p=>'「'+NODES[p].name+'」').join('、');
-          hintText = prereqNames ? ('必要な概念: '+prereqNames) : t('UI_NO_PREREQ');
+          hintText = prereqNames ? (t('HINT_PREREQ')+prereqNames) : t('UI_NO_PREREQ');
         }
         div.title=hintText;
         // スマホ等ホバーできない環境向け: タップでも同じヒントをログに表示する
-        div.onclick=()=>log('？？？ ―― '+hintText, 'dream');
+        div.onclick=()=>log(t('HINT_UNKNOWN')+hintText, 'dream');
         div.style.borderLeftColor='var(--text-dim)';
       }
       g.appendChild(div);
@@ -758,8 +758,8 @@ function effText(n){
 }
 function dirText(n){
   const diff=n.ep-n.sp;
-  if(Math.abs(diff)<0.005) return '<div class="dir neutral">中立 0.00</div>';
-  const dir = diff>0 ? '拡散' : t('DIR_CONVERGE');
+  if(Math.abs(diff)<0.005) return '<div class="dir neutral">'+t('DIR_NEUTRAL')+' 0.00</div>';
+  const dir = diff>0 ? t('DIR_DIFFUSE') : t('DIR_CONVERGE');
   const cls = diff>0 ? 'entropy' : 'silence';
   return '<div class="dir '+cls+'">'+dir+' '+Math.abs(diff).toFixed(2)+'</div>';
 }

@@ -477,7 +477,20 @@ const LANG_JA = {
   "個の問いが新たに見えてきた": "個の問いが新たに見えてきた",
   "収束": "収束",
   "位相": "位相",
-  "？？？": "？？？"
+  "？？？": "？？？",
+  "HINT_INFO_TH": "必要情報量: ",
+  "HINT_PREREQ": "必要な概念: ",
+  "HINT_UNKNOWN": "？？？ ―― ",
+  "DIR_NEUTRAL": "中立",
+  "RENORM_SUCCESS_TXT": "一度も方針を変えずに、ここまで来た。観測点は、今の形をそのまま抱えて、次の深度へ進む。―― 観測点が、深度を進めた。",
+  "RENORM_PARTIAL_TXT": "探索を、自らの意思で終えた。途中でいくつかの選び直しがあった。その選び直し自体も、観測の一部だった。―― 観測は、ここで一区切りとなった。",
+  "TOTAL_INFO_LABEL": "総獲得情報量: ",
+  "OBS_IMPACT_T": "「{name}」の影響が大きい。存在安定度 {sign}{delta}",
+  "OBS_EFFECT_T": "{dir}している。存在安定度 {sign}{delta}",
+  "OFFLINE_EVOLVED_T": "。観測点は{n}回進化した",
+  "OFFLINE_FOUND_T": "。{n}個の問いが新たに見えてきた",
+  "TOTAL_INFO_GAINED": "今回の獲得情報量: ",
+  "TOTAL_INFO_GRAND": "総獲得情報量: "
 };
 
 const LANG_EN = {
@@ -955,7 +968,20 @@ const LANG_EN = {
   "個の問いが新たに見えてきた": "new questions came into view",
   "収束": "Convergence",
   "位相": "Phase",
-  "？？？": "???"
+  "？？？": "???",
+  "HINT_INFO_TH": "Required info: ",
+  "HINT_PREREQ": "Required concepts: ",
+  "HINT_UNKNOWN": "??? ―― ",
+  "DIR_NEUTRAL": "Neutral",
+  "RENORM_SUCCESS_TXT": "The observation point reached here without changing course once. It carries its current form forward to the next depth. ―― Depth advanced.",
+  "RENORM_PARTIAL_TXT": "The exploration ended by its own will. There were some course corrections along the way. Those corrections were part of the observation too. ―― A chapter closes.",
+  "TOTAL_INFO_LABEL": "Total info gained: ",
+  "OBS_IMPACT_T": "\"{name}\" has a strong effect. Stability {sign}{delta}",
+  "OBS_EFFECT_T": "{dir}. Stability {sign}{delta}",
+  "OFFLINE_EVOLVED_T": ". The observation point evolved {n} times",
+  "OFFLINE_FOUND_T": ". {n} new questions came into view",
+  "TOTAL_INFO_GAINED": "Info gained this run: ",
+  "TOTAL_INFO_GRAND": "Total info gained: "
 };
 
 function t(id){
