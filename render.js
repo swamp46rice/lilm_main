@@ -1024,6 +1024,11 @@ initTitleScreen();
 initImportButton();
 initSettings();
 initBgmSelect();
+// tireImg（キャラクター）クリックイベント
+(function(){
+  const tireImg=document.getElementById('tireImg');
+  if(tireImg) tireImg.addEventListener('click', ()=>charaJoyClick());
+})();
 // 波形アニメーション(rAF)
 (function waveLoop(){
   drawWave();

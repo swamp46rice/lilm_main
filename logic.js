@@ -1183,7 +1183,7 @@ function charaJoyClick(){
     : CHARA_JOY_TEXTS;
   const text=pool[Math.floor(Math.random()*pool.length)];
   showSpeech(text);
-  sfxAbsorb();
+  sfxCommit();
   playCharaJoyAnim(); // 拡縮アニメ+パーティクル+妖精回転(render.js側)
   // 10%の確率で、ノードのボーナスを除いた素のステータス値が最も低いものに+1(累積+30が上限)
   if(s.charaJoyBonusTotal<30 && Math.random()<0.10){
