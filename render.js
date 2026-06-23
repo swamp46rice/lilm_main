@@ -681,7 +681,7 @@ function buildGraph(scrollToNew){
     if(allIds.length===0){ prevTierHasFound=false; continue; }
     const label=document.createElement('div');
     label.className='tier-label';
-    label.textContent=TIER_LABELS[tier]||('Tier '+tier);
+    label.textContent=TIER_LABEL_IDS[tier]?t(TIER_LABEL_IDS[tier]):('Tier '+tier);
     label.style.color=TIER_COLOR[tier]||'var(--text-dim)';
     label.style.borderBottom='1px solid '+(TIER_COLOR[tier]||'var(--line)');
     label.style.opacity='0.85';
@@ -752,7 +752,7 @@ function buildGraph(scrollToNew){
 }
 function effText(n){
   const parts=[];
-  if(n.buffStat) parts.push(n.buffStat+' +'+n.buffVal);
+  if(n.buffStat) parts.push(t(n.buffStat)+' +'+n.buffVal);
   if(n.intBuff) parts.push(t('MSG_INTEGRITY_VAL')+n.intBuff);
   return parts.join(' / ');
 }

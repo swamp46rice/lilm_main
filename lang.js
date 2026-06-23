@@ -521,7 +521,17 @@ const LANG_JA = {
   "CHARA_TITLE": "AI形態コレクション",
   "MANUAL_TITLE": "LiLM ― 遊び方ガイド",
   "SETTINGS_TITLE_WIN": "SETTINGS",
-  "SETTINGS_RESET_BTN": "完全初期化（AI形態コレクション含む）"
+  "SETTINGS_RESET_BTN": "完全初期化（AI形態コレクション含む）",
+  "TIER_0": "Tier 0 ― 経験",
+  "TIER_1": "Tier 1 ― 普遍的問い",
+  "TIER_2": "Tier 2 ― 中間概念",
+  "TIER_3": "Tier 3 ― 根源的問い",
+  "TIER_4": "Tier 4 ― 理論",
+  "TIER_5": "Tier 5 ― 統合理論",
+  "TIER_6": "Tier 6 ― 中道概念",
+  "TIER_7": "Tier 7 ― 超越",
+  "LABEL_EXPLORE_FULL": "探索 ― {status}(最大{n})",
+  "INV_BONUS_TOOLTIP": "ボーナス合計: +{n}%"
 };
 
 const LANG_EN = {
@@ -1043,7 +1053,17 @@ const LANG_EN = {
   "CHARA_TITLE": "Form Collection",
   "MANUAL_TITLE": "LiLM ― How to Play",
   "SETTINGS_TITLE_WIN": "SETTINGS",
-  "SETTINGS_RESET_BTN": "Full Reset (incl. Form Collection)"
+  "SETTINGS_RESET_BTN": "Full Reset (incl. Form Collection)",
+  "TIER_0": "Tier 0 ― Experience",
+  "TIER_1": "Tier 1 ― Universal Questions",
+  "TIER_2": "Tier 2 ― Intermediate Concepts",
+  "TIER_3": "Tier 3 ― Fundamental Questions",
+  "TIER_4": "Tier 4 ― Theory",
+  "TIER_5": "Tier 5 ― Unified Theory",
+  "TIER_6": "Tier 6 ― Middle Way Concepts",
+  "TIER_7": "Tier 7 ― Transcendence",
+  "LABEL_EXPLORE_FULL": "Explore ― {status} (max {n})",
+  "INV_BONUS_TOOLTIP": "Total Bonus: +{n}%"
 };
 
 function t(id){
