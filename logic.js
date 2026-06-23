@@ -2212,7 +2212,6 @@ function applyUILang(){
   // メインUIラベル
   set('labelDepth',       t('LABEL_DEPTH'));
   set('labelRunInfo',     t('LABEL_RUN_INFO'));
-  set('labelObsPoint',    t('LABEL_OBS_POINT'));
   set('labelStability',   t('LABEL_STABILITY'));
   set('labelIntegrity',   t('LABEL_INTEGRITY'));
   set('labelTotalInfo',   t('LABEL_TOTAL_INFO'));

@@ -144,9 +144,9 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
 .info-display .label #gaugeLabel{font-family:var(--font-display);font-size:12px;}
 
 .section-title{font-family:var(--font-display);font-size:11.5px;color:var(--text-dim);letter-spacing:.15em;margin:8px 14px 4px;}
-.stat-title-row{display:flex;align-items:baseline;}
-.stat-title-row .lv-label{min-width:110px;}
-.stat-title-row .gauge-label{margin-left:10px;}
+.stat-title-row{display:flex;align-items:baseline;flex-wrap:nowrap;}
+.stat-title-row .lv-label{flex:none;font-family:var(--font-mono);font-size:12px;white-space:nowrap;}
+.stat-title-row .gauge-label{flex:1;margin-left:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;}
 
 .total-info-display{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);
   text-align:left;padding:6px 14px 2px;letter-spacing:.06em;flex:none;}

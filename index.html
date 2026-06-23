@@ -205,7 +205,7 @@
       <button id="bgmAudioToggle" class="bgm-toggle on" onclick="sfxButton();toggleBGMAudio()" title="BGM ON/OFF">♪ BGM: ON</button>
       <button id="bgmToggle" class="bgm-toggle on" onclick="sfxButton();toggleSE()" title="SE ON/OFF">♪ SE: ON</button>
       <button id="tooltipInventory" class="bgm-toggle icon-btn" onclick="sfxButton();showInventory()" title="所持データリスト"><img id="iconData" src="" alt=""></button>
-      <span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;">NEW</span>
+      <span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;left:-999px;top:-999px;">NEW</span>
       <button class="bgm-toggle icon-btn" onclick="sfxButton();showCharaCollection()" id="tooltipChara" title="AI形態コレクション"><img id="iconAi" src="" alt="AI形態コレクション"></button>
       <button class="bgm-toggle icon-btn" onclick="sfxButton();showManual()" id="tooltipManual" title="遊び方"><img id="iconHowto" src="" alt="遊び方"></button>
       <button class="bgm-toggle icon-btn" onclick="sfxButton();showSettings()" id="tooltipSettings" title="設定"><img id="iconSetting" src="" alt="設定"></button>
@@ -290,7 +290,7 @@
   </div>
 
   <div class="section-title stat-title-row">
-    <span class="lv-label"><span id="labelObsPoint">観測点 ― Lv.</span><span id="lv">1</span></span>
+    <span class="lv-label">Lv.<span id="lv">1</span></span>
     <span class="gauge-label"><span id="labelStability">存在安定度 </span><span id="gaugeVal">50</span>% <span id="gaugeLabel">流動</span></span>
   </div>
   <div class="stat-grid">
