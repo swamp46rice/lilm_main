@@ -65,7 +65,7 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
   box-shadow:0 10px 50px rgba(0,0,0,.6);overflow:hidden;
   color:var(--text);font-size:13.5px;
 }
-.titlebar{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--bg-deep);border-bottom:1px solid var(--line);flex:none;}
+.titlebar{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;background:var(--bg-deep);border-bottom:1px solid var(--line);flex:none;overflow:visible;position:relative;z-index:10;}
 .titlebar h1{font-family:var(--font-display);font-weight:500;font-size:14px;letter-spacing:.06em;margin:0;}
 .titlebar .badge{font-family:var(--font-mono);font-size:11px;color:var(--text-dim);}
 .title-buttons{display:flex;gap:6px;align-items:center;}
@@ -185,13 +185,12 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
 .atk-particle{pointer-events:none;}
 @keyframes orbhit{0%{filter:brightness(1);}40%{filter:brightness(1.9) saturate(1.4) drop-shadow(0 0 10px var(--hitcolor,var(--breath)));}100%{filter:brightness(1);}}
 
-.slots{display:flex;gap:6px;padding:0 14px;min-height:52px;flex-wrap:wrap;align-content:flex-start;}
-.slot{flex:1;background:var(--bg-panel);border:1px solid var(--line);border-radius:6px;padding:5px 4px;min-height:42px;}
+.slots{display:flex;flex-direction:column;gap:4px;padding:0 14px;min-height:180px;}
+.slot{width:100%;background:var(--bg-panel);border:1px solid var(--line);border-radius:6px;padding:5px 10px;min-height:32px;display:flex;align-items:center;gap:8px;box-sizing:border-box;}
 .slot.filled{cursor:pointer;}
-.slot .tag{font-size:9px;color:var(--text-dim);letter-spacing:.1em;}
-.slot .name{font-family:var(--font-display);font-size:10.5px;margin-top:3px;line-height:1.25;color:var(--text);}
-.slot .eff{font-size:9px;color:var(--text-dim);margin-top:2px;font-family:var(--font-mono);}
-.slot .dir{font-size:9px;margin-top:1px;font-family:var(--font-mono);}
+.slot .name{font-family:var(--font-display);font-size:10.5px;line-height:1.25;color:var(--text);flex:1;}
+.slot .eff{font-size:9px;color:var(--text-dim);font-family:var(--font-mono);}
+.slot .dir{font-size:9px;font-family:var(--font-mono);}
 .slot .dir.entropy{color:var(--entropy);}
 .slot .dir.silence{color:var(--coherent);}
 .slot .dir.neutral{color:var(--text-dim);}

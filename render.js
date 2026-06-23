@@ -762,7 +762,7 @@ function buildSlots(){
     div.className='slot '+(id?'filled':'empty');
     if(id) div.style.borderColor=TIER_COLOR[NODES[id].tier];
     const extra=id?'<div class="eff">'+effText(NODES[id])+'</div>'+dirText(NODES[id]):'';
-    div.innerHTML='<div class="tag">'+tf('UI_SLOT_LABEL_T',{n:i+1})+'</div><div class="name">'+(id?t(NODES[id].name):t('UI_SLOT_EMPTY'))+'</div>'+extra;
+    div.innerHTML='<div class="name">'+(id?t(NODES[id].name):t('UI_SLOT_EMPTY'))+'</div>'+extra;
     if(id) div.onclick=()=>toggleCommit(id);
     slots.appendChild(div);
   }

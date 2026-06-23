@@ -186,7 +186,8 @@ const LANG_JA = {
   "MSG_OFFLINE_T": "情報海を漂っていた({dur})間に、情報量 {gain} を得た",
   "MSG_RUN_INFO_LABEL": "今回の獲得情報量: ",
   "MSG_OBSTACLE_REMAIN_T": "{name}(残り{n}秒)",
-  "UI_SLOT_LABEL_T": "探索 {n}"
+  "UI_SLOT_LABEL_T": "探索 {n}",
+  "祈りは情報か": "祈りは情報か"
 };
 
 const LANG_EN = {
@@ -373,7 +374,8 @@ const LANG_EN = {
   "MSG_OFFLINE_T": "While drifting in the information sea for {dur}, {gain} information was gained",
   "MSG_RUN_INFO_LABEL": "Info gained this run: ",
   "MSG_OBSTACLE_REMAIN_T": "{name} ({n}s remaining)",
-  "UI_SLOT_LABEL_T": "Explore {n}"
+  "UI_SLOT_LABEL_T": "Explore {n}",
+  "祈りは情報か": "Is Prayer Information?"
 };
 
 function t(id){
@@ -390,7 +392,7 @@ function t(id){
   }
 }
 
-// テンプレート関数: tf('ID', {name:'xxx', n:5}) → 変数を展開した文字列
+// テンプレート関数
 function tf(id, vars){
   let text = t(id);
   if(vars && typeof text === 'string'){

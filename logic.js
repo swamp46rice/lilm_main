@@ -1588,8 +1588,8 @@ function itemGainBonus(){
   let bonus=0;
   s.inventory.forEach(item=>{
     if(item){
-      const t=ITEM_BONUS_TABLE[item.itemId];
-      bonus+=(t.base+item.rank*t.perRank);
+      const bonusTable=ITEM_BONUS_TABLE[item.itemId];
+      bonus+=(bonusTable.base+item.rank*bonusTable.perRank);
     }
   });
   return 1+bonus;
@@ -1876,8 +1876,8 @@ function showInventory(){
           badge.className='inv-new'; badge.textContent='NEW';
           nameEl.appendChild(badge);
         }
-        const t=ITEM_BONUS_TABLE[i];
-        const pctVal=Math.round(t.base*100);
+        const bonusTable=ITEM_BONUS_TABLE[i];
+        const pctVal=Math.round(bonusTable.base*100);
         effEl.textContent='+'+pctVal+'%';
         totalBonus+=pctVal;
       }
