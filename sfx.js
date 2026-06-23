@@ -178,7 +178,18 @@ function sfxItemDrop()      { playSE(8); }   // アイテムドロップ
 function sfxItemLost()      { playSE(9); }   // アイテム消失
 function sfxDamage()        { playSE(10); }  // ダメージ
 function sfxCommit()        { playSE(11); }  // スロットへノード設定
-function sfxTypeChar()      { if(seTypeCharOn) playSE(12); } // タイプライター1文字
+// タイプライター音：インスタンスを使い回して軽量化
+let _typeCharAudio=null;
+function sfxTypeChar(){
+  if(!seTypeCharOn) return;
+  const path=SE_FILES[12];
+  if(!path) return;
+  try{
+    if(!_typeCharAudio){ _typeCharAudio=new Audio(path); _typeCharAudio.volume=seVolume; }
+    _typeCharAudio.currentTime=0;
+    _typeCharAudio.play().catch(()=>{});
+  }catch(e){}
+}
 function sfxAttackMiss()    { playSE(14); }  // 壁突破ミス
 function sfxDepthUp()       { playSE(16); }  // 観測深度アップ
 function sfxUncommit()      { playSE(17); }  // スロットからノード外れる

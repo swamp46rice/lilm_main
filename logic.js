@@ -378,8 +378,9 @@ function _logProcessQueue(){
   }
   let i=0;
   const n=item.text.length;
+  const CHUNK=typeof window!=='undefined'&&window.innerWidth<600?3:1; // スマホは3文字まとめ
   function step(){
-    i++;
+    i+=CHUNK;
     if(i>=n || (!_logSlowMode && _logQueue.length>0)){
       body.textContent=item.text;
       el.scrollTop=el.scrollHeight;
@@ -387,7 +388,7 @@ function _logProcessQueue(){
       return;
     }
     body.textContent=item.text.slice(0,i);
-    sfxTypeChar();
+    if(i%3===1) sfxTypeChar(); // SE間引き(3文字に1回)
     el.scrollTop=el.scrollHeight;
     setTimeout(step, 26);
   }
@@ -1600,12 +1601,13 @@ function itemGainBonus(){
 function _resultTypewrite(el, text, onDone){
   const n=text.length;
   let i=0;
+  const CHUNK2=typeof window!=='undefined'&&window.innerWidth<600?3:1;
   function step(){
     if(s._resultSkipRequested){ el.textContent=text; onDone(); return; }
-    i++;
+    i+=CHUNK2;
+    if(i>=n){ el.textContent=text; sfxTypeChar(); onDone(); return; }
     el.textContent=text.slice(0,i);
-    sfxTypeChar();
-    if(i>=n){ onDone(); return; }
+    if(i%3===1) sfxTypeChar();
     setTimeout(step, 26);
   }
   if(n===0){ onDone(); return; }
