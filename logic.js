@@ -1643,7 +1643,7 @@ function showResultSequence(){
   }
   seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:(s.lang==='en'?'Info gained this run: ':t('MSG_RUN_INFO_LABEL'))+Math.floor(finalRunInfo), type:'positive'});
   if(bestUpdated){
-    seq.push({delay:300, text:t('MSG_BEST'), type:'observe'});
+    seq.push({delay:300, text:t('MSG_BEST'), type:'observe', sfx:'integcrit'});
     bestAchievementsGranted.forEach(name=>{
       seq.push({delay:400, text:'「'+name+t('MSG_ACHIEVE_UNLOCK'), type:'observe', sfx:'levelup'});
     });
@@ -1678,6 +1678,7 @@ function showResultSequence(){
       const el=document.getElementById('log');
       if(!el){ next(); return; }
       if(item.sfx==='levelup' && !s._resultSkipRequested) sfxLevelUp();
+      if(item.sfx==='integcrit' && !s._resultSkipRequested) sfxIntegCrit();
       const div=document.createElement('div');
       if(item.type) div.className='log-'+item.type;
       const ts=document.createElement('span');
