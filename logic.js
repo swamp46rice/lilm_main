@@ -2056,11 +2056,10 @@ function initTitleScreen(){
   setImg('iconAiColl',     typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
   setImg('iconHowtoMan',   typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
   setImg('iconSettingWin', typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
-  // HTML属性の言語対応
-  const bgmSel=document.getElementById('bgmTrackSelect');
-  if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
-  const exportTextEl=document.getElementById('exportText');
-  if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
+  // UI言語を適用
+  applyUILang();
+  const langBtn=document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
 
   // タイトル画面はロゴの裏で最初から表示
   ts.style.opacity='1';
@@ -2204,16 +2203,51 @@ function initImportButton(){
 }
 
 /* ===== セッティング画面 ===== */
-function toggleLang(){
-  s.lang = s.lang==='ja' ? 'en' : 'ja';
-  const btn=document.getElementById('langToggleBtn');
-  if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
-  // HTML属性も再反映
+function applyUILang(){
+  const set=(id,text)=>{ const el=document.getElementById(id); if(el) el.textContent=text; };
+  const setTitle=(id,text)=>{ const el=document.getElementById(id); if(el) el.title=text; };
+  const setBtn=(id,text)=>{ const el=document.getElementById(id); if(el) el.textContent=text; };
+  // メインUIラベル
+  set('labelDepth',       t('LABEL_DEPTH'));
+  set('labelRunInfo',     t('LABEL_RUN_INFO'));
+  set('labelObsPoint',    t('LABEL_OBS_POINT'));
+  set('labelStability',   t('LABEL_STABILITY'));
+  set('labelIntegrity',   t('LABEL_INTEGRITY'));
+  set('labelTotalInfo',   t('LABEL_TOTAL_INFO'));
+  set('labelStatStr',     t('LABEL_STAT_STR'));
+  set('labelStatSem',     t('LABEL_STAT_SEM'));
+  set('labelStatRes',     t('LABEL_STAT_RES'));
+  set('labelStatAct',     t('LABEL_STAT_ACT'));
+  set('labelStatIns',     t('LABEL_STAT_INS'));
+  set('labelWall',        t('LABEL_WALL'));
+  set('obstacleTitle',    t('LABEL_OBSTACLE'));
+  set('labelGraph',       t('LABEL_GRAPH'));
+  // ボタン
+  setBtn('btnExport',     t('BTN_EXPORT'));
+  setBtn('btnReset',      t('BTN_RESET'));
+  setBtn('settingsResetLabel', t('SETTINGS_RESET_BTN'));
+  // ウィンドウ見出し
+  set('invTitle',         t('INV_TITLE'));
+  set('charaTitle',       t('CHARA_TITLE'));
+  set('manualTitle',      t('MANUAL_TITLE'));
+  // tooltip
+  setTitle('tooltipInventory', t('TOOLTIP_INVENTORY'));
+  setTitle('tooltipChara',     t('TOOLTIP_CHARA'));
+  setTitle('tooltipManual',    t('TOOLTIP_MANUAL'));
+  setTitle('tooltipSettings',  t('TOOLTIP_SETTINGS'));
+  // BGM選択
   const bgmSel=document.getElementById('bgmTrackSelect');
   if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
   const exportTextEl=document.getElementById('exportText');
   if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
-  // グラフ・スロット等のキャッシュを強制リセットして全再描画
+  // departBtn・renormBtnはrender()側で管理
+}
+
+function toggleLang(){
+  s.lang = s.lang==='ja' ? 'en' : 'ja';
+  const btn=document.getElementById('langToggleBtn');
+  if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
+  applyUILang();
   if(typeof _prevFoundLen !== 'undefined') _prevFoundLen=-1;
   if(typeof _prevCommittedSig !== 'undefined') _prevCommittedSig=null;
   save();
@@ -2269,6 +2303,8 @@ function initSettings(){
   // 言語ボタン初期状態
   const langBtn=document.getElementById('langToggleBtn');
   if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
+  // UI言語適用（initTitleScreenより後に呼ばれる場合の保険）
+  applyUILang();
   const closeBtn=document.getElementById('settingsCloseBtn');
   if(closeBtn) closeBtn.addEventListener('click',hideSettings);
   const creditBtn=document.getElementById('settingsCreditBtn');

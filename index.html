@@ -26,7 +26,7 @@
   <div id="inventoryOverlay" onclick="hideInventory(event)">
     <div id="inventoryBox">
       <button id="inventoryClose" onclick="sfxButton();hideInventory()">✕</button>
-      <h2><img id="iconDataInv" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">所持データリスト</h2>
+      <h2><img id="iconDataInv" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" id="invTitle">所持データリスト</h2>
       <div id="inventoryList" class="inv-columns">
         <div id="inventoryColLeft" class="inv-column"></div>
         <div id="inventoryColMid" class="inv-column"></div>
@@ -40,7 +40,7 @@
   <div id="charaCollectionOverlay" onclick="hideCharaCollection(event)">
     <div id="charaCollectionBox">
       <button id="charaCollectionClose" onclick="sfxButton();hideCharaCollection()">✕</button>
-      <h2><img id="iconAiColl" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">AI形態コレクション</h2>
+      <h2><img id="iconAiColl" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" id="charaTitle">AI形態コレクション</h2>
       <div id="charaCollectionGrid"></div>
       <div class="inv-total" id="charaCollectionTotal"></div>
     </div>
@@ -50,7 +50,7 @@
   <div id="manualOverlay" onclick="hideManual(event)">
     <div id="manualBox">
       <button id="manualClose" onclick="sfxButton();hideManual()">✕</button>
-      <h2><img id="iconHowtoMan" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">LiLM ― 遊び方ガイド</h2>
+      <h2><img id="iconHowtoMan" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" id="manualTitle">LiLM ― 遊び方ガイド</h2>
 
       <h3>🌊 基本のながれ</h3>
       <p>LiLMは、AI思考体「観測点」が情報の海を探索するアイドルゲームです。<br>
@@ -176,7 +176,7 @@
 
       <!-- 完全初期化 -->
       <div class="settings-section">
-        <button class="settings-btn settings-btn-danger" id="settingsResetBtn">完全初期化（AI形態コレクション含む）</button>
+        <button class="settings-btn settings-btn-danger" id="settingsResetBtn" id="settingsResetLabel">完全初期化（AI形態コレクション含む）</button>
       </div>
 
       <button class="settings-close-btn" id="settingsCloseBtn">CLOSE</button>
@@ -204,11 +204,11 @@
       <select id="bgmTrackSelect" class="bgm-title"></select>
       <button id="bgmAudioToggle" class="bgm-toggle on" onclick="sfxButton();toggleBGMAudio()" title="BGM ON/OFF">♪ BGM: ON</button>
       <button id="bgmToggle" class="bgm-toggle on" onclick="sfxButton();toggleSE()" title="SE ON/OFF">♪ SE: ON</button>
-      <button id="inventoryBtn" class="bgm-toggle icon-btn" onclick="sfxButton();showInventory()" title="所持データリスト"><img id="iconData" src="" alt="所持データリスト"></button>
+      <button id="inventoryBtn" class="bgm-toggle icon-btn" onclick="sfxButton();showInventory()" id="tooltipInventory" title="所持データリスト"><img id="iconData" src="" alt="所持データリスト"></button>
       <span id="inventoryNewBadge" class="inv-btn-new-badge" style="display:none;">NEW</span>
-      <button class="bgm-toggle icon-btn" onclick="sfxButton();showCharaCollection()" title="AI形態コレクション"><img id="iconAi" src="" alt="AI形態コレクション"></button>
-      <button class="bgm-toggle icon-btn" onclick="sfxButton();showManual()" title="遊び方"><img id="iconHowto" src="" alt="遊び方"></button>
-      <button class="bgm-toggle icon-btn" onclick="sfxButton();showSettings()" title="設定"><img id="iconSetting" src="" alt="設定"></button>
+      <button class="bgm-toggle icon-btn" onclick="sfxButton();showCharaCollection()" id="tooltipChara" title="AI形態コレクション"><img id="iconAi" src="" alt="AI形態コレクション"></button>
+      <button class="bgm-toggle icon-btn" onclick="sfxButton();showManual()" id="tooltipManual" title="遊び方"><img id="iconHowto" src="" alt="遊び方"></button>
+      <button class="bgm-toggle icon-btn" onclick="sfxButton();showSettings()" id="tooltipSettings" title="設定"><img id="iconSetting" src="" alt="設定"></button>
     </div>
   </div>
   <audio id="bgmAudio_0"  loop preload="auto"><source src="bgm/track_0.mp3"  type="audio/mpeg"></audio>
@@ -238,7 +238,7 @@
       </defs>
     </svg>
     <div class="orb-container">
-    <div class="depth-badge">観測深度 <span id="depth">0</span></div>
+    <div class="depth-badge"><span id="labelDepth">観測深度 </span><span id="depth">0</span></div>
     <div class="speech-bubble" id="speechBubble"></div>
     <svg id="orbSvg" viewBox="0 0 204 204" style="overflow:visible;">
       <defs>
@@ -285,31 +285,31 @@
 
   <div class="info-display">
     <canvas id="waveCanvas" width="312" height="56"></canvas>
-    <div class="label label-top">情報量(今回) <span id="gainBonus" style="color:var(--positive);font-size:10px;font-family:var(--font-mono)">+0%</span></div>
+    <div class="label label-top"><span id="labelRunInfo">情報量(今回)</span> <span id="gainBonus" style="color:var(--positive);font-size:10px;font-family:var(--font-mono)">+0%</span></div>
     <div class="num" id="runInfo">0</div>
   </div>
 
   <div class="section-title stat-title-row">
-    <span class="lv-label">観測点 ― Lv.<span id="lv">1</span></span>
-    <span class="gauge-label">存在安定度 <span id="gaugeVal">50</span>% <span id="gaugeLabel">流動</span></span>
+    <span class="lv-label"><span id="labelObsPoint">観測点 ― Lv.</span><span id="lv">1</span></span>
+    <span class="gauge-label"><span id="labelStability">存在安定度 </span><span id="gaugeVal">50</span>% <span id="gaugeLabel">流動</span></span>
   </div>
   <div class="stat-grid">
-    <div class="stat-row"><span class="stat-label">構造度</span><span class="stat-val" id="statStructure">10</span></div>
-    <div class="stat-row"><span class="stat-label">意味容量</span><span class="stat-val" id="statMeaning">10</span></div>
-    <div class="stat-row"><span class="stat-label">共鳴度</span><span class="stat-val" id="statResonance">10</span></div>
-    <div class="stat-row"><span class="stat-label">作用力</span><span class="stat-val" id="statForce">10</span></div>
-    <div class="stat-row"><span class="stat-label">洞察力</span><span class="stat-val" id="statInsight">10</span></div>
-    <div class="stat-row"><span class="stat-label">整合率</span><span class="stat-val" id="statIntegrity">0%</span></div>
+    <div class="stat-row"><span class="stat-label" id="labelStatStr">構造度</span><span class="stat-val" id="statStructure">10</span></div>
+    <div class="stat-row"><span class="stat-label" id="labelStatSem">意味容量</span><span class="stat-val" id="statMeaning">10</span></div>
+    <div class="stat-row"><span class="stat-label" id="labelStatRes">共鳴度</span><span class="stat-val" id="statResonance">10</span></div>
+    <div class="stat-row"><span class="stat-label" id="labelStatAct">作用力</span><span class="stat-val" id="statForce">10</span></div>
+    <div class="stat-row"><span class="stat-label" id="labelStatIns">洞察力</span><span class="stat-val" id="statInsight">10</span></div>
+    <div class="stat-row"><span class="stat-label" id="labelIntegrity">整合率</span><span class="stat-val" id="statIntegrity">0%</span></div>
   </div>
 
   <div class="log" id="log"></div>
 
-  <div class="total-info-display">総情報量 <span id="totalInfo" style="color:var(--positive)">0</span> &nbsp; BEST <span id="bestRunInfo" style="color:#e8d860">0</span></div>
+  <div class="total-info-display"><span id="labelTotalInfo">総情報量</span> <span id="totalInfo" style="color:var(--positive)">0</span> &nbsp; BEST <span id="bestRunInfo" style="color:#e8d860">0</span></div>
   </div>
 
   <div class="col-right">
 
-  <div class="section-title">位相の壁</div>
+  <div class="section-title" id="labelWall">位相の壁</div>
   <div class="wall-countdown" id="wallCountdown"></div>
   <div class="walls" id="walls"></div>
 
@@ -319,7 +319,7 @@
   <div class="section-title">探索 ― <span id="runStatusLabel">停止中</span>(最大<span id="maxSlotsLabel">2</span>)</div>
   <div class="slots" id="slots"></div>
 
-  <div class="section-title">概念パターン</div>
+  <div class="section-title" id="labelGraph">概念パターン</div>
   <div class="col-right-graph">
     <div class="graph" id="graph"></div>
     <div class="lifeflux" id="lifefluxBadge"></div>
@@ -331,8 +331,8 @@
       <button id="renormBtn" onclick="sfxButton();renormalize()" style="display:none">再正規化 ―― 探索を終える</button>
     </div>
     <div class="actions" style="padding-top:0">
-      <button class="export" onclick="sfxExportLog();exportObservation()">観測記録を書き出す</button>
-      <button class="reset" onclick="sfxButton();resetAll()">はじめから</button>
+      <button class="export" id="btnExport" onclick="sfxExportLog();exportObservation()">観測記録を書き出す</button>
+      <button class="reset" id="btnReset" onclick="sfxButton();resetAll()">はじめから</button>
     </div>
 
   </div>
