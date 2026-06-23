@@ -816,7 +816,7 @@ function render(){
     const integrityBonusG=s.integrity>=100?1.5:1.0;
     const itemBonusAddG = itemGainBonus()-1;
     // 意味属性: 発動時のみ意味容量に応じたGainボーナスが乗る(常時ではない)
-    const semanticBonusAddG = detectAttr(stats)==='semantic' ? stats[t('STAT_SEMANTIC')]*0.004 : 0;
+    const semanticBonusAddG = detectAttr(stats)==='semantic' ? stats['意味容量']*0.004 : 0;
     const coreMultG=0.5*(1+s.level*0.008)*knowledgeMultG*gainMultGG*(1+s.depth*0.1);
     const totalMult=(coreMultG+itemBonusAddG+semanticBonusAddG)*integrityBonusG;
     // 初期状態(Lv1,gauge50,found3,depth0,壁0,item0,normal属性=意味ボーナス0): totalMult≈0.5645 → 約-44%
@@ -897,7 +897,7 @@ function render(){
     }
   }
 
-  const dur=Math.max(1.5, 5-stats[t('STAT_INSIGHT')]*0.02);
+  const dur=Math.max(1.5, 5-stats['洞察力']*0.02);
   document.getElementById('orbGroup').style.animationDuration=dur+'s';
 
   // ラン中ドロップの衛星表示(ゲージより外側)。差分更新: 既存のg要素は再利用し、浮遊アニメのループを継続させる

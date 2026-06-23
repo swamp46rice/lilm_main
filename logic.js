@@ -327,7 +327,7 @@ if(s.statGrowth===undefined || s.statGrowth===null){
 }
 // マイグレーション: 旧パラメータ名「共鳴率」のセーブデータを新名「共鳴度」へ移行(値の引っ越し漏れを防ぐ)
 if(s.statGrowth['共鳴率']!==undefined){
-  if(s.statGrowth[t('STAT_RESONANCE')]===undefined) s.statGrowth[t('STAT_RESONANCE')]=s.statGrowth['共鳴率'];
+  if(s.statGrowth['共鳴度']===undefined) s.statGrowth['共鳴度']=s.statGrowth['共鳴率'];
   delete s.statGrowth['共鳴率'];
 }
 // 念のため、STAT_KEYSの全キーが揃っていない場合(マイグレーション漏れ・破損データ対策)はその場で補完
@@ -536,7 +536,7 @@ function tickGain(){
   const integrityBonus=s.integrity>=100?1.5:1.0;
   const itemBonusAdd = itemGainBonus()-1; // itemGainBonus()は1+ボーナスを返すため、加算分のみ取り出す
   // 意味属性: 発動時のみ意味容量に応じたGainボーナスが乗る(常時ではない)
-  const semanticBonusAdd = detectAttr(stats)==='semantic' ? stats[t('STAT_SEMANTIC')]*0.004 : 0;
+  const semanticBonusAdd = detectAttr(stats)==='semantic' ? stats['意味容量']*0.004 : 0;
   const coreMult=0.5*(1+s.level*0.008)*knowledgeMult*gainMultG*(1+s.depth*0.1);
   let base=(coreMult+itemBonusAdd+semanticBonusAdd)*integrityBonus;
   base*=obs.gainMult;
@@ -748,15 +748,15 @@ function tickGauge(){
   const effEntropy=entropySum*alphaMult;
   const effSilence=silenceSum*alphaMult;
   const emptySlots=maxSlots()-s.committed.length;
-  const effBaselineDrift=BASELINE_DRIFT*(1-baselineSuppressRatio(stats[t('STAT_RESONANCE')]));
+  const effBaselineDrift=BASELINE_DRIFT*(1-baselineSuppressRatio(stats['共鳴度']));
   // BASELINE_DRIFT以外の変動(ノード由来entropy/silence・空きスロット・障害)をまず合算し、
   // その符号に応じて構造度/共鳴度の抑制をかける。BASELINE_DRIFTは専用カーブで個別抑制済みのため、
   // 二重抑制を避けてここでは対象に含めない。
   let delta=effEntropy-effSilence+emptySlots*EMPTY_SLOT_DRIFT*alphaMult+obs.gaugePush*alphaMult;
   if(delta>0){
-    delta*=(1-suppressRatio(stats[t('STAT_STRUCTURAL')]));
+    delta*=(1-suppressRatio(stats['構造度']));
   }else if(delta<0){
-    delta*=(1-suppressRatio(stats[t('STAT_RESONANCE')]));
+    delta*=(1-suppressRatio(stats['共鳴度']));
   }
   delta+=effBaselineDrift;
   const gaugeBefore=s.gauge;
@@ -781,7 +781,7 @@ function tickIntegrity(){
     if(o.side==='silence') silenceCount++;
   });
   // 構造属性: 整合率の基礎上昇量に控えめなボーナスを加える(比例+上限0.2でクリップ。基礎上昇量0.2の最大2倍)
-  const structuralIntegrityBonus = detectAttr(stats)==='structural' ? Math.min(0.2, stats[t('STAT_STRUCTURAL')]*0.0001) : 0;
+  const structuralIntegrityBonus = detectAttr(stats)==='structural' ? Math.min(0.2, stats['構造度']*0.0001) : 0;
   const delta=Math.max(0, (INTEGRITY_BASE_GAIN+intBuffSum+structuralIntegrityBonus)*stabilityFactor - SILENCE_OBSTACLE_PENALTY*silenceCount);
   const before=s.integrity;
   s.integrity=clamp01(s.integrity+delta);
@@ -1385,7 +1385,7 @@ function dropRankLuck(stats){
 
   // 作用属性は従来通り、高ランク抽選に追加補正。
   const attr=detectAttr(stats);
-  const activeLuck = attr==='active' ? Math.min(1.0, (stats[t('STAT_ACTIVE')]||0)/1000) : 0;
+  const activeLuck = attr==='active' ? Math.min(1.0, (stats['作用力']||0)/1000) : 0;
 
   return infoLuck + activeLuck;
 }
@@ -1453,7 +1453,7 @@ function wallDrop(wallIdx){
 }
 function obstacleDrop(stats){
   const attr=detectAttr(stats);
-  const insightBonus = attr==='insight' ? stats[t('STAT_INSIGHT')]*0.00005 : stats[t('STAT_INSIGHT')]*0.00002;
+  const insightBonus = attr==='insight' ? stats['洞察力']*0.00005 : stats['洞察力']*0.00002;
   const cap = attr==='insight' ? 0.15 : 0.10;
   const prob=Math.min(cap, 0.01+insightBonus);
   if(Math.random()<prob){
@@ -1861,8 +1861,8 @@ function showInventory(){
           badge.className='inv-new'; badge.textContent='NEW';
           nameEl.appendChild(badge);
         }
-        const t=ITEM_BONUS_TABLE[i];
-        const pctVal=Math.round((t.base+held.rank*t.perRank)*100);
+        const bonusTable=ITEM_BONUS_TABLE[i];
+        const pctVal=Math.round((bonusTable.base+held.rank*bonusTable.perRank)*100);
         effEl.textContent='+'+pctVal+'%';
         totalBonus+=pctVal;
       }else{
