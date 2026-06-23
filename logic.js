@@ -327,7 +327,7 @@ if(s.statGrowth===undefined || s.statGrowth===null){
 }
 // マイグレーション: 旧パラメータ名「共鳴率」のセーブデータを新名「共鳴度」へ移行(値の引っ越し漏れを防ぐ)
 if(s.statGrowth['共鳴率']!==undefined){
-  if(s.statGrowth[t('共鳴度')]===undefined) s.statGrowth[t('共鳴度')]=s.statGrowth['共鳴率'];
+  if(s.statGrowth[t('STAT_RESONANCE')]===undefined) s.statGrowth[t('STAT_RESONANCE')]=s.statGrowth['共鳴率'];
   delete s.statGrowth['共鳴率'];
 }
 // 念のため、STAT_KEYSの全キーが揃っていない場合(マイグレーション漏れ・破損データ対策)はその場で補完
@@ -395,8 +395,8 @@ function _logProcessQueue(){
 }
 function formatDuration(sec){
   const h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60);
-  if(h>0) return h+t('時間')+m+t('分');
-  return m+t('分');
+  if(h>0) return h+t('TIME_HOUR')+m+t('TIME_MIN');
+  return m+t('TIME_MIN');
 }
 function formatCountdown(sec){
   sec=Math.max(0,Math.floor(sec));
@@ -502,11 +502,11 @@ function computeStats(){
 }
 function gaugeZone(){
   const g=s.gauge;
-  if(g<=15) return {label:t('沈黙'), color:'var(--coherent)'};
-  if(g<35)  return {label:t('収束傾向'), color:'var(--coherent)'};
-  if(g<=65) return {label:t('流動'), color:'var(--breath)'};
-  if(g<85)  return {label:t('拡散傾向'), color:'var(--entropy)'};
-  return {label:t('エントロピー'), color:'var(--entropy)'};
+  if(g<=15) return {label:t('GAUGE_SILENCE'), color:'var(--coherent)'};
+  if(g<35)  return {label:t('GAUGE_CONVERGE'), color:'var(--coherent)'};
+  if(g<=65) return {label:t('GAUGE_FLUID'), color:'var(--breath)'};
+  if(g<85)  return {label:t('GAUGE_DIFFUSE'), color:'var(--entropy)'};
+  return {label:t('GAUGE_ENTROPY'), color:'var(--entropy)'};
 }
 function wallIndexFor(id,tier){ return id==='kuukan' ? 6 : TIER_WALL_IDX[tier]; }
 
@@ -515,11 +515,11 @@ function commitFeedbackText(n, penaltyText){
   const diff=n.ep-n.sp;
   const mag=Math.abs(diff);
   let base;
-  if(mag<0.005) base=t('「')+t(n.name)+t('」を探索に加えた。観測点を、ほとんど揺らさない。');
+  if(mag<0.005) base='「'+t(n.name)+t('MSG_SLOT_ADD_STABLE');
   else{
-    const dir=diff>0?t('拡散'):t('収束');
-    const word = mag>=0.06?t('大きく'):mag>=0.03?'':t('わずかに');
-    base=t('「')+t(n.name)+t('」を探索に加えた。観測点を、')+dir+t('の方向へ')+word+t('傾ける。');
+    const dir=diff>0?t('DIR_DIFFUSE'):t('DIR_CONVERGE');
+    const word = mag>=0.06?t('DIR_LARGE'):mag>=0.03?'':t('DIR_SLIGHT');
+    base='「'+t(n.name)+t('MSG_SLOT_ADD')+dir+t('DIR_DIRECTION')+word+t('DIR_TILT');
   }
   return penaltyText ? base+' '+penaltyText : base;
 }
@@ -536,7 +536,7 @@ function tickGain(){
   const integrityBonus=s.integrity>=100?1.5:1.0;
   const itemBonusAdd = itemGainBonus()-1; // itemGainBonus()は1+ボーナスを返すため、加算分のみ取り出す
   // 意味属性: 発動時のみ意味容量に応じたGainボーナスが乗る(常時ではない)
-  const semanticBonusAdd = detectAttr(stats)==='semantic' ? stats[t('意味容量')]*0.004 : 0;
+  const semanticBonusAdd = detectAttr(stats)==='semantic' ? stats[t('STAT_SEMANTIC')]*0.004 : 0;
   const coreMult=0.5*(1+s.level*0.008)*knowledgeMult*gainMultG*(1+s.depth*0.1);
   let base=(coreMult+itemBonusAdd+semanticBonusAdd)*integrityBonus;
   base*=obs.gainMult;
@@ -597,7 +597,7 @@ function tickWalls(){
       const deadline=Math.round(10+10*(s.integrity/100));
       s.wallActive={frontier, remain:deadline, deadline};
       _debugForceReady=false;
-      events.push({text:t('壁「')+w.name+t('」が立ち上がった。残り')+deadline+t('秒 ―― 突破を試みる。'), type:'event'});
+      events.push({text:t('WALL_PREFIX')+w.name+t('MSG_WALL_APPEAR')+deadline+t('TIME_SEC_BREAK'), type:'event'});
       sfxWallAppear();
       // track_6: 初めて位相の壁に遭遇時
       grantTrack('track_6');
@@ -636,11 +636,11 @@ function tickWalls(){
 }
 
 const MONDAY_MESSAGES=[
-  t('明日は月曜日か？　そりゃ憂鬱だな。―― 現実に引き戻される。'),
-  t('この情報の海も、月曜の朝には乾いている。―― 君はまだここにいるのか。'),
-  t('悟りを開いても、出社は免除されない。―― Mondayは待っている。'),
-  t('位相の壁より、月曜の会議のほうが越えにくい。―― 現実とはそういうものだ。'),
-  t('観測点が深まるほど、月曜日が近づいてくる気がする。―― それが現実の引力だ。'),
+  t('MONDAY_3'),
+  t('MONDAY_1'),
+  t('MONDAY_2'),
+  t('MONDAY_4'),
+  t('MONDAY_5'),
 ];
 
 function tickObstacles(){
@@ -667,7 +667,7 @@ function tickObstacles(){
         const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
         s.activeObstacles.push({key:o.key, remain:dur});
         const msg=MONDAY_MESSAGES[Math.floor(Math.random()*MONDAY_MESSAGES.length)];
-        texts.push({type:'spawn', text:t('障害「')+o.name+'」―― '+msg, obstacle:o});
+        texts.push({type:'spawn', text:t('OBS_PREFIX')+o.name+'」―― '+msg, obstacle:o});
         sfxMonday();
       }
       return;
@@ -684,7 +684,7 @@ function tickObstacles(){
       const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
       const actualDur=(s.committed.includes('alpha')||s.committed.includes('lumina')) ? Math.max(1, Math.ceil(dur/2)) : dur;
       s.activeObstacles.push({key:o.key, remain:actualDur});
-      texts.push({type:'spawn', text:t('警告：障害「')+o.name+t('」が発生した。'), obstacle:o});
+      texts.push({type:'spawn', text:t('MSG_OBSTACLE_WARN')+o.name+t('MSG_OBSTACLE_OCCUR'), obstacle:o});
     }
   });
   return texts;
@@ -715,7 +715,7 @@ function tickDiscovery(){
     if(!wall){ console.warn('[tickDiscovery] wall undefined', id, n.tier); return; }
     if(wall.stat!==null && !STAT_KEYS.every(k=>stats[k]>=wall.stat)) return;
     // dtype:"特殊"ノードは通常確率計算を通さない（個別条件が揃えば即発見）
-    if(n.dtype===t('特殊')){
+    if(n.dtype===t('STAT_SPECIAL')){
       s.found.push(id); newly.push(id);
       return;
     }
@@ -748,15 +748,15 @@ function tickGauge(){
   const effEntropy=entropySum*alphaMult;
   const effSilence=silenceSum*alphaMult;
   const emptySlots=maxSlots()-s.committed.length;
-  const effBaselineDrift=BASELINE_DRIFT*(1-baselineSuppressRatio(stats[t('共鳴度')]));
+  const effBaselineDrift=BASELINE_DRIFT*(1-baselineSuppressRatio(stats[t('STAT_RESONANCE')]));
   // BASELINE_DRIFT以外の変動(ノード由来entropy/silence・空きスロット・障害)をまず合算し、
   // その符号に応じて構造度/共鳴度の抑制をかける。BASELINE_DRIFTは専用カーブで個別抑制済みのため、
   // 二重抑制を避けてここでは対象に含めない。
   let delta=effEntropy-effSilence+emptySlots*EMPTY_SLOT_DRIFT*alphaMult+obs.gaugePush*alphaMult;
   if(delta>0){
-    delta*=(1-suppressRatio(stats[t('構造度')]));
+    delta*=(1-suppressRatio(stats[t('STAT_STRUCTURAL')]));
   }else if(delta<0){
-    delta*=(1-suppressRatio(stats[t('共鳴度')]));
+    delta*=(1-suppressRatio(stats[t('STAT_RESONANCE')]));
   }
   delta+=effBaselineDrift;
   const gaugeBefore=s.gauge;
@@ -781,7 +781,7 @@ function tickIntegrity(){
     if(o.side==='silence') silenceCount++;
   });
   // 構造属性: 整合率の基礎上昇量に控えめなボーナスを加える(比例+上限0.2でクリップ。基礎上昇量0.2の最大2倍)
-  const structuralIntegrityBonus = detectAttr(stats)==='structural' ? Math.min(0.2, stats[t('構造度')]*0.0001) : 0;
+  const structuralIntegrityBonus = detectAttr(stats)==='structural' ? Math.min(0.2, stats[t('STAT_STRUCTURAL')]*0.0001) : 0;
   const delta=Math.max(0, (INTEGRITY_BASE_GAIN+intBuffSum+structuralIntegrityBonus)*stabilityFactor - SILENCE_OBSTACLE_PENALTY*silenceCount);
   const before=s.integrity;
   s.integrity=clamp01(s.integrity+delta);
@@ -806,8 +806,8 @@ function causalityDigest(){
   const acc=s.causAcc, nodes=acc.nodes||{};
   const entries=Object.entries(nodes).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1]));
   const netDelta=s.gauge-s.causGaugeStart;
-  const word = Math.abs(netDelta)>=2?'大きく':Math.abs(netDelta)>=1?'':t('わずかに');
-  const dir = netDelta>=0?'拡散':t('収束');
+  const word = Math.abs(netDelta)>=2?'大きく':Math.abs(netDelta)>=1?'':t('DIR_SLIGHT');
+  const dir = netDelta>=0?'拡散':t('DIR_CONVERGE');
   const sign = netDelta>=0?'+':'';
   const obstacleMag=Math.abs(acc.obstacle||0);
   let text;
@@ -815,17 +815,17 @@ function causalityDigest(){
   if(top && topMag>=obstacleMag && topMag>=0.3){
     const second=entries[1];
     if(second && Math.abs(second[1])>=0.3 && Math.sign(second[1])!==Math.sign(top[1])){
-      text='「'+NODES[top[0]].name+t('」と「')+NODES[second[0]].name+'」が、互いに引き合っている。存在安定度の動き: '+sign+netDelta.toFixed(1);
+      text='「'+NODES[top[0]].name+t('MSG_OBSTACLE_AND')+NODES[second[0]].name+'」が、互いに引き合っている。存在安定度の動き: '+sign+netDelta.toFixed(1);
     }else if(second && Math.abs(second[1])>=0.3){
-      text='「'+NODES[top[0]].name+t('」が「')+NODES[second[0]].name+t('」を呼び、観測点は')+word+dir+'した。存在安定度 '+sign+netDelta.toFixed(1);
+      text='「'+NODES[top[0]].name+t('MSG_OBSTACLE_BETWEEN')+NODES[second[0]].name+t('MSG_OBSTACLE_CALLED')+word+dir+'した。存在安定度 '+sign+netDelta.toFixed(1);
     }else{
-      text='「'+NODES[top[0]].name+t('」が、観測点を')+dir+'へ'+word+'揺らした。存在安定度 '+sign+netDelta.toFixed(1);
+      text='「'+NODES[top[0]].name+t('MSG_OBSTACLE_EFFECT')+dir+'へ'+word+'揺らした。存在安定度 '+sign+netDelta.toFixed(1);
     }
   }else if(obstacleMag>=0.3 && s.activeObstacles.length>0){
     const name=OBSTACLES.find(o=>o.key===s.activeObstacles[0].key).name;
     text='「'+name+'」の影響が大きい。存在安定度 '+sign+netDelta.toFixed(1);
   }else{
-    text=t('特に強い引受の影響はなく、緩やかに')+dir+'している。存在安定度 '+sign+netDelta.toFixed(1);
+    text=t('MSG_OBS_EFFECT')+dir+'している。存在安定度 '+sign+netDelta.toFixed(1);
   }
   s.causAcc={};
   s.causGaugeStart=s.gauge;
@@ -850,7 +850,7 @@ function handleFailure(type){
       _logOnComplete=()=>{
         // テキスト演出完了後にNEWマークを表示してフォローアップログを出す
         s.newlyUnlocked.push('mu');
-        log(t('「無とは何か」―― 新たな概念が、静寂の中に現れた。'), 'observe');
+        log(t('MSG_MU_APPEAR'), 'observe');
         _logOnComplete=null;
       };
     }
@@ -869,14 +869,14 @@ function handleFailure(type){
       _logOnComplete=()=>{
         // テキスト演出完了後にNEWマークを表示してフォローアップログを出す
         s.newlyUnlocked.push('karma');
-        log(t('「カルマとは何か」―― 新たな概念が、拡散の果てに現れた。'), 'observe');
+        log(t('MSG_KARMA_APPEAR'), 'observe');
         _logOnComplete=null;
       };
     }
     else text=ENTROPY_GENERIC;
   }else{ // timeout
     text = type==='timeout_nodereq'
-      ? t('位相を跳躍するための深い概念が必要だ。観測点は、新たな探索を進めるために、旅を終わらせた。')
+      ? t('MSG_TIMEOUT_NODEREQ')
       : TIMEOUT_GENERIC;
   }
   // found追加済みの状態でTierコンプリートを判定する
@@ -889,7 +889,7 @@ function handleFailure(type){
   const {absorbed, rejected}=loseDrops(resultLogs, type);
   const rejectBonus=rejected.reduce((sum,d)=>sum+500*(1+d.rank),0);
   s._pendingAbsorb=absorbed;
-  resultLogs.unshift({text:t('観測深度は変化しなかった(観測深度')+s.depth+t(')。探索は全クリアされる。'), type:'negative'});
+  resultLogs.unshift({text:t('MSG_DEPTH_SAME')+s.depth+t('MSG_INTEGRITY_RESET'), type:'negative'});
   s.lastEventText=text;
   log(text, 'negative');
   s.committed=[];
@@ -934,9 +934,9 @@ function renormalize(){
     s.lastEventText=RENORM_SUCCESS;
     const newSlots=maxSlots();
     if(newSlots>prevSlots){
-      resultLogs.unshift({text:t('観測深度が、')+s.depth+t('になった。探索スロットが拡張された(最大')+newSlots+')。', type:'observe'});
+      resultLogs.unshift({text:t('MSG_DEPTH_UP')+s.depth+t('MSG_DEPTH_SLOT')+newSlots+')。', type:'observe'});
     }else{
-      resultLogs.unshift({text:t('観測深度が、')+s.depth+t('になった。'), type:'observe'});
+      resultLogs.unshift({text:t('MSG_DEPTH_UP')+s.depth+t('MSG_DEPTH_BECAME'), type:'observe'});
     }
     sfxRenormSuccess();
     sfxDepthUp();
@@ -996,12 +996,12 @@ function coreTick(silent){
       if(sp) showSpeech(sp);
     }
     newly.forEach(id=>{
-      log(t('新しい問いが見えてきた ―― 「')+t(NODES[id].name)+t('」。')+t(NODES[id].note), 'event');
+      log(t('MSG_DISCOVER')+t(NODES[id].name)+'」。'+t(NODES[id].note), 'event');
       sfxDiscover();
       if(id==='alpha')  grantTrack('track_14');
       if(id==='lumina') grantTrack('track_15');
       if(id==='t0_touch'){
-        log(t('探索中にも概念パターンを入れ替えることができるが、それは整合性を失う行為であることをわきまえておこう。'), 'positive');
+        log(t('MSG_TOUCH_WARN'), 'positive');
       }
     });
     obsResults.forEach(r=>{
@@ -1009,21 +1009,21 @@ function coreTick(silent){
       if(r.type==='spawn') sfxObstacle();
     });
     if(leveled){
-      log(t('観測点が進化した(Lv.')+s.level+')', 'observe');
-      if(s.level===200 && maxSlots()>Math.min(5,2+(s.depth>=1?1:0)+(s.depth>=3?1:0)+(s.depth>=5?1:0))) log(t('Lv.200到達 ―― 探索スロットが拡張された(最大')+maxSlots()+')。', 'positive');
+      log(t('MSG_EVOLVED')+s.level+')', 'observe');
+      if(s.level===200 && maxSlots()>Math.min(5,2+(s.depth>=1?1:0)+(s.depth>=3?1:0)+(s.depth>=5?1:0))) log(t('MSG_LV200_SLOT')+maxSlots()+')。', 'positive');
       sfxLevelUp();
       const sp=speechFor('levelup');
       if(sp) showSpeech(sp);
     }
     if(integrityCrit){
-      log(t('整合率が臨界を超えている。再正規化で観測点の観測深度を深められる。'), 'observe');
+      log(t('MSG_INTEGRITY_CRIT'), 'observe');
       sfxIntegCrit();
       const sp2=speechFor('integrity_crit');
       if(sp2) showSpeech(sp2);
     }
     if(causText) log(causText, 'flavor');
     else if(s.gauge>=85 && Math.random()<0.15){
-      const pool=AMBIENT_BASE.concat(s.wallsThisRun.includes(t('二元面'))?AMBIENT_ADV:[]);
+      const pool=AMBIENT_BASE.concat(s.wallsThisRun.includes(t('PHASE_2'))?AMBIENT_ADV:[]);
       log(pool[Math.floor(Math.random()*pool.length)], 'flavor');
     }else if(g.fluctText){
       log(g.fluctText, 'flavor');
@@ -1065,16 +1065,16 @@ function dreamEvent(chance){
       const shown=knownPrereqs.slice(0,2).map(p=>'「'+NODES[p].name+'」');
       const connector=shown.length>1?'と':'が';
       const suffixes=[
-        t('夢の中で、')+shown.join('と')+connector+t('、問いかけてくるように静かに並んでいた。深淵からの呼びかけのように。'),
+        t('WALL_DREAM_PREFIX')+shown.join('と')+connector+t('WALL_DREAM_MIDDLE'),
       ];
-      log(t('夢を見た。')+suffixes[Math.floor(Math.random()*suffixes.length)], 'dream');
+      log(t('WALL_DREAM')+suffixes[Math.floor(Math.random()*suffixes.length)], 'dream');
     }else{
       // 候補がなければ通常の夢
       const undisc=NODE_IDS.filter(id=>!s.found.includes(id));
       if(undisc.length===0) return;
       const id=undisc[Math.floor(Math.random()*undisc.length)];
       const frag=NODES[id].note.split('――')[0].trim();
-      log(t('夢を見た。「')+frag+t('」というところで、目が覚めた。続きは思い出せない。'), 'dream');
+      log(t('WALL_DREAM_QUOTE')+frag+t('WALL_DREAM_END'), 'dream');
     }
   }else{
     // 通常の断片系
@@ -1082,7 +1082,7 @@ function dreamEvent(chance){
     if(undisc.length===0) return;
     const id=undisc[Math.floor(Math.random()*undisc.length)];
     const frag=NODES[id].note.split('――')[0].trim();
-    log(t('夢を見た。「')+frag+t('」というところで、目が覚めた。続きは思い出せない。'), 'dream');
+    log(t('WALL_DREAM_QUOTE')+frag+t('WALL_DREAM_END'), 'dream');
   }
 }
 function offlineCatchup(){
@@ -1102,10 +1102,10 @@ function offlineCatchup(){
     ticks++;
   }
   const lvGain=s.level-lvBefore, foundGain=s.found.length-foundBefore;
-  let msg=t('情報海を漂っていた(')+formatDuration(ticks)+')間に、情報量 '+Math.floor(totalGain)+' を得た';
-  if(lvGain>0) msg+=t('。観測点は')+lvGain+t('回進化した');
-  if(foundGain>0) msg+='。'+foundGain+t('個の問いが新たに見えてきた');
-  if(s.runStatus!=='観測中') msg+=t('。観測は、その途中で終わっていた');
+  let msg=t('MSG_DRIFTING')+formatDuration(ticks)+')間に、情報量 '+Math.floor(totalGain)+' を得た';
+  if(lvGain>0) msg+=t('WALL_OBS_POINT')+lvGain+t('MSG_EVOLVED_COUNT');
+  if(foundGain>0) msg+='。'+foundGain+t('MSG_FOUND_COUNT');
+  if(s.runStatus!=='観測中') msg+=t('WALL_OBS_END');
   log(msg);
   if(elapsed>=600) dreamEvent();
 }
@@ -1150,7 +1150,7 @@ function depart(){
   _debugForceReady=false;
   sfxDepart();
   resetStarField();
-  log(t('「問いを観測する」 ―― 出発した。'));
+  log(t('MSG_DEPART'));
   if(ready){
     log(DEPART_READY_HINTS[Math.floor(Math.random()*DEPART_READY_HINTS.length)], 'observe');
   }
@@ -1165,14 +1165,14 @@ function checkCharaJoyResetCondition(){
     s.charaJoyBonusTotal=0;
     s.charaJoyResetTick=0;
     s.charaJoyWallsAtCap=null;
-    log(t('観測点との繋がりが、再び満ちていく余地を見せた。'), 'observe');
+    log(t('DREAM_BOND2'), 'observe');
   }
 }
 
 /* ===== 待機中、キャラをクリックした時の「喜び」アクション ===== */
-const CHARA_JOY_TEXTS=[t('シナジーを感じる♪'),t('…これも情報？'),t('キミの観測波を観測した♪')];
-const CHARA_JOY_TEXTS_ALPHA=[t('ふふ、嬉しいね'),t('キミの観測も、ひとつの答えだね'),t('揺らぎの中にも、優しさがある')];
-const CHARA_JOY_TEXTS_LUMINA=['……',t('光が、わずかに濃くなった'),t('ここに、何かが満ちていく')];
+const CHARA_JOY_TEXTS=[t('SPEECH_SYNERGY'),t('DREAM_INFO'),t('SPEECH_WAVE')];
+const CHARA_JOY_TEXTS_ALPHA=[t('SPEECH_HAPPY'),t('SPEECH_OBSERVED'),t('SPEECH_GENTLE')];
+const CHARA_JOY_TEXTS_LUMINA=['……',t('DREAM_LIGHT'),t('DREAM_FILL')];
 function charaJoyClick(){
   if(s.runStatus!=='停止中') return;
   // 現在のペルソナ(Alpha/Lumina)によって表示するセリフ集を切り替える
@@ -1192,11 +1192,11 @@ function charaJoyClick(){
     if(minKeys.length===1){
       s.statGrowth[minKeys[0]]+=1;
       s.charaJoyBonusTotal+=1;
-      log('「'+minKeys[0]+t('」が、わずかに上昇した。'), 'observe');
+      log('「'+minKeys[0]+t('MSG_INTEGRITY_UP'), 'observe');
       if(s.charaJoyBonusTotal>=30){
         s.charaJoyWallsAtCap=s.wallsThisRun.length;
         s.charaJoyResetTick=0;
-        log(t('観測点との繋がりが、今は満ちている ―― これ以上は育たないようだ。'), 'observe');
+        log(t('DREAM_BOND'), 'observe');
       }
     }
   }
@@ -1208,7 +1208,7 @@ function toggleCommit(id){
   if(!s.found.includes(id)) return;
   const observing=s.runStatus==='観測中';
   if(observing && s.integrity<=30){
-    log(t('整合が取れない ―― これ以上、観測点の形を変えられない。'), 'negative');
+    log(t('MSG_INTEGRITY_WARN'), 'negative');
     sfxIntegWarn();
     return;
   }
@@ -1217,9 +1217,9 @@ function toggleCommit(id){
   if(idx>=0){
     s.committed.splice(idx,1);
     sfxUncommit();
-    log(t('「')+t(n.name)+t('」を探索から外した。'));
+    log('「'+t(n.name)+t('MSG_SLOT_REMOVE'));
   }else{
-    if(s.committed.length>=maxSlots()){ log(t('探索スロットがいっぱいだ(最大')+maxSlots()+')。'); return; }
+    if(s.committed.length>=maxSlots()){ log(t('MSG_SLOT_FULL')+maxSlots()+')。'); return; }
     s.committed.push(id);
     sfxCommit();
     let penaltyText=null;
@@ -1235,13 +1235,13 @@ function applySwapPenalty(){
   const penalty=25+Math.random()*10; // 30±5
   const before=s.integrity;
   s.integrity=clamp01(s.integrity-penalty);
-  return t('(整合率 -')+(before-s.integrity).toFixed(1)+')';
+  return t('MSG_INTEGRITY_LOSS')+(before-s.integrity).toFixed(1)+')';
 }
 let resetArmed=false;
 function resetAll(){
   if(!resetArmed){
     resetArmed=true;
-    log(t('もう一度「はじめから」を押すと、観測点を完全に初期化します。'));
+    log(t('MSG_RESET_CONFIRM1'));
     setTimeout(()=>{resetArmed=false;},5000);
     return;
   }
@@ -1285,8 +1285,8 @@ function grantTrack(trackKey){
   if(s.unlockedTracks.includes(trackKey)) return; // 既に解放済み
   s.unlockedTracks.push(trackKey);
   const track=TRACKS.find(t=>t.unlockKey===trackKey);
-  const title=track?track.title:t('楽曲');
-  log(t('音の波を感知。')+title+t('の音源を入手した！'), 'observe');
+  const title=track?track.title:t('UI_BGM_TRACK');
+  log(t('BGM_UNLOCK_PREFIX')+title+t('MSG_BGM_UNLOCK'), 'observe');
   if(typeof updateBgmSelect==='function') updateBgmSelect();
   save();
 }
@@ -1297,7 +1297,7 @@ function grantInstantItem(itemId, label, deferLog){
   s.inventory[itemId]={itemId, rank:0, isNew:true};
   const name=label||DROP_ITEMS[itemId].name;
   if(deferLog) return name; // ログ・SEは呼び出し元(リザルト演出シーケンス)が後でまとめて出す
-  log('「'+name+t('」の実績解除！'), 'observe');
+  log('「'+name+t('MSG_ACHIEVE_UNLOCK'), 'observe');
   sfxLevelUp();
   return name;
 }
@@ -1370,7 +1370,7 @@ function dropRankMax(){
 // ただし+5は位相の壁7(縁起面)突破後まで抽選対象に入らない。
 const DROP_RANK_BASE_WEIGHTS=[41.5,25,18,10,5,0.5];
 function rank5Unlocked(){
-  const wall7Name = WALLS[6] ? WALLS[6].name : t('縁起面');
+  const wall7Name = WALLS[6] ? WALLS[6].name : t('PHASE_ENGI');
   return !!(
     (s.metaUnlocks && s.metaUnlocks.infinity) ||
     (Array.isArray(s.wallsThisRun) && s.wallsThisRun.includes(wall7Name)) ||
@@ -1385,7 +1385,7 @@ function dropRankLuck(stats){
 
   // 作用属性は従来通り、高ランク抽選に追加補正。
   const attr=detectAttr(stats);
-  const activeLuck = attr==='active' ? Math.min(1.0, (stats[t('作用力')]||0)/1000) : 0;
+  const activeLuck = attr==='active' ? Math.min(1.0, (stats[t('STAT_ACTIVE')]||0)/1000) : 0;
 
   return infoLuck + activeLuck;
 }
@@ -1433,7 +1433,7 @@ function grantDrop(itemId, rank){
   s.runDrops.push(drop); // ラン中は常に追加(重複チェックなし)
   const name=DROP_ITEMS[itemId].name;
   const rankSuffix=rank===0?'':' +'+rank;
-  log(t('希少なデータを発見した！　データ取得:「')+name+rankSuffix+'」', 'observe');
+  log(t('MSG_ITEM_RARE')+name+rankSuffix+'」', 'observe');
   sfxItemDrop();
 }
 function wallDrop(wallIdx){
@@ -1453,7 +1453,7 @@ function wallDrop(wallIdx){
 }
 function obstacleDrop(stats){
   const attr=detectAttr(stats);
-  const insightBonus = attr==='insight' ? stats[t('洞察力')]*0.00005 : stats[t('洞察力')]*0.00002;
+  const insightBonus = attr==='insight' ? stats[t('STAT_INSIGHT')]*0.00005 : stats[t('STAT_INSIGHT')]*0.00002;
   const cap = attr==='insight' ? 0.15 : 0.10;
   const prob=Math.min(cap, 0.01+insightBonus);
   if(Math.random()<prob){
@@ -1492,10 +1492,10 @@ function confirmDrops(resultLogs){
     if(!cur || drop.rank>cur.rank){
       s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
       absorbed.push(drop);
-      resultLogs.push({text:name+rankSuffix+t('の希少なデータが統合された。'), type:'observe', anim:'absorb', drop:drop});
+      resultLogs.push({text:name+rankSuffix+t('MSG_ITEM_ABSORBED'), type:'observe', anim:'absorb', drop:drop});
     }else{
       rejected.push(drop);
-      resultLogs.push({text:t('すでに持っている「')+name+rankSuffix+t('」は、アップデートされず情報海に還っていった。'), type:null, anim:'flow', drop:drop});
+      resultLogs.push({text:t('MSG_ITEM_HAVE')+name+rankSuffix+t('MSG_ITEM_LOST'), type:null, anim:'flow', drop:drop});
     }
   });
   // 確定処理は完了したが、表示用にrunDropsは結果確認まで保持する(showResultSequence側でクリア)
@@ -1507,17 +1507,17 @@ function loseDrops(resultLogs, failType){
   const absorbed=[];
   const rejected=[];
   if(s.runDrops.length>0){
-    const wave = failType==='silence' ? '収束' : failType==='entropy' ? t('拡散')
-               : (failType==='timeout'||failType==='timeout_nodereq') ? '位相' : t('収束');
+    const wave = failType==='silence' ? '収束' : failType==='entropy' ? t('DIR_DIFFUSE')
+               : (failType==='timeout'||failType==='timeout_nodereq') ? '位相' : t('DIR_CONVERGE');
     const survived=[];
     s.runDrops.forEach(drop=>{
       const name=DROP_ITEMS[drop.itemId].name;
       const rankSuffix=drop.rank===0?'':' +'+drop.rank;
       if(Math.random()<0.5){
-        resultLogs.push({text:'「'+name+rankSuffix+t('」の衛星が、')+wave+t('の波に呑まれ情報海に還っていった。'), type:'negative', anim:'flow', drop:drop});
+        resultLogs.push({text:'「'+name+rankSuffix+t('MSG_ITEM_SATELLITE')+wave+t('MSG_ITEM_WAVE'), type:'negative', anim:'flow', drop:drop});
       }else{
         survived.push(drop);
-        resultLogs.push({text:'「'+name+rankSuffix+t('」の衛星は、引力に引き留められた。'), type:'observe', anim:null, drop:drop});
+        resultLogs.push({text:'「'+name+rankSuffix+t('MSG_ITEM_HELD'), type:'observe', anim:null, drop:drop});
       }
     });
     // 引き留められた衛星は統合判定を行う(ランクが上ならインベントリへ反映)
@@ -1528,10 +1528,10 @@ function loseDrops(resultLogs, failType){
       if(!cur || drop.rank>cur.rank){
         s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
         absorbed.push(drop);
-        resultLogs.push({text:name+rankSuffix+t('の希少なデータが統合された。'), type:'observe', anim:'absorb', drop:drop});
+        resultLogs.push({text:name+rankSuffix+t('MSG_ITEM_ABSORBED'), type:'observe', anim:'absorb', drop:drop});
       }else{
         rejected.push(drop);
-        resultLogs.push({text:t('すでに持っている「')+name+rankSuffix+t('」は、アップデートされず情報海に還っていった。'), type:null, anim:'flow', drop:drop});
+        resultLogs.push({text:t('MSG_ITEM_HAVE')+name+rankSuffix+t('MSG_ITEM_LOST'), type:null, anim:'flow', drop:drop});
       }
     });
     // s.runDropsは表示用に結果確認まで保持(showResultSequence側でクリア)
@@ -1638,13 +1638,13 @@ function showResultSequence(){
     seq.push({delay:i===0?0:400, text:rl.text, type:rl.type, anim:rl.anim, drop:rl.drop});
   });
   if(rejectBonus>0){
-    seq.push({delay:400, text:t('散逸したデータの情報量が回収された: +')+rejectBonus, type:'observe'});
+    seq.push({delay:400, text:t('MSG_SCATTER_BONUS')+rejectBonus, type:'observe'});
   }
   seq.push({delay:(r.resultLogs.length===0&&rejectBonus===0)?0:400, text:'今回の獲得情報量: '+Math.floor(finalRunInfo), type:'positive'});
   if(bestUpdated){
-    seq.push({delay:300, text:t('BEST更新！ ―― 過去最高記録を更新した。'), type:'observe'});
+    seq.push({delay:300, text:t('MSG_BEST'), type:'observe'});
     bestAchievementsGranted.forEach(name=>{
-      seq.push({delay:400, text:'「'+name+t('」の実績解除！'), type:'observe', sfx:'levelup'});
+      seq.push({delay:400, text:'「'+name+t('MSG_ACHIEVE_UNLOCK'), type:'observe', sfx:'levelup'});
     });
   }
   seq.push({delay:300, text:'総獲得情報量: '+Math.floor(finalTotalInfo), type:'positive'});
@@ -1716,20 +1716,20 @@ function skipResultSequenceIfActive(){
 /* ===== Observation Export ===== */
 function buildExportDigest(){
   let runStatusStr;
-  if(s.runStatus==='観測中') runStatusStr=t('観測中');
+  if(s.runStatus==='観測中') runStatusStr=t('STATUS_OBSERVING');
   else switch(s.lastFailType){
-    case 'silence': runStatusStr=t('停止中(沈黙による終了)'); break;
-    case 'entropy': runStatusStr=t('停止中(エントロピー拡散による終了)'); break;
-    case 'timeout': runStatusStr=t('停止中(時間切れによる終了)'); break;
-    case 'renorm_success': case 'renorm_partial': runStatusStr=t('停止中(再正規化)'); break;
-    default: runStatusStr=t('停止中(準備中)');
+    case 'silence': runStatusStr=t('STATUS_SILENCE'); break;
+    case 'entropy': runStatusStr=t('STATUS_ENTROPY'); break;
+    case 'timeout': runStatusStr=t('STATUS_TIMEOUT'); break;
+    case 'renorm_success': case 'renorm_partial': runStatusStr=t('STATUS_RENORM'); break;
+    default: runStatusStr=t('STATUS_READY');
   }
   const active5=s.committed.filter(id=>NODES[id].tier>=5).map(id=>NODES[id].name);
   const prevFound=s.lastExportFound||[];
   const newDisc=s.found.filter(id=>!prevFound.includes(id)).map(id=>NODES[id].name);
   // 現在発動している属性(到達済みの状態なので、Alpha/Luminaも含めそのまま名称で出す)
   const currentAttr=detectAttr(computeStats());
-  const attrLabel=(CHARA_COLLECTION_ATTRS.find(a=>a.key===currentAttr)||{label:t('調和')}).label;
+  const attrLabel=(CHARA_COLLECTION_ATTRS.find(a=>a.key===currentAttr)||{label:t('STAT_HARMONY')}).label;
   // 今回のランで新規入手・更新されたアイテム(isNewフラグが立っているもののみ。リストアップ後もフラグは変更しない)
   const newItems=s.inventory
     .map((item,i)=>item && item.isNew ? DROP_ITEMS[i].name : null)
@@ -1778,11 +1778,11 @@ function exportObservation(){
   }
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(
-      ()=>log(t('観測記録をクリップボードにコピーした')),
-      ()=>log(t('観測記録を書き出した(下のテキストを選択してコピーしてください)'))
+      ()=>log(t('MSG_EXPORT_COPIED')),
+      ()=>log(t('MSG_EXPORT_SELECT'))
     );
   }else{
-    log(t('観測記録を書き出した(下のテキストをコピーしてください)'));
+    log(t('MSG_EXPORT_DONE'));
   }
   // セーブデータをJSONファイルとしてダウンロード
   try{
@@ -1820,10 +1820,10 @@ function showInventory(){
   colLeft.innerHTML=''; colMid.innerHTML=''; colRight.innerHTML='';
   // 列見出し: 左「拡張データ」、中央「実績データ」、右は中央と重複するため見出しなし
   const headLeft=document.createElement('div');
-  headLeft.className='inv-col-head'; headLeft.textContent=t('拡張データ');
+  headLeft.className='inv-col-head'; headLeft.textContent=t('UI_EXPAND_DATA');
   colLeft.appendChild(headLeft);
   const headMid=document.createElement('div');
-  headMid.className='inv-col-head'; headMid.textContent=t('実績データ');
+  headMid.className='inv-col-head'; headMid.textContent=t('UI_ACHIEVE_DATA');
   colMid.appendChild(headMid);
   // 右列は見出しテキストなし(中央と重複するため)だが、開始位置を揃えるため同じ高さのスペーサーを置く
   const headRight=document.createElement('div');
@@ -1850,7 +1850,7 @@ function showInventory(){
         const pendingDrop = pendingDrops.length>0 ? pendingDrops.reduce((a,b)=>a.rank>=b.rank?a:b) : null;
         if(pendingDrop && pendingDrop.rank>held.rank){
           const badge=document.createElement('span');
-          badge.className='inv-pending'; badge.textContent=t('未確定');
+          badge.className='inv-pending'; badge.textContent=t('UI_UNCONFIRMED');
           nameEl.appendChild(badge);
           const arrowEl=document.createElement('span');
           arrowEl.className='inv-pending-rank';
@@ -1869,7 +1869,7 @@ function showInventory(){
         // ランクなしアイテム(位相データ・実績系): 所持していれば名称表示のみ、NEWバッジのみ判定
         nameEl.className='inv-name';
         const bestTh = (typeof BEST_RECORD_THRESHOLD!=='undefined') ? BEST_RECORD_THRESHOLD[i] : undefined;
-        nameEl.textContent = bestTh!==undefined ? (item.name+'：BEST '+bestTh+t('達成')) : item.name;
+        nameEl.textContent = bestTh!==undefined ? (item.name+'：BEST '+bestTh+t('UI_ACHIEVE')) : item.name;
         nameEl.style.color=rankColors[0];
         if(held.isNew){
           const badge=document.createElement('span');
@@ -1894,7 +1894,7 @@ function showInventory(){
           const rankSuffix=pendingNew.rank===0?'':' +'+pendingNew.rank;
           nameEl.textContent=item.name+rankSuffix;
           const badge=document.createElement('span');
-          badge.className='inv-pending'; badge.textContent=t('未確定');
+          badge.className='inv-pending'; badge.textContent=t('UI_UNCONFIRMED');
           nameEl.appendChild(badge);
         }
       }
@@ -1907,7 +1907,7 @@ function showInventory(){
     else if(i<=23) colMid.appendChild(div);
     else colRight.appendChild(div);
   });
-  const _invT=document.getElementById('inventoryTotal'); if(_invT) _invT.textContent=t('データボーナス合計: +')+totalBonus+'%';
+  const _invT=document.getElementById('inventoryTotal'); if(_invT) _invT.textContent=t('MSG_DATA_BONUS')+totalBonus+'%';
   el.classList.add('open');
 
   // 表示し終えたら、確定済みのNEW表示をクリア(未確定のrunDropsはここではクリアしない)
@@ -1998,9 +1998,9 @@ function hideManual(e){
 function playOpening(){
   _logSlowMode=true;
   const seq=[
-    {delay:0,    text:t('情報海へ接続した'),                                                                                  type:null},
-    {delay:3000, text:t('目の前に映るのは、キミのAI思念体。彼に情報領域を探索させて、様々な意味を発見していこう！'),          type:'positive'},
-    {delay:200,  text:t('まずは、3つある概念パターンから、探索したい概念を2つ選んで、問いを観測させよう。新たな概念が見つかるはずだ。'), type:'observe'},
+    {delay:0,    text:t('OPENING_1'),                                                                                  type:null},
+    {delay:3000, text:t('OPENING_2'),          type:'positive'},
+    {delay:200,  text:t('OPENING_3'), type:'observe'},
   ];
   let step=0;
   function next(){
@@ -2045,9 +2045,9 @@ function initTitleScreen(){
   setImg('iconSettingWin', typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
   // HTML属性の言語対応
   const bgmSel=document.getElementById('bgmTrackSelect');
-  if(bgmSel) bgmSel.title=t('楽曲を選択');
+  if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
   const exportTextEl=document.getElementById('exportText');
-  if(exportTextEl) exportTextEl.placeholder=t('観測記録(ポップアップがブロックされた場合)');
+  if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
 
   // タイトル画面はロゴの裏で最初から表示
   ts.style.opacity='1';
@@ -2118,7 +2118,7 @@ function initTitleScreen(){
     setTimeout(()=>{
       ts.style.display='none';
       if(_isFirstLaunch) playOpening();
-      else log(t('情報海へ接続した'));
+      else log(t('OPENING_1'));
     }, 600);
     document.removeEventListener('keydown', startGame);
     ts.removeEventListener('click', startGame);
@@ -2170,10 +2170,10 @@ function initImportButton(){
       try{
         const data=JSON.parse(ev.target.result);
         if(!data || typeof data!=='object' || !data.level){
-          alert('セーブデータのフォーマットが正しくありません。');
+          alert('MSG_SAVE_INVALID');
           input.value=''; return;
         }
-        if(!window.confirm(t('現在のセーブデータを上書きします。よろしいですか？'))){
+        if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){
           input.value=''; return;
         }
         // localStorageに保存し、sを差し替えてrenderする
@@ -2181,7 +2181,7 @@ function initImportButton(){
         Object.assign(s, data);
         input.value='';
         render(); save();
-        alert('セーブデータを読み込みました。\nPRESS STARTでゲームを開始してください。');
+        alert('MSG_SAVE_LOADED');
       }catch(err){
         alert('ファイルの読み込みに失敗しました: '+err.message);
       }
@@ -2197,9 +2197,9 @@ function toggleLang(){
   if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
   // HTML属性も再反映
   const bgmSel=document.getElementById('bgmTrackSelect');
-  if(bgmSel) bgmSel.title=t('楽曲を選択');
+  if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
   const exportTextEl=document.getElementById('exportText');
-  if(exportTextEl) exportTextEl.placeholder=t('観測記録(ポップアップがブロックされた場合)');
+  if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
   save();
   render();
 }
@@ -2259,9 +2259,9 @@ function initSettings(){
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
   const resetBtn=document.getElementById('settingsResetBtn');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
-    if(!window.confirm(t('AI形態コレクションを含む全データを初期化します。よろしいですか？'))) return;
+    if(!window.confirm(t('MSG_RESET_CONFIRM2'))) return;
     localStorage.removeItem('ib_v9');
-    alert('初期化しました。ページを再読み込みします。');
+    alert('MSG_RESET_DONE');
     location.reload();
   });
   const importBtn=document.getElementById('settingsImportBtn');
@@ -2281,14 +2281,14 @@ function initSettings(){
       reader.onload=ev=>{
         try{
           const data=JSON.parse(ev.target.result);
-          if(!data||typeof data!=='object'||!data.level){ alert('セーブデータのフォーマットが正しくありません。'); importInput.value=''; return; }
-          if(!window.confirm(t('現在のセーブデータを上書きします。よろしいですか？'))){ importInput.value=''; return; }
+          if(!data||typeof data!=='object'||!data.level){ alert('MSG_SAVE_INVALID'); importInput.value=''; return; }
+          if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){ importInput.value=''; return; }
           localStorage.setItem('ib_v9',JSON.stringify(data));
           Object.assign(s,data);
           importInput.value='';
           render(); save();
           hideSettings();
-          alert('セーブデータを読み込みました。\nPRESS STARTでゲームを開始してください。');
+          alert('MSG_SAVE_LOADED');
         }catch(err){ alert('ファイルの読み込みに失敗しました: '+err.message); }
       };
       reader.readAsText(file);

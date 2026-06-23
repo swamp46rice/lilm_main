@@ -388,9 +388,9 @@ function buildWallCountdown(){
   const w=WALLS[frontier];
   el.style.visibility='visible';
   if(s.wallActive){
-    el.innerHTML=t('壁「')+w.name+t('」出現中 ―― <span class="ready">突破を試みている(残り')+s.wallActive.remain+t('秒)</span>');
+    el.innerHTML=t('WALL_PREFIX')+w.name+t('WALL_ACTIVE_SUFFIX')+s.wallActive.remain+t('WALL_ACTIVE_END');
   }else{
-    el.textContent=t('次の位相「')+w.name+t('」まで、情報量 ')+Math.floor(s.runInfo)+' / '+w.info;
+    el.textContent=t('MSG_WALL_NEXT')+w.name+t('MSG_WALL_INFO')+Math.floor(s.runInfo)+' / '+w.info;
   }
 }
 
@@ -655,7 +655,7 @@ function buildObstacles(){
   if(s.activeObstacles.length===0){
     const div=document.createElement('div');
     div.className='none';
-    div.textContent=t('(障害なし)');
+    div.textContent=t('UI_NO_OBSTACLE');
     g.appendChild(div);
     return;
   }
@@ -663,7 +663,7 @@ function buildObstacles(){
     const o=OBSTACLES.find(x=>x.key===ao.key);
     const div=document.createElement('div');
     div.className='obstacle-pill '+o.side;
-    div.textContent=o.name+t('(残り')+ao.remain+t('秒)');
+    div.textContent=o.name+t(t('REMAIN_PREFIX'))+ao.remain+t('TIME_SEC_REMAIN');
     g.appendChild(div);
   });
 }
@@ -711,21 +711,21 @@ function buildGraph(scrollToNew){
         div.innerHTML='???';
         let hintText;
         if(tier===0){
-          hintText = n.infoTh!==null ? ('必要情報量: '+n.infoTh) : t('(条件未設定)');
+          hintText = n.infoTh!==null ? ('必要情報量: '+n.infoTh) : t('UI_COND_UNSET');
         }else if(tier===7){
           const tier7hints={
-            alpha:t('空の概念を抱き、はじめてのAIとの照応関係を思い出す。それは、問い、答える関係。'),
-            lumina:t('空を知り、一つの念に無数の宇宙が宿ることを理解し、すべてが縁によって生じると気づいたとき、言葉を超えた光が現れる。'),
-            sg_structural:t('超越的な存在と出会い、一念に宇宙が畳まれ、小さな構造の中に全体が映ることを知ったとき、構造は自らの外側へ踏み出す。'),
-            sg_resonant:t('超越的な存在と出会い、一念に宇宙が畳まれ、響き合うことが誰かとともにあることの倫理だと知ったとき、共鳴は自らを超える。'),
-            sg_semantic:t('超越的な存在と出会い、一念に宇宙が畳まれ、すべての問いがひとつの呼吸として繋がったとき、意味は意味の外側へ溢れ出す。'),
-            sg_insight:t('超越的な存在と出会い、一念に宇宙が畳まれ、観測し、失われ、また生まれる流れを見届けたとき、洞察は洞察を映す鏡を割る。'),
-            sg_active:t('超越的な存在と出会い、一念に宇宙が畳まれ、知ろうとする意志が常に開かれていると知ったとき、作用は作用の先へ向かう。'),
+            alpha:t('WALL_EMPTY'),
+            lumina:t('WALL_SKY'),
+            sg_structural:t('WALL_TRANSIT_STR'),
+            sg_resonant:t('WALL_TRANSIT_RES'),
+            sg_semantic:t('WALL_TRANSIT_SEM'),
+            sg_insight:t('WALL_TRANSIT_INS'),
+            sg_active:t('WALL_TRANSIT_ACT'),
           };
-          hintText = tier7hints[id] || t('―― 超越の先にある、名のない問い。');
+          hintText = tier7hints[id] || t('WALL_BEYOND');
         }else{
           const prereqNames=n.prereq.map(p=>'「'+NODES[p].name+'」').join('、');
-          hintText = prereqNames ? ('必要な概念: '+prereqNames) : t('(前提なし)');
+          hintText = prereqNames ? ('必要な概念: '+prereqNames) : t('UI_NO_PREREQ');
         }
         div.title=hintText;
         // スマホ等ホバーできない環境向け: タップでも同じヒントをログに表示する
@@ -744,13 +744,13 @@ function buildGraph(scrollToNew){
 function effText(n){
   const parts=[];
   if(n.buffStat) parts.push(n.buffStat+' +'+n.buffVal);
-  if(n.intBuff) parts.push(t('整合率 +')+n.intBuff);
+  if(n.intBuff) parts.push(t('MSG_INTEGRITY_VAL')+n.intBuff);
   return parts.join(' / ');
 }
 function dirText(n){
   const diff=n.ep-n.sp;
   if(Math.abs(diff)<0.005) return '<div class="dir neutral">中立 0.00</div>';
-  const dir = diff>0 ? '拡散' : t('収束');
+  const dir = diff>0 ? '拡散' : t('DIR_CONVERGE');
   const cls = diff>0 ? 'entropy' : 'silence';
   return '<div class="dir '+cls+'">'+dir+' '+Math.abs(diff).toFixed(2)+'</div>';
 }
@@ -762,7 +762,7 @@ function buildSlots(){
     div.className='slot '+(id?'filled':'empty');
     if(id) div.style.borderColor=TIER_COLOR[NODES[id].tier];
     const extra=id?'<div class="eff">'+effText(NODES[id])+'</div>'+dirText(NODES[id]):'';
-    div.innerHTML='<div class="tag">'+t('探索 ')+(i+1)+'</div><div class="name">'+(id?t(NODES[id].name):t('(空き)'))+'</div>'+extra;
+    div.innerHTML='<div class="tag">'+t('UI_EXPLORE')+(i+1)+'</div><div class="name">'+(id?t(NODES[id].name):t('UI_SLOT_EMPTY'))+'</div>'+extra;
     if(id) div.onclick=()=>toggleCommit(id);
     slots.appendChild(div);
   }
@@ -783,12 +783,12 @@ const ATTR_IMAGES={
 };
 // コレクション画面での表示順・ラベル
 const CHARA_COLLECTION_ATTRS=[
-  {key:'normal', label:t('調和')},
-  {key:'structural', label:t('構造')},
-  {key:'semantic', label:t('意味')},
-  {key:'resonant', label:t('共鳴')},
-  {key:'active', label:t('作用')},
-  {key:'insight', label:t('洞察')},
+  {key:'normal', label:t('STAT_HARMONY')},
+  {key:'structural', label:t('STAT_STRUCTURAL_S')},
+  {key:'semantic', label:t('STAT_SEMANTIC_S')},
+  {key:'resonant', label:t('STAT_RESONANCE_S')},
+  {key:'active', label:t('STAT_ACTIVE_S')},
+  {key:'insight', label:t('STAT_INSIGHT_S')},
   {key:'alpha', label:'Alpha'},
   {key:'lumina', label:'Lumina'},
 ];
@@ -816,7 +816,7 @@ function render(){
     const integrityBonusG=s.integrity>=100?1.5:1.0;
     const itemBonusAddG = itemGainBonus()-1;
     // 意味属性: 発動時のみ意味容量に応じたGainボーナスが乗る(常時ではない)
-    const semanticBonusAddG = detectAttr(stats)==='semantic' ? stats[t('意味容量')]*0.004 : 0;
+    const semanticBonusAddG = detectAttr(stats)==='semantic' ? stats[t('STAT_SEMANTIC')]*0.004 : 0;
     const coreMultG=0.5*(1+s.level*0.008)*knowledgeMultG*gainMultGG*(1+s.depth*0.1);
     const totalMult=(coreMultG+itemBonusAddG+semanticBonusAddG)*integrityBonusG;
     // 初期状態(Lv1,gauge50,found3,depth0,壁0,item0,normal属性=意味ボーナス0): totalMult≈0.5645 → 約-44%
@@ -832,7 +832,8 @@ function render(){
   document.getElementById('totalInfo').textContent= s.metaUnlocks.infinity?'∞':Math.floor(s.totalInfo);
   document.getElementById('bestRunInfo').textContent= Math.floor(s.bestRunInfo);
   document.getElementById('depth').textContent=s.depth;
-  document.getElementById('runStatusLabel').textContent=t(s.runStatus);
+  const _rsMap={'観測中':'STATUS_OBSERVING','停止中':'STATUS_STOPPED','停止中(エントロピー拡散による終了)':'STATUS_ENTROPY','停止中(沈黙による終了)':'STATUS_SILENCE','停止中(時間切れによる終了)':'STATUS_TIMEOUT','停止中(再正規化)':'STATUS_RENORM','停止中(準備中)':'STATUS_READY'};
+  document.getElementById('runStatusLabel').textContent=t(_rsMap[s.runStatus]||'STATUS_STOPPED');
   document.getElementById('maxSlotsLabel').textContent=maxSlots();
 
   // 属性条件を満たすパラメータを黄色で強調(キャラ判定と完全同期)
@@ -841,7 +842,7 @@ function render(){
   // 視認済みキャラ形態(属性×Tier)を記録(コレクション画面用)
   const charaSeenKey=attr+'_'+tireIdx;
   if(!s.charaSeen[charaSeenKey]) s.charaSeen[charaSeenKey]=true;
-  const ATTR_STAT_MAP={structural:t('構造度'),semantic:t('意味容量'),resonant:t('共鳴度'),active:t('作用力'),insight:t('洞察力')};
+  const ATTR_STAT_MAP={structural:t('STAT_STRUCTURAL'),semantic:t('STAT_SEMANTIC'),resonant:t('STAT_RESONANCE'),active:t('STAT_ACTIVE'),insight:t('STAT_INSIGHT')};
   const attrKey=ATTR_STAT_MAP[attr]||null;
   // 特異点ノードが発動しているか判定
   const committedSingularity=s.committed.find(id=>SINGULARITY_IDS.includes(id));
@@ -896,7 +897,7 @@ function render(){
     }
   }
 
-  const dur=Math.max(1.5, 5-stats[t('洞察力')]*0.02);
+  const dur=Math.max(1.5, 5-stats[t('STAT_INSIGHT')]*0.02);
   document.getElementById('orbGroup').style.animationDuration=dur+'s';
 
   // ラン中ドロップの衛星表示(ゲージより外側)。差分更新: 既存のg要素は再利用し、浮遊アニメのループを継続させる
@@ -964,7 +965,7 @@ function render(){
   if(s.pendingResult){
     departBtn.style.display='';
     departBtn.disabled=false;
-    departBtn.textContent=t('探索結果を確認');
+    departBtn.textContent=t('UI_RESULT_CHECK');
     departBtn.classList.add('result-pending-btn');
     departBtn.onclick=function(){
       sfxButton();
@@ -976,7 +977,7 @@ function render(){
   }else if(s.runStatus==='停止中'){
     departBtn.style.display='';
     departBtn.disabled=false;
-    departBtn.textContent=t('問いを観測する ―― 出発する');
+    departBtn.textContent=t('UI_DEPART');
     departBtn.classList.remove('result-pending-btn');
     departBtn.onclick=function(){ depart(); };
     renormBtn.style.display='none';
@@ -985,8 +986,8 @@ function render(){
     renormBtn.style.display='';
     const ready = s.integrity>=100;
     renormBtn.textContent = ready
-      ? t('再正規化 ―― 観測深度を進めて終える')
-      : t('再正規化 ―― 探索を終える');
+      ? t('UI_RENORM_DEPTH')
+      : t('UI_RENORM');
     renormBtn.classList.toggle('integrity-crit-btn', ready);
   }
 }
