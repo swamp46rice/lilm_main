@@ -1762,6 +1762,28 @@ function buildExportDigest(){
     last_event_text: s.lastEventText
   };
 }
+function showExportModal(){
+  const ov=document.getElementById('exportOverlay');
+  if(ov){ ov.style.display='flex'; }
+}
+function hideExportModal(e){
+  if(e && e.target!==document.getElementById('exportOverlay')) return;
+  const ov=document.getElementById('exportOverlay');
+  if(ov) ov.style.display='none';
+}
+function copyExportText(){
+  const ta=document.getElementById('exportText');
+  if(!ta) return;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ta.value).then(()=>{
+      const btn=document.getElementById('exportCopyBtn');
+      if(btn){ btn.textContent='✓ コピーしました'; setTimeout(()=>{ btn.textContent='📋 コピー'; },2000); }
+    });
+  }else{
+    ta.select(); document.execCommand('copy');
+  }
+}
+
 function exportObservation(){
   const digest=buildExportDigest();
   s.lastExportFound=[...s.found];
@@ -1769,22 +1791,12 @@ function exportObservation(){
   save();
   const text=NARRATOR_PROTOCOL+'\n\n'+JSON.stringify(digest,null,2);
 
-  // Electron対応: window.openを使わず常にゲーム内に表示
+  // 観測記録モーダルに表示
   const ta=document.getElementById('exportText');
-  if(ta){
-    ta.value=text;
-    const _ep=document.getElementById('exportPanel');
-    if(_ep) _ep.style.display='block';
-    ta.focus(); ta.select();
-  }
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(
-      ()=>log(t('MSG_EXPORT_COPIED')),
-      ()=>log(t('MSG_EXPORT_SELECT'))
-    );
-  }else{
-    log(t('MSG_EXPORT_DONE'));
-  }
+  if(ta){ ta.value=text; }
+  showExportModal();
+  log(t('MSG_EXPORT_COPIED'));
+
   // セーブデータをJSONファイルとしてダウンロード
   try{
     const now=new Date();
@@ -1795,9 +1807,8 @@ function exportObservation(){
     const a=document.createElement('a');
     a.href=url; a.download=fname; a.click();
     URL.revokeObjectURL(url);
-    log('セーブデータをエクスポートした: '+fname);
   }catch(e){
-    log('セーブデータのエクスポートに失敗した: '+e.message);
+    // ダウンロード失敗は無視
   }
 }
 

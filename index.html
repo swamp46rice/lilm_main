@@ -9,6 +9,19 @@
 <body>
 
 <div class="window" style="position:relative;">
+  <!-- 観測記録モーダル -->
+  <div id="exportOverlay" onclick="hideExportModal(event)" style="display:none;position:absolute;top:0;left:0;width:860px;height:660px;background:rgba(2,6,18,0.92);z-index:200;border-radius:10px;display:none;align-items:center;justify-content:center;">
+    <div style="width:800px;max-height:600px;display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="settings-title" style="margin:0;">観測記録</div>
+        <div style="display:flex;gap:8px;">
+          <button class="settings-btn" onclick="copyExportText()" id="exportCopyBtn">📋 コピー</button>
+          <button class="settings-close-btn" onclick="sfxButton();hideExportModal()">CLOSE</button>
+        </div>
+      </div>
+      <textarea id="exportText" readonly style="flex:1;height:520px;background:var(--bg-deep);color:var(--text-dim);border:1px solid var(--line);border-radius:6px;padding:10px;font-family:var(--font-mono);font-size:11px;line-height:1.6;resize:none;outline:none;"></textarea>
+    </div>
+  </div>
   <!-- インベントリモーダル -->
   <div id="inventoryOverlay" onclick="hideInventory(event)">
     <div id="inventoryBox">
@@ -302,13 +315,15 @@
   <div class="section-title" id="obstacleTitle">障害</div>
   <div class="obstacles" id="obstacles"></div>
 
+  <div class="col-left-scroll">
   <div class="section-title">探索 ― <span id="runStatusLabel">停止中</span>(最大<span id="maxSlotsLabel">2</span>)</div>
   <div class="slots" id="slots"></div>
 
   <div class="section-title">概念パターン</div>
-  <div class="col-right-scroll">
+  <div class="col-left-graph">
     <div class="graph" id="graph"></div>
     <div class="lifeflux" id="lifefluxBadge"></div>
+  </div>
   </div>
 
   <div class="col-right-footer">
@@ -320,9 +335,7 @@
       <button class="export" onclick="sfxExportLog();exportObservation()">観測記録を書き出す</button>
       <button class="reset" onclick="sfxButton();resetAll()">はじめから</button>
     </div>
-    <div class="export-panel" id="exportPanel" style="display:none">
-      <textarea id="exportText" readonly></textarea>
-    </div>
+
   </div>
 
   <div class="section-title" style="opacity:.5;display:none">デバッグ ― 演出確認用</div>
