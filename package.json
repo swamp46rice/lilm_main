@@ -1,0 +1,56 @@
+{
+  "name": "lilm",
+  "version": "0.9.0",
+  "description": "LiLM / information_breather",
+  "main": "main.js",
+  "author": "KOMMEPY / SWAMP",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.swamp.lilm",
+    "productName": "LiLM",
+    "copyright": "© 2026 KOMMEPY / SWAMP",
+    "files": [
+      "index.html",
+      "style.css",
+      "lang.js",
+      "assets.js",
+      "logic.js",
+      "sfx.js",
+      "render.js",
+      "main.js",
+      "assets/**/*",
+      "bgm/**/*",
+      "se/**/*",
+      "fonts/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico"
+    }
+  }
+}

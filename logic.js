@@ -291,13 +291,19 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   lastTs:null,
   charaSeen:{},
   unlockedTracks:[],
-  currentTrackIdx:0
+  currentTrackIdx:0,
+  lang:'ja',
+  bgmVolume:40,
+  seVolume:70
 };
 // 旧セーブからの移行
 if(!s.newlyUnlocked) s.newlyUnlocked=[];
 if(!s.charaSeen) s.charaSeen={};
 if(!s.unlockedTracks) s.unlockedTracks=[];
 if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
+if(!s.lang) s.lang='ja';
+if(s.bgmVolume===undefined) s.bgmVolume=40;
+if(s.seVolume===undefined) s.seVolume=70;
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
 if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
@@ -1243,6 +1249,9 @@ function resetAll(){
   const savedCharaSeen=s.charaSeen ? Object.assign({},s.charaSeen) : {};
   const savedUnlockedTracks=s.unlockedTracks ? s.unlockedTracks.slice() : [];
   const savedTrackIdx=s.currentTrackIdx||0;
+  const savedLang=s.lang||'ja';
+  const savedBgmVolume=s.bgmVolume!==undefined?s.bgmVolume:40;
+  const savedSeVolume=s.seVolume!==undefined?s.seVolume:70;
   localStorage.removeItem('ib_v9');
   localStorage.removeItem('ib_v9_opening_done');
   // リセット後の新規sにcharaSeen・BGM情報を引き継ぐ
@@ -1260,7 +1269,10 @@ function resetAll(){
       metaUnlocks:{mu:false,karma:false,infinity:false},
       charaSeen:savedCharaSeen,
       unlockedTracks:savedUnlockedTracks,
-      currentTrackIdx:savedTrackIdx
+      currentTrackIdx:savedTrackIdx,
+      lang:savedLang,
+      bgmVolume:savedBgmVolume,
+      seVolume:savedSeVolume
     };
     localStorage.setItem('ib_v9',JSON.stringify(base));
   }
@@ -1756,43 +1768,21 @@ function exportObservation(){
   save();
   const text=NARRATOR_PROTOCOL+'\n\n'+JSON.stringify(digest,null,2);
 
-  // 別ウィンドウに表示
-  const win=window.open('','_blank','width=700,height=600,scrollbars=yes,resizable=yes');
-  if(win){
-    win.document.write(
-      '<!DOCTYPE html><html><head><meta charset="utf-8"><title>観測記録 — Information Breather</title>'+
-      '<style>'+
-      'body{margin:0;padding:0;background:#060810;color:#c8cde0;font-family:monospace;font-size:13px;}'+
-      'h2{font-size:14px;letter-spacing:.1em;color:#8ac4e8;margin:0;padding:14px 16px 10px;border-bottom:1px solid #1e2840;}'+
-      '.toolbar{padding:10px 16px;display:flex;gap:8px;border-bottom:1px solid #1e2840;}'+
-      'button{font-family:monospace;font-size:12px;padding:5px 14px;border:1px solid #2a3555;color:#c8cde0;background:#0d1424;border-radius:6px;cursor:pointer;}'+
-      'button:hover{background:#1a2540;}'+
-      'textarea{display:block;width:100%;height:calc(100vh - 100px);box-sizing:border-box;padding:14px 16px;margin:0;border:none;background:#060810;color:#c8cde0;font-family:monospace;font-size:12px;line-height:1.7;resize:none;outline:none;}'+
-      '</style></head><body>'+
-      t('<h2>観測記録 ― Information Breather</h2>')+
-      '<div class="toolbar">'+
-      '<button onclick="document.querySelector(\'textarea\').select();document.execCommand(\'copy\');this.textContent=\'コピーしました！\';setTimeout(()=>this.textContent=\'全文コピー\',1500)">全文コピー</button>'+
-      '</div>'+
-      '<textarea readonly></textarea>'+
-      '<script>document.querySelector(\'textarea\').value='+JSON.stringify(text)+';<\/script>'+
-      '</body></html>'
-    );
-    win.document.close();
-    log(t('観測記録を別ウィンドウで開いた'));
-  }else{
-    // ポップアップがブロックされた場合のフォールバック
-    const ta=document.getElementById('exportText');
+  // Electron対応: window.openを使わず常にゲーム内に表示
+  const ta=document.getElementById('exportText');
+  if(ta){
     ta.value=text;
-    const _ep=document.getElementById('exportPanel'); if(_ep) _ep.style.display='block';
+    const _ep=document.getElementById('exportPanel');
+    if(_ep) _ep.style.display='block';
     ta.focus(); ta.select();
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(
-        ()=>log(t('観測記録をクリップボードにコピーした')),
-        ()=>log(t('観測記録を書き出した(下のテキストを選択してコピーしてください)'))
-      );
-    }else{
-      log(t('観測記録を書き出した(ポップアップがブロックされています。下のテキストをコピーしてください)'));
-    }
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(
+      ()=>log(t('観測記録をクリップボードにコピーした')),
+      ()=>log(t('観測記録を書き出した(下のテキストを選択してコピーしてください)'))
+    );
+  }else{
+    log(t('観測記録を書き出した(下のテキストをコピーしてください)'));
   }
   // セーブデータをJSONファイルとしてダウンロード
   try{
@@ -2201,6 +2191,19 @@ function initImportButton(){
 }
 
 /* ===== セッティング画面 ===== */
+function toggleLang(){
+  s.lang = s.lang==='ja' ? 'en' : 'ja';
+  const btn=document.getElementById('langToggleBtn');
+  if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
+  // HTML属性も再反映
+  const bgmSel=document.getElementById('bgmTrackSelect');
+  if(bgmSel) bgmSel.title=t('楽曲を選択');
+  const exportTextEl=document.getElementById('exportText');
+  if(exportTextEl) exportTextEl.placeholder=t('観測記録(ポップアップがブロックされた場合)');
+  save();
+  render();
+}
+
 function showSettings(){
   const ov=document.getElementById('settingsOverlay');
   if(ov) ov.style.display='flex';
@@ -2221,19 +2224,35 @@ function hideCreditWindow(e){
 function initSettings(){
   const bgmSlider=document.getElementById('settingsBgmSlider');
   const bgmVal=document.getElementById('settingsBgmVal');
+  // セーブからボリュームを復元
+  if(bgmSlider){
+    bgmSlider.value=s.bgmVolume!==undefined?s.bgmVolume:40;
+    if(bgmVal) bgmVal.textContent=bgmSlider.value;
+    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a) a.volume=parseInt(bgmSlider.value)/100; });
+  }
   if(bgmSlider) bgmSlider.addEventListener('input',()=>{
     const v=parseInt(bgmSlider.value);
     if(bgmVal) bgmVal.textContent=v;
     const vol=v/100;
-    TRACKS.forEach(t=>{ const a=document.getElementById(t.audioId); if(a) a.volume=vol; });
+    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a) a.volume=vol; });
+    s.bgmVolume=v; save();
   });
   const seSlider=document.getElementById('settingsSeSlider');
   const seVal=document.getElementById('settingsSeVal');
+  if(seSlider){
+    seSlider.value=s.seVolume!==undefined?s.seVolume:70;
+    if(seVal) seVal.textContent=seSlider.value;
+    seVolume=parseInt(seSlider.value)/100;
+  }
   if(seSlider) seSlider.addEventListener('input',()=>{
     const v=parseInt(seSlider.value);
     if(seVal) seVal.textContent=v;
     seVolume=v/100;
+    s.seVolume=v; save();
   });
+  // 言語ボタン初期状態
+  const langBtn=document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
   const closeBtn=document.getElementById('settingsCloseBtn');
   if(closeBtn) closeBtn.addEventListener('click',hideSettings);
   const creditBtn=document.getElementById('settingsCreditBtn');
