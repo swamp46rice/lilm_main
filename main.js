@@ -1,5 +1,5 @@
 // LiLM - Electron main.js
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow, shell, session } = require('electron');
 const path = require('path');
 
 let mainWindow;
@@ -11,14 +11,26 @@ function createWindow() {
     minWidth: 900,
     minHeight: 600,
     title: 'LiLM',
-    icon: path.join(__dirname, 'assets/icon.png'), // アイコン（後で用意）
+    icon: path.join(__dirname, 'assets/icon.png'),
     backgroundColor: '#060810',
     webPreferences: {
-      nodeIntegration: false,       // セキュリティのためfalse
-      contextIsolation: true,       // セキュリティのためtrue
+      nodeIntegration: false,
+      contextIsolation: true,
       webSecurity: true,
       allowRunningInsecureContent: false,
     }
+  });
+
+  // Electron向けCSP（インラインイベントハンドラを許可）
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'none';"
+        ]
+      }
+    });
   });
 
   mainWindow.loadFile('index.html');
