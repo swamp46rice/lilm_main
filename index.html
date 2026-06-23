@@ -10,16 +10,16 @@
 
 <div class="window" style="position:relative;">
   <!-- 観測記録モーダル -->
-  <div id="exportOverlay" onclick="hideExportModal(event)" style="display:none;position:absolute;top:0;left:0;width:860px;height:660px;background:rgba(2,6,18,0.92);z-index:200;border-radius:10px;display:none;align-items:center;justify-content:center;">
-    <div style="width:800px;max-height:600px;display:flex;flex-direction:column;gap:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
+  <div id="exportOverlay" onclick="hideExportModal(event)" style="display:none;position:absolute;top:0;left:0;width:860px;height:660px;background:rgba(2,6,18,0.92);z-index:200;border-radius:10px;align-items:center;justify-content:center;">
+    <div style="width:820px;height:620px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex:none;">
         <div class="settings-title" style="margin:0;">観測記録</div>
         <div style="display:flex;gap:8px;">
-          <button class="settings-btn" onclick="copyExportText()" id="exportCopyBtn">📋 コピー</button>
+          <button class="settings-btn" onclick="copyExportText()" id="exportCopyBtn">COPY</button>
           <button class="settings-close-btn" onclick="sfxButton();hideExportModal()">CLOSE</button>
         </div>
       </div>
-      <textarea id="exportText" readonly style="flex:1;height:520px;background:var(--bg-deep);color:var(--text-dim);border:1px solid var(--line);border-radius:6px;padding:10px;font-family:var(--font-mono);font-size:11px;line-height:1.6;resize:none;outline:none;"></textarea>
+      <textarea id="exportText" readonly style="flex:1;min-height:0;background:var(--bg-deep);color:var(--text-dim);border:1px solid var(--line);border-radius:6px;padding:10px;font-family:var(--font-mono);font-size:11px;line-height:1.6;resize:none;outline:none;"></textarea>
     </div>
   </div>
   <!-- インベントリモーダル -->

@@ -1778,7 +1778,7 @@ function copyExportText(){
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(ta.value).then(()=>{
       const btn=document.getElementById('exportCopyBtn');
-      if(btn){ btn.textContent='✓ コピーしました'; setTimeout(()=>{ btn.textContent='📋 コピー'; },2000); }
+      if(btn){ btn.textContent='✓ COPIED'; setTimeout(()=>{ btn.textContent='COPY'; },2000); }
     });
   }else{
     ta.select(); document.execCommand('copy');
