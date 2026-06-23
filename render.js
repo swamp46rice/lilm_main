@@ -777,7 +777,7 @@ function buildSlots(){
   }
 }
 
-let _prevCommittedSig=null, _prevFoundLen=-1;
+let _prevCommittedSig=null, _prevFoundLen=-1, _prevLang=null;
 
 // 属性ごとのキャラ画像セット(8Tier分)。render()とキャラコレクション画面の両方から参照する
 const ATTR_IMAGES={
@@ -974,11 +974,13 @@ function render(){
     });
   }
   buildWalls(); buildWallCountdown(); updateBarrier();
-  buildObstacles(); buildGraph(s.found.length!==_prevFoundLen); buildSlots();
+  const _langChanged = (typeof _prevLang !== 'undefined') && _prevLang !== s.lang;
+  buildObstacles(); buildGraph(s.found.length!==_prevFoundLen || _langChanged); buildSlots();
 
   const committedSig=s.committed.join(',');
-  if(committedSig!==_prevCommittedSig){ buildParticles(); _prevCommittedSig=committedSig; }
-  if(s.found.length!==_prevFoundLen){ buildRings(); _prevFoundLen=s.found.length; }
+  if(committedSig!==_prevCommittedSig || _langChanged){ buildParticles(); _prevCommittedSig=committedSig; }
+  if(s.found.length!==_prevFoundLen || _langChanged){ buildRings(); _prevFoundLen=s.found.length; }
+  _prevLang = s.lang;
 
   const departBtn=document.getElementById('departBtn');
   const renormBtn=document.getElementById('renormBtn');
