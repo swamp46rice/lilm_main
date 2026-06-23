@@ -679,7 +679,7 @@ function tickObstacles(){
     let bias=1;
     if(o.side==='entropy' && s.gauge>50) bias=1+(s.gauge-50)/50;
     if(o.side==='silence' && s.gauge<50) bias=1+(50-s.gauge)/50;
-    const resonantRateMult = resonantMode ? 0.5 : 1.0;
+    const resonantRateMult = resonantMode ? 0.8 : 1.0;
     if(Math.random()<baseRate*bias*integrityMod*resonantRateMult){
       const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
       const actualDur=(s.committed.includes('alpha')||s.committed.includes('lumina')) ? Math.max(1, Math.ceil(dur/2)) : dur;
