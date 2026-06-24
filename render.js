@@ -880,6 +880,7 @@ function render(){
   }
   STAT_KEYS.forEach(k=>{
     const el=document.getElementById(STAT_DOM[k]);
+    if(!el) return;
     if(k===singularityStat){
       el.textContent='∞';
       el.style.color='#e8d860';

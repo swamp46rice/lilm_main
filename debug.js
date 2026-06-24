@@ -114,3 +114,11 @@ function initDebugMode(){
 
 // debug.jsが読み込まれた時点でinitTitleScreen()は完了しているため、即時実行
 initDebugMode();
+
+function debugAttr(){
+  const stats=computeStats();
+  const attr=detectAttr(stats);
+  const ATTR_STAT_MAP={structural:'構造度',semantic:'意味容量',resonant:'共鳴度',active:'作用力',insight:'洞察力'};
+  const attrKey=ATTR_STAT_MAP[attr]||null;
+  alert('attr='+attr+'\nattrKey='+attrKey+'\nlang='+s.lang+'\nSTAT_KEYS='+JSON.stringify(STAT_KEYS)+'\nstats='+JSON.stringify(stats));
+}
