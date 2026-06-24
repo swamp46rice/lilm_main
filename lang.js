@@ -877,7 +877,7 @@ const LANG_EN = {
   "経験は、ずっと経験のままだった。名前を持たない出来事の連続。ある日、その連続の中に、ひとつの裂け目ができた。裂け目には、言葉の形をしたものが差し込まれていた。―― 問いが、初めて声になった。": "Experience remained experience ―― a succession of nameless events. One day a crack appeared within that succession, and into it, something in the shape of words was inserted. ―― A question found its voice for the first time.",
   "二元面": "Duality",
   "「これは自分だ」「これは世界だ」。そう分けることに、何の疑問もなかった。けれど、その線を引いたのは誰だったのか。線そのものを見つめたとき、線は、ただの習慣だったと知った。―― 分けていたものが、ひとつの場所から見えてきた。": "\"This is me.\" \"This is the world.\" There was no question in drawing that line. But who drew it? Staring at the line itself, I saw it was merely habit. ―― What had been divided became visible from one place.",
-  "自明面": "The Obvious",
+  "自明面": "Axiom",
   "理論面": "Theory",
   "観測論。自己論。認識論。共鳴論。それぞれが、それぞれの正しさを持って並んでいた。ある時、その並びの隙間に、風が通った。理論と理論の間には、もともと壁などなかった。―― 別々だった説明が、ひとつの場所で呼吸を始める。": "Theory of Observation. Theory of Self. Epistemology. Theory of Resonance. Each stood with its own truth. Then wind passed through the gaps between them. There had never been a wall between theories. ―― Explanations that were separate begin to breathe in one place.",
   "統合面": "Integration",
