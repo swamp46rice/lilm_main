@@ -187,6 +187,10 @@ const SPEECH_CONFIG = {
   renormalize: {
     desc: "再正規化ボタンを押した時",
     lines: ["お疲れ。新たな探索に備えよう！"]
+  },
+  obstacle_defeat: {
+    desc: "障害が消滅した時",
+    lines: ["よし！", "乗り越えた。", "さすがだ。", "処理完了。"]
   }
 };
 function speechFor(key){
@@ -654,6 +658,7 @@ function tickObstacles(){
     if(ao.remain<=0){
       const o=OBSTACLES.find(x=>x.key===ao.key);
       texts.push({type:'defeat', text:t(o.defeat), obstacle:o});
+      const spd=speechFor('obstacle_defeat'); if(spd) showSpeech(t(spd));
       s.activeObstacles.splice(i,1);
       obstacleDrop(statsForDrop);
     }

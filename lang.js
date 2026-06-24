@@ -552,7 +552,11 @@ const LANG_JA = {
   "CREDIT_FONT": "Font",
   "CREDIT_SOUND": "Sound",
   "CREDIT_SPECIAL_THANKS": "Special Thanks",
-  "…。": "…。"
+  "…。": "…。",
+  "よし！": "よし！",
+  "乗り越えた。": "乗り越えた。",
+  "さすがだ。": "さすがだ。",
+  "処理完了。": "処理完了。"
 };
 
 const LANG_EN = {
@@ -738,7 +742,7 @@ const LANG_EN = {
   "WALL_DREAM_FRAG_T": "I had a dream. I woke up at the part where \"{frag}\". I cannot remember the rest.",
   "MSG_OFFLINE_T": "While drifting in the information sea for {dur}, {gain} information was gained",
   "MSG_RUN_INFO_LABEL": "Info gained this run: ",
-  "MSG_OBSTACLE_REMAIN_T": "{name} ({n}s remaining)",
+  "MSG_OBSTACLE_REMAIN_T": "{name} ({n}s)",
   "UI_SLOT_LABEL_T": "Explore {n}",
   "祈りは情報か": "Is Prayer Information?",
   "見る": "Observe",
@@ -1105,7 +1109,11 @@ const LANG_EN = {
   "CREDIT_FONT": "Font",
   "CREDIT_SOUND": "Sound",
   "CREDIT_SPECIAL_THANKS": "Special Thanks",
-  "…。": "..."
+  "…。": "...",
+  "よし！": "Nice!",
+  "乗り越えた。": "Cleared.",
+  "さすがだ。": "As expected.",
+  "処理完了。": "Processed."
 };
 
 function t(id){
