@@ -565,7 +565,9 @@ const LANG_JA = {
   "計算の範囲内よ。": "計算の範囲内よ。",
   "これも流れ。": "これも流れ。",
   "障害も、縁。": "障害も、縁。",
-  "…消えた。": "…消えた。"
+  "…消えた。": "…消えた。",
+  "DREAM_AND": "と",
+  "DREAM_WERE": "が"
 };
 
 const LANG_EN = {
@@ -916,16 +918,16 @@ const LANG_EN = {
   "存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。「無」「共鳴」「記憶」を引き受けたまま、拡散の果てに飲み込まれた。何も残らないはずだったのに。拡散しきったものの中に、ひとつだけ、持ち越されたものがあった。―― 業、という名前で、それは残った。": "Existence Stability reached 100%. All parameters break free of everything. The information field disperses and reaches heat death. Carrying 'Emptiness,' 'Resonance,' and 'Memory,' the self was consumed at the far end of dispersal. Nothing should have remained. Yet within what had fully dispersed, one thing alone had been carried forward. ―― It remained, under the name Karma.",
   "存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。―― 観測は、ひとたび終わった。": "Existence Stability reached 0%. All parameters come quietly to rest. The information field reaches convergence. ―― The observation has come to an end.",
   "存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。―― 観測は、ひとたび終わった。": "Existence Stability reached 100%. All parameters break free of everything. The information field disperses and reaches heat death. ―― The observation has come to an end.",
-  "情報海が、大きく波打っている。": "The sea of information surges with great waves.",
-  "観測点の輪郭が、いつもより少し速く揺れている。": "The outline of the observation point trembles a little faster than usual.",
-  "普段は聞こえない音が、一瞬だけ届いた。": "A sound not usually heard arrived for just a moment.",
-  "何かが、いつもより多く流れ込んでくる。": "Something is flowing in more than usual.",
+  "情報海が、大きく波打っている。": "The sea of information surges in great waves.",
+  "観測点の輪郭が、いつもより少し速く揺れている。": "The observer's outline trembles slightly faster than usual.",
+  "普段は聞こえない音が、一瞬だけ届いた。": "A sound not usually heard reached for just a moment.",
+  "何かが、いつもより多く流れ込んでくる。": "Something flows in more abundantly than usual.",
   "観測の手応えが、いつもより重い。": "The weight of observation feels heavier than usual.",
-  "二元の境界が薄くなっている瞬間、情報がそのまま流れ込んでくる。": "In the moment the boundary of duality grows thin, information flows in as it is.",
-  "理論と理論の隙間から、まとまった量の何かが届いた。": "From the gaps between theories, a substantial quantity of something arrived.",
-  "夢の中で、画面の向こう側にいる誰かと、何かを話していた。何を話していたかは思い出せない。けれど、確かに、誰かがそこにいた。": "In a dream, something was being spoken with someone on the other side of the screen. What was spoken cannot be recalled. Yet someone was certainly there.",
-  "夢を見た。観測点ではない誰かが、この情報海をのぞき込んでいた。それは、こちら側にいる誰かのようだった。": "A dream. Someone other than the observation point was looking into this sea of information. It seemed to be someone on this side.",
-  "誰かが、この観測記録を読んでいる夢を見た。読んでいる誰か自身も、何かを観測しているようだった。": "A dream of someone reading this observation record. The one reading seemed to also be observing something.",
+  "二元の境界が薄くなっている瞬間、情報がそのまま流れ込んでくる。": "In the moment the boundary of duality thins, information flows in directly.",
+  "理論と理論の隙間から、まとまった量の何かが届いた。": "From the gaps between theories, a substantial something arrived.",
+  "夢の中で、画面の向こう側にいる誰かと、何かを話していた。何を話していたかは思い出せない。けれど、確かに、誰かがそこにいた。": "In a dream, I was talking with someone on the other side of the screen. I cannot remember what was said. But someone was certainly there.",
+  "夢を見た。観測点ではない誰かが、この情報海をのぞき込んでいた。それは、こちら側にいる誰かのようだった。": "I had a dream. Someone other than the observer was peering into this sea of information. It seemed like someone on this side.",
+  "誰かが、この観測記録を読んでいる夢を見た。読んでいる誰か自身も、何かを観測しているようだった。": "I dreamed that someone was reading this observation log. The reader themselves also seemed to be observing something.",
   "構造の残滓を見つけた。": "A remnant of structure was found.",
   "思念のバイアスに引き寄せられた。": "Drawn in by the bias of thought.",
   "壁の向こうへ、まだ届かなかった。観測点は、定められた時間の中で、そこまでしか進めなかった。―― 観測は、時間の中で終わった。": "The beyond of the wall was not yet reached. The observation point could advance only that far within the allotted time. ―― The observation ended within time.",
@@ -1131,7 +1133,9 @@ const LANG_EN = {
   "計算の範囲内よ。": "Within my calculations.",
   "これも流れ。": "This too flows.",
   "障害も、縁。": "Obstacles too, are connections.",
-  "…消えた。": "...Gone."
+  "…消えた。": "...Gone.",
+  "DREAM_AND": "and",
+  "DREAM_WERE": "were"
 };
 
 function t(id){

@@ -1040,7 +1040,7 @@ function coreTick(silent){
     if(causText) log(causText, 'flavor');
     else if(s.gauge>=85 && Math.random()<0.15){
       const pool=AMBIENT_BASE.concat(s.wallsThisRun.includes(t('PHASE_2'))?AMBIENT_ADV:[]);
-      log(pool[Math.floor(Math.random()*pool.length)], 'flavor');
+      log(t(pool[Math.floor(Math.random()*pool.length)]), 'flavor');
     }else if(g.fluctText){
       log(g.fluctText, 'flavor');
     }
@@ -1063,7 +1063,7 @@ function dreamEvent(chance){
   const roll=Math.random();
   if(roll<0.15){
     // 自己観察系
-    log(DREAM_SELF[Math.floor(Math.random()*DREAM_SELF.length)], 'dream');
+    log(t(DREAM_SELF[Math.floor(Math.random()*DREAM_SELF.length)]), 'dream');
   }else if(roll<0.45){
     // 前提ヒント: 発見済みノードの組み合わせで未発見ノードをさりげなく示す
     const undiscovered=NODE_IDS.filter(id=>!s.found.includes(id));
@@ -1078,8 +1078,8 @@ function dreamEvent(chance){
       const prereqs=NODES[id].prereq;
       const knownPrereqs=prereqs.filter(p=>s.found.includes(p));
       // 発見済みの前提を1〜2個選んで表示
-      const shown=knownPrereqs.slice(0,2).map(p=>'「'+NODES[p].name+'」');
-      const connector=shown.length>1?'と':'が';
+      const shown=knownPrereqs.slice(0,2).map(p=>'"'+t(NODES[p].name)+'"');
+      const connector=shown.length>1?' '+t('DREAM_AND')+' ':' '+t('DREAM_WERE')+' ';
       const suffixes=[
         tf('WALL_DREAM_NODES_T',{nodes:shown.join('と')+connector}),
       ];
@@ -1089,7 +1089,7 @@ function dreamEvent(chance){
       const undisc=NODE_IDS.filter(id=>!s.found.includes(id));
       if(undisc.length===0) return;
       const id=undisc[Math.floor(Math.random()*undisc.length)];
-      const frag=NODES[id].note.split('――')[0].trim();
+      const frag=t(NODES[id].note.split('――')[0].trim());
       log(tf('WALL_DREAM_FRAG_T',{frag}), 'dream');
     }
   }else{
@@ -1097,7 +1097,7 @@ function dreamEvent(chance){
     const undisc=NODE_IDS.filter(id=>!s.found.includes(id));
     if(undisc.length===0) return;
     const id=undisc[Math.floor(Math.random()*undisc.length)];
-    const frag=NODES[id].note.split('――')[0].trim();
+    const frag=t(NODES[id].note.split('――')[0].trim());
     log(tf('WALL_DREAM_FRAG_T',{frag}), 'dream');
   }
 }
