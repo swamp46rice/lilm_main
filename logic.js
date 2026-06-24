@@ -699,7 +699,6 @@ function tickObstacles(){
       const actualDur=(s.committed.includes('alpha')||s.committed.includes('lumina')) ? Math.max(1, Math.ceil(dur/2)) : dur;
       s.activeObstacles.push({key:o.key, remain:actualDur});
       texts.push({type:'spawn', text:tf('MSG_OBSTACLE_OCCUR_T',{name:t(o.name)}), obstacle:o});
-      const sps=speechFor('obstacle_spawn'); if(sps) showSpeech(t(sps));
     }
   });
   return texts;
@@ -1022,7 +1021,10 @@ function coreTick(silent){
     });
     obsResults.forEach(r=>{
       log(r.text, r.type==='spawn'?'negative':'positive');
-      if(r.type==='spawn') sfxObstacle();
+      if(r.type==='spawn'){
+        sfxObstacle();
+        const sps=speechFor('obstacle_spawn'); if(sps) showSpeech(t(sps));
+      }
     });
     if(leveled){
       log(tf('MSG_EVOLVED_T',{n:s.level}), 'observe');
