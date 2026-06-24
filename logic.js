@@ -1021,7 +1021,7 @@ function coreTick(silent){
       log(t('MSG_INTEGRITY_CRIT'), 'observe');
       sfxIntegCrit();
       const sp2=speechFor('integrity_crit');
-      if(sp2) showSpeech(sp2);
+      if(sp2) showSpeech(t(sp2));
     }
     if(causText) log(causText, 'flavor');
     else if(s.gauge>=85 && Math.random()<0.15){
