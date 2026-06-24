@@ -1021,10 +1021,7 @@ function coreTick(silent){
     });
     obsResults.forEach(r=>{
       log(r.text, r.type==='spawn'?'negative':'positive');
-      if(r.type==='spawn'){
-        sfxObstacle();
-        const sps=speechFor('obstacle_spawn'); if(sps) showSpeech(t(sps));
-      }
+      if(r.type==='spawn') sfxObstacle();
     });
     if(leveled){
       log(tf('MSG_EVOLVED_T',{n:s.level}), 'observe');

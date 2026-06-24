@@ -560,7 +560,7 @@ function spawnAttackParticle(obstacle){
       flashOrb(color);
       sfxDamage();
       const sp=speechFor('damage');
-      if(sp) showSpeech(sp);
+      if(sp) showSpeech(t(sp));
     }
   }
   step();
@@ -869,7 +869,7 @@ function render(){
   // 視認済みキャラ形態(属性×Tier)を記録(コレクション画面用)
   const charaSeenKey=attr+'_'+tireIdx;
   if(!s.charaSeen[charaSeenKey]) s.charaSeen[charaSeenKey]=true;
-  const ATTR_STAT_MAP={structural:t('STAT_STRUCTURAL'),semantic:t('STAT_SEMANTIC'),resonant:t('STAT_RESONANCE'),active:t('STAT_ACTIVE'),insight:t('STAT_INSIGHT')};
+  const ATTR_STAT_MAP={structural:'構造度',semantic:'意味容量',resonant:'共鳴度',active:'作用力',insight:'洞察力'};
   const attrKey=ATTR_STAT_MAP[attr]||null;
   // 特異点ノードが発動しているか判定
   const committedSingularity=s.committed.find(id=>SINGULARITY_IDS.includes(id));
