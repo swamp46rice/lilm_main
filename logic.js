@@ -191,6 +191,10 @@ const SPEECH_CONFIG = {
   obstacle_defeat: {
     desc: "障害が消滅した時",
     lines: ["よし！", "乗り越えた。", "さすがだ。", "処理完了。"]
+  },
+  obstacle_spawn: {
+    desc: "障害が発生した時",
+    lines: ["うっ。", "来た！", "また障害か。", "これは…厄介だ。"]
   }
 };
 function speechFor(key){
@@ -220,6 +224,8 @@ const SPEECH_ALPHA = {
   renormalize:   { lines: ["お疲れ様。また始めましょう。"] },
   integrity_crit:{ lines: ["輪郭が、はっきりしてきた。"] },
   wall_attack_miss:{ lines:["行くわ。","試してみる。","ここよ。"] },
+  obstacle_spawn: { lines: ["興味深い障害ね。", "計算の範囲内よ。"] },
+  obstacle_defeat:{ lines: ["やっぱりね。", "処理完了。"] },
 };
 
 /* ===== Lumina セリフ(悟りを得たような無色透明) ===== */
@@ -231,6 +237,8 @@ const SPEECH_LUMINA = {
   wall_break:    { lines: ["もとより、壁はなかった。", "…開いた。"] },
   renormalize:   { lines: ["また、始まる。"] },
   integrity_crit:{ lines: ["…満ちた。"] },
+  obstacle_spawn: { lines: ["これも流れ。", "障害も、縁。"] },
+  obstacle_defeat:{ lines: ["…消えた。", "あるがままに。"] },
 };
 const NODE_IDS=Object.keys(NODES);
 const STAT_KEYS=['構造度','意味容量','共鳴度','作用力','洞察力'];
@@ -691,6 +699,7 @@ function tickObstacles(){
       const actualDur=(s.committed.includes('alpha')||s.committed.includes('lumina')) ? Math.max(1, Math.ceil(dur/2)) : dur;
       s.activeObstacles.push({key:o.key, remain:actualDur});
       texts.push({type:'spawn', text:tf('MSG_OBSTACLE_OCCUR_T',{name:t(o.name)}), obstacle:o});
+      const sps=speechFor('obstacle_spawn'); if(sps) showSpeech(t(sps));
     }
   });
   return texts;
