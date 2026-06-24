@@ -26,7 +26,7 @@
   <div id="inventoryOverlay" onclick="hideInventory(event)">
     <div id="inventoryBox">
       <button id="inventoryClose" onclick="sfxButton();hideInventory()">✕</button>
-      <h2><img id="iconDataInv" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" id="invTitle">所持データリスト</h2>
+      <h2><img id="iconDataInv" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;"><span id="invTitle">所持データリスト</span></h2>
       <div id="inventoryList" class="inv-columns">
         <div id="inventoryColLeft" class="inv-column"></div>
         <div id="inventoryColMid" class="inv-column"></div>
@@ -40,7 +40,7 @@
   <div id="charaCollectionOverlay" onclick="hideCharaCollection(event)">
     <div id="charaCollectionBox">
       <button id="charaCollectionClose" onclick="sfxButton();hideCharaCollection()">✕</button>
-      <h2><img id="iconAiColl" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" id="charaTitle">AI形態コレクション</h2>
+      <h2><img id="iconAiColl" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;"><span id="charaTitle">AI形態コレクション</span></h2>
       <div id="charaCollectionGrid"></div>
       <div class="inv-total" id="charaCollectionTotal"></div>
     </div>
@@ -50,50 +50,8 @@
   <div id="manualOverlay" onclick="hideManual(event)">
     <div id="manualBox">
       <button id="manualClose" onclick="sfxButton();hideManual()">✕</button>
-      <h2><img id="iconHowtoMan" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" id="manualTitle">LiLM ― 遊び方ガイド</h2>
-
-      <h3>🌊 基本のながれ</h3>
-      <p>LiLMは、AI思考体「観測点」が情報の海を探索するアイドルゲームです。<br>
-      概念パターンから探索したい概念を選び、<span class="key">問いを観測する</span>を押すとゲームが始まります。</p>
-
-      <h3>🔷 概念パターン(ノード)</h3>
-      <p>画面右下の概念パターンから、最大2つのノードをスロットに設定できます。<br>
-      ノードをクリックするとスロットへの追加・解除ができます。<br>
-      ノードにはそれぞれ<span class="key">拡散(ep)</span>/<span class="key">収束(sp)</span>の特性があり、存在安定度ゲージに影響します。<br>
-      探索を続けると新たなノードが発見されます。</p>
-
-      <h3>📊 存在安定度ゲージ</h3>
-      <p>0〜100%で変化するゲージです。中央(50%)に近いほど整合率が高まりやすくなります。<br>
-      0%に近づくと<span class="key">沈黙</span>状態、100%に近づくと<span class="key">拡散</span>状態となり、探索が終了します。</p>
-
-      <h3>✨ 整合率</h3>
-      <p>100%になると、<span class="key">再正規化</span>ボタンで手動終了することで観測深度を高めることも可能です。<br>
-      観測深度が高まるとラン中の情報量の獲得効率が上昇します。</p>
-
-      <h3>🌀 位相の壁</h3>
-      <p>探索中、一定の情報量に達すると位相の壁が出現します。<br>
-      カウントダウン中に突破できれば次の位相へ進み、観測点の姿が変化します。<br>
-      突破には<span class="key">各Tierのノードを発見</span>していることが条件です。</p>
-
-      <h3>🎭 観測点の属性</h3>
-      <p>5つのパラメータのうち、突出して高いものが属性となり姿が変化します。<br>
-      <span class="key">構造的 / 共鳴的 / 意味的 / 洞察的 / 作用的</span> の5種類があります。</p>
-
-      <h3>⚠️ 障害</h3>
-      <p>探索中にランダムで障害が発生し、ゲージや情報獲得に影響します。<br>
-      障害は一定時間で自然に消滅します。</p>
-
-      <h3>💾 セーブ</h3>
-      <p>進行は自動でこのブラウザに保存されます(ブラウザの「ローカルストレージ」という仕組みを使用)。<br>
-      別のブラウザや別の端末では引き継がれません。<br>
-      ブラウザの設定で「Cookieとサイトデータ」「閲覧履歴データ」などをまとめて削除すると、このデータも一緒に消えることがあります。シークレットモード(プライベートウィンドウ)で開いた場合は、ウィンドウを閉じると消えます。<br>
-      <span class="key">はじめから</span>ボタンで初期化できます(確認あり)。</p>
-
-      <h3>📤 観測記録を書き出す</h3>
-      <p>画面下の<span class="key">観測記録を書き出す</span>ボタンを押すと、2つの処理が同時に行われます。<br>
-      ひとつは、現在の観測状態をAIが文章で描写した<span class="key">観測記録テキスト</span>を別ウィンドウで表示します(ポップアップがブロックされた場合は画面下に表示されます)。<br>
-      もうひとつは、現在のセーブデータを<span class="key">lilm_save_日付_時刻.json</span>という名前のファイルとしてダウンロードフォルダに保存します。<br>
-      このファイルは別の端末や別のブラウザに引き継ぐ際に使用できます。タイトル画面の<span class="key">セーブデータを読み込む</span>ボタンからダウンロードフォルダのファイルを選択してください。</p>
+      <h2><img id="iconHowtoMan" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;"><span id="manualTitle">LiLM ― 遊び方ガイド</span></h2>
+      <div id="manualContent"></div>
     </div>
   </div>
 

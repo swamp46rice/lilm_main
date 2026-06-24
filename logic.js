@@ -2339,6 +2339,7 @@ function applyUILang(){
   // ウィンドウ見出し
   set('invTitle',          t('INV_TITLE'));
   set('charaTitle',        t('CHARA_TITLE'));
+  set('manualTitle',       t('MANUAL_TITLE'));
   set('exportModalTitle',  t('EXPORT_TITLE'));
   set('invColExpand',      t('INV_COL_EXPAND'));
   set('invColAchieve',     t('INV_COL_ACHIEVE'));
