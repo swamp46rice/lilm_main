@@ -388,9 +388,9 @@ function buildWallCountdown(){
   const w=WALLS[frontier];
   el.style.visibility='visible';
   if(s.wallActive){
-    el.innerHTML=tf('MSG_WALL_ACTIVE_T',{name:w.name,n:s.wallActive.remain});
+    el.innerHTML=tf('MSG_WALL_ACTIVE_T',{name:t(w.name),n:s.wallActive.remain});
   }else{
-    el.textContent=tf('MSG_WALL_NEXT_T',{name:w.name,n:Math.floor(s.runInfo),max:w.info});
+    el.textContent=tf('MSG_WALL_NEXT_T',{name:t(w.name),n:Math.floor(s.runInfo),max:w.info});
   }
 }
 
@@ -750,10 +750,17 @@ function buildGraph(scrollToNew){
     }, 50);
   }
 }
+const BUFF_STAT_ID_MAP={
+  '構造度':'LABEL_STAT_STR','意味容量':'LABEL_STAT_SEM',
+  '共鳴度':'LABEL_STAT_RES','作用力':'LABEL_STAT_ACT','洞察力':'LABEL_STAT_INS'
+};
 function effText(n){
   const parts=[];
-  if(n.buffStat) parts.push(t(n.buffStat)+' +'+n.buffVal);
-  if(n.intBuff) parts.push(t('MSG_INTEGRITY_VAL')+n.intBuff);
+  if(n.buffStat){
+    const id=BUFF_STAT_ID_MAP[n.buffStat];
+    parts.push((id?t(id):t(n.buffStat))+' +'+n.buffVal);
+  }
+  if(n.intBuff) parts.push(t('LABEL_INTEGRITY')+' +'+n.intBuff);
   return parts.join(' / ');
 }
 function dirText(n){

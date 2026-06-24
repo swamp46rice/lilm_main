@@ -549,8 +549,8 @@ function tickGain(){
   if(!s.metaUnlocks.infinity) s.totalInfo=Math.min(Number.MAX_SAFE_INTEGER, s.totalInfo+gain);
   let fluctText=null;
   const FLUCT_RANGE=FLUCT_MAX-FLUCT_MIN;
-  if(fluct>=FLUCT_MAX-FLUCT_RANGE*0.02) fluctText=FLUCT_POSITIVE;
-  else if(fluct<=FLUCT_MIN+FLUCT_RANGE*0.02) fluctText=FLUCT_BIAS;
+  if(fluct>=FLUCT_MAX-FLUCT_RANGE*0.02) fluctText=t('構造の残滓を見つけた。');
+  else if(fluct<=FLUCT_MIN+FLUCT_RANGE*0.02) fluctText=t('思念のバイアスに引き寄せられた。');
   return {gain, fluctText};
 }
 
@@ -598,7 +598,7 @@ function tickWalls(){
       const deadline=Math.round(10+10*(s.integrity/100));
       s.wallActive={frontier, remain:deadline, deadline};
       _debugForceReady=false;
-      events.push({text:tf('MSG_WALL_APPEAR_T',{name:w.name,n:deadline}), type:'event'});
+      events.push({text:tf('MSG_WALL_APPEAR_T',{name:t(w.name),n:deadline}), type:'event'});
       sfxWallAppear();
       // track_6: 初めて位相の壁に遭遇時
       grantTrack('track_6');
@@ -613,8 +613,8 @@ function tickWalls(){
     s.wallsThisRun.push(w.name);
     s.tireIdxDisplay=Math.min(7, s.tireIdxDisplay+1);
     sfxCharaChange();
-    s.lastEventText=w.text;
-    events.push({text:w.text, type:'positive'});
+    s.lastEventText=t(w.text);
+    events.push({text:t(w.text), type:'positive'});
     if(frontier===6 && s.found.includes('kuukan')) s.metaUnlocks.infinity=true;
     grantPhaseAchievement(frontier);
     if(frontier===6) checkAttrLimitAchievement();
@@ -653,7 +653,7 @@ function tickObstacles(){
     ao.remain--;
     if(ao.remain<=0){
       const o=OBSTACLES.find(x=>x.key===ao.key);
-      texts.push({type:'defeat', text:o.defeat, obstacle:o});
+      texts.push({type:'defeat', text:t(o.defeat), obstacle:o});
       s.activeObstacles.splice(i,1);
       obstacleDrop(statsForDrop);
     }
@@ -668,7 +668,7 @@ function tickObstacles(){
         const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
         s.activeObstacles.push({key:o.key, remain:dur});
         const msg=MONDAY_MESSAGES[Math.floor(Math.random()*MONDAY_MESSAGES.length)];
-        texts.push({type:'spawn', text:t('OBS_PREFIX')+o.name+'」―― '+msg, obstacle:o});
+        texts.push({type:'spawn', text:t('OBS_PREFIX')+t(o.name)+'」―― '+msg, obstacle:o});
         sfxMonday();
       }
       return;
@@ -685,7 +685,7 @@ function tickObstacles(){
       const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
       const actualDur=(s.committed.includes('alpha')||s.committed.includes('lumina')) ? Math.max(1, Math.ceil(dur/2)) : dur;
       s.activeObstacles.push({key:o.key, remain:actualDur});
-      texts.push({type:'spawn', text:tf('MSG_OBSTACLE_OCCUR_T',{name:o.name}), obstacle:o});
+      texts.push({type:'spawn', text:tf('MSG_OBSTACLE_OCCUR_T',{name:t(o.name)}), obstacle:o});
     }
   });
   return texts;
@@ -911,7 +911,7 @@ function renormalize(){
   s.runStatus='停止中';
   {
     const sp=speechFor('renormalize');
-    if(sp) showSpeech(sp);
+    if(sp) showSpeech(t(sp));
   }
   // このランで得た問いを確定させ、Tierコンプリートを判定する
   checkAllTierCompleteAchievements();
@@ -985,16 +985,16 @@ function coreTick(silent){
       if(e.type==='positive'){
         sfxWallBreak();
         const sp=speechFor('wall_break');
-        if(sp) showSpeech(sp);
+        if(sp) showSpeech(t(sp));
       }else if(e.type==='event'){
         const sp=speechFor('wall_appear');
-        if(sp) showSpeech(sp);
+        if(sp) showSpeech(t(sp));
       }
     });
     if(_lastWallAttack==='miss'){
       sfxAttackMiss();
       const sp=speechFor('wall_attack');
-      if(sp) showSpeech(sp);
+      if(sp) showSpeech(t(sp));
     }
     newly.forEach(id=>{
       s.newlyUnlocked.push(id);
@@ -1015,7 +1015,7 @@ function coreTick(silent){
       if(s.level===200 && maxSlots()>Math.min(5,2+(s.depth>=1?1:0)+(s.depth>=3?1:0)+(s.depth>=5?1:0))) log(tf('MSG_LV200_SLOT_T',{n:maxSlots()}), 'positive');
       sfxLevelUp();
       const sp=speechFor('levelup');
-      if(sp) showSpeech(sp);
+      if(sp) showSpeech(t(sp));
     }
     if(integrityCrit){
       log(t('MSG_INTEGRITY_CRIT'), 'observe');
@@ -1372,7 +1372,7 @@ function dropRankMax(){
 // ただし+5は位相の壁7(縁起面)突破後まで抽選対象に入らない。
 const DROP_RANK_BASE_WEIGHTS=[41.5,25,18,10,5,0.5];
 function rank5Unlocked(){
-  const wall7Name = WALLS[6] ? WALLS[6].name : t('PHASE_ENGI');
+  const wall7Name = WALLS[6] ? t(WALLS[6].name) : t('PHASE_ENGI');
   return !!(
     (s.metaUnlocks && s.metaUnlocks.infinity) ||
     (Array.isArray(s.wallsThisRun) && s.wallsThisRun.includes(wall7Name)) ||
