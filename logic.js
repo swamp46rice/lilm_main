@@ -2427,7 +2427,7 @@ function initSettings(){
   if(closeBtn) closeBtn.addEventListener('click',hideSettings);
   const creditBtn=document.getElementById('settingsCreditBtn');
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
-  const resetBtn=document.getElementById('settingsResetBtn');
+  const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     if(!window.confirm(t('MSG_RESET_CONFIRM2'))) return;
     localStorage.removeItem('ib_v9');
