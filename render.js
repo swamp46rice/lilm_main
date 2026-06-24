@@ -56,11 +56,11 @@ function drawWave(){
     ctx.lineWidth=wave===0?1.5:1.0;
     ctx.globalAlpha=wave===0?0.55:0.3;
     for(let x=0;x<=W;x++){
-      const t=x/W;
+      const prog=x/W;
       const y=H/2
-        +Math.sin(t*Math.PI*2*freq+_wavePhase+phaseOff)*amp*ampMult
-        +Math.sin(t*Math.PI*4*freq*0.7+_wavePhase*1.3+phaseOff)*amp*0.35*ampMult
-        +Math.sin(t*Math.PI*freq*3.1+_wavePhase*0.8)*amp*0.2*ampMult;
+        +Math.sin(prog*Math.PI*2*freq+_wavePhase+phaseOff)*amp*ampMult
+        +Math.sin(prog*Math.PI*4*freq*0.7+_wavePhase*1.3+phaseOff)*amp*0.35*ampMult
+        +Math.sin(prog*Math.PI*freq*3.1+_wavePhase*0.8)*amp*0.2*ampMult;
       x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
     }
     ctx.stroke();
@@ -97,13 +97,13 @@ function flowAwayStars(rejected, fixedAngle){
     const dur=600;
     const t0=performance.now();
     function frame(){
-      const t=Math.min(1,(performance.now()-t0)/dur);
-      const ease=t*t;
+      const prog=Math.min(1,(performance.now()-t0)/dur);
+      const ease=prog*prog;
       const cx=sx+(ex-sx)*ease;
       const cy=sy+(ey-sy)*ease;
       g.setAttribute('transform','translate('+cx.toFixed(1)+','+cy.toFixed(1)+') scale('+baseScale.toFixed(2)+')');
-      g.setAttribute('opacity',(0.9*(1-t)).toFixed(2));
-      if(t<1){
+      g.setAttribute('opacity',(0.9*(1-prog)).toFixed(2));
+      if(prog<1){
         requestAnimationFrame(frame);
       }else{
         if(g.parentNode) g.parentNode.removeChild(g);
@@ -136,14 +136,14 @@ function absorbStars(absorbed, fixedAngle){
     const dur=700;
     const t0=performance.now();
     function frame(){
-      const t=Math.min(1,(performance.now()-t0)/dur);
-      const ease=1-Math.pow(1-t,2);
+      const prog=Math.min(1,(performance.now()-t0)/dur);
+      const ease=1-Math.pow(1-prog,2);
       const cx=sx+(102-sx)*ease;
       const cy=sy+(102-sy)*ease;
-      const sc=Math.max(0, baseScale*(1+0.6*Math.min(1,t*2))*(t<0.7?1:(1-(t-0.7)/0.3)));
+      const sc=Math.max(0, baseScale*(1+0.6*Math.min(1,prog*2))*(prog<0.7?1:(1-(prog-0.7)/0.3)));
       g.setAttribute('transform','translate('+cx.toFixed(1)+','+cy.toFixed(1)+') scale('+sc.toFixed(2)+')');
-      g.setAttribute('opacity',(1-t).toFixed(2));
-      if(t<1){
+      g.setAttribute('opacity',(1-prog).toFixed(2));
+      if(prog<1){
         requestAnimationFrame(frame);
       }else{
         if(g.parentNode) g.parentNode.removeChild(g);
@@ -352,19 +352,19 @@ function spawnShootingStar(){
 
   const start=performance.now();
   function step(now){
-    const t=Math.min(1,(now-start)/dur);
+    const prog=Math.min(1,(now-start)/dur);
     // 頭(先端): 0→len進む
-    const headDist=t*len;
-    // 尾(始点): t>0.4から追いかける
-    const tailDist=Math.max(0,(t-0.4)/0.6)*len;
+    const headDist=prog*len;
+    // 尾(始点): prog>0.4から追いかける
+    const tailDist=Math.max(0,(prog-0.4)/0.6)*len;
     const hx=x1+ux*headDist, hy=y1+uy*headDist;
     const tx2=x1+ux*tailDist, ty2=y1+uy*tailDist;
     // opacity: 0→1(前半)→0(後半)
-    const op=t<0.3?(t/0.3):Math.max(0,1-(t-0.3)/0.7);
+    const op=prog<0.3?(prog/0.3):Math.max(0,1-(prog-0.3)/0.7);
     line.setAttribute('x1',tx2.toFixed(1)); line.setAttribute('y1',ty2.toFixed(1));
     line.setAttribute('x2',hx.toFixed(1)); line.setAttribute('y2',hy.toFixed(1));
     line.setAttribute('opacity',(op*0.95).toFixed(2));
-    if(t<1) requestAnimationFrame(step);
+    if(prog<1) requestAnimationFrame(step);
     else if(line.parentNode) line.parentNode.removeChild(line);
   }
   requestAnimationFrame(step);
@@ -495,12 +495,12 @@ function spawnBreakParticles(){
     fx.appendChild(ring);
     const dur=700+ri*150, start=Date.now();
     (function step(){
-      const t=Math.min(1,(Date.now()-start)/dur);
-      const ease=1-Math.pow(1-t,3);
+      const prog=Math.min(1,(Date.now()-start)/dur);
+      const ease=1-Math.pow(1-prog,3);
       ring.setAttribute('r',(8+ease*110).toFixed(1));
       ring.setAttribute('opacity',(1-ease).toFixed(2));
       if(ring.style) ring.style.strokeWidth=(3*(1-ease)+0.5).toFixed(2);
-      if(t<1) raf(step);
+      if(prog<1) raf(step);
       else if(fx.removeChild) fx.removeChild(ring);
     })();
   });
@@ -520,13 +520,13 @@ function spawnBreakParticles(){
     fx.appendChild(p);
     const dur=650+Math.random()*550, start=Date.now();
     (function step(){
-      const t=Math.min(1,(Date.now()-start)/dur);
-      const ease=1-Math.pow(1-t,2);
+      const prog=Math.min(1,(Date.now()-start)/dur);
+      const ease=1-Math.pow(1-prog,2);
       p.setAttribute('cx',(100+(x1-100)*ease).toFixed(1));
       p.setAttribute('cy',(100+(y1-100)*ease).toFixed(1));
       p.setAttribute('r',(r0*(1-0.8*ease)).toFixed(2));
       p.setAttribute('opacity',(1-ease).toFixed(2));
-      if(t<1) raf(step);
+      if(prog<1) raf(step);
       else if(fx.removeChild) fx.removeChild(p);
     })();
   }
@@ -548,13 +548,13 @@ function spawnAttackParticle(obstacle){
   const dur=650, start=Date.now();
   const raf = (typeof requestAnimationFrame==='function') ? requestAnimationFrame : (fn)=>setTimeoutSafe(fn,16);
   function step(){
-    const t=Math.min(1,(Date.now()-start)/dur);
-    const ease=1-Math.pow(1-t,2);
+    const prog=Math.min(1,(Date.now()-start)/dur);
+    const ease=1-Math.pow(1-prog,2);
     p.setAttribute('cx',(x0+(100-x0)*ease).toFixed(1));
     p.setAttribute('cy',(y0+(100-y0)*ease).toFixed(1));
     p.setAttribute('r',(5.5*(1-0.7*ease)).toFixed(2));
     p.setAttribute('opacity',(1-0.6*ease).toFixed(2));
-    if(t<1){ raf(step); }
+    if(prog<1){ raf(step); }
     else{
       if(fx.removeChild) fx.removeChild(p);
       flashOrb(color);
@@ -580,13 +580,13 @@ function spawnWallAttackParticle(){
   const dur=500, start=Date.now();
   const raf = (typeof requestAnimationFrame==='function') ? requestAnimationFrame : (fn)=>setTimeoutSafe(fn,16);
   function step(){
-    const t=Math.min(1,(Date.now()-start)/dur);
-    const ease=1-Math.pow(1-t,2);
+    const prog=Math.min(1,(Date.now()-start)/dur);
+    const ease=1-Math.pow(1-prog,2);
     p.setAttribute('cx',(100+(x1-100)*ease).toFixed(1));
     p.setAttribute('cy',(100+(y1-100)*ease).toFixed(1));
     p.setAttribute('r',(5.5*(1-0.5*ease)).toFixed(2));
     p.setAttribute('opacity',(1-0.7*ease).toFixed(2));
-    if(t<1){ raf(step); }
+    if(prog<1){ raf(step); }
     else if(fx.removeChild) fx.removeChild(p);
   }
   step();
@@ -637,12 +637,12 @@ function playCharaJoyAnim(){
     const dur=550, start=Date.now();
     const raf = (typeof requestAnimationFrame==='function') ? requestAnimationFrame : (fn)=>setTimeoutSafe(fn,16);
     function step(){
-      const t=Math.min(1,(Date.now()-start)/dur);
-      const ease=1-Math.pow(1-t,2);
+      const prog=Math.min(1,(Date.now()-start)/dur);
+      const ease=1-Math.pow(1-prog,2);
       p.setAttribute('cx',(100+(ex-100)*ease).toFixed(1));
       p.setAttribute('cy',(100+(ey-100)*ease).toFixed(1));
-      p.setAttribute('opacity',(1-t).toFixed(2));
-      if(t<1){ raf(step); }
+      p.setAttribute('opacity',(1-prog).toFixed(2));
+      if(prog<1){ raf(step); }
       else{ if(fx.removeChild) fx.removeChild(p); }
     }
     step();
@@ -961,8 +961,8 @@ function render(){
         (function floatLoop(){
           if(!window._dropFxNodes[key]) return; // 既に除去済みなら停止
           const e=window._dropFxNodes[key];
-          const t=(performance.now()-e.t0)/floatDur;
-          const dy=Math.sin(t*Math.PI*2+e.phase)*floatAmp;
+          const prog=(performance.now()-e.t0)/floatDur;
+          const dy=Math.sin(prog*Math.PI*2+e.phase)*floatAmp;
           e.g.setAttribute('transform','translate('+e.cx.toFixed(1)+','+(e.cy+dy).toFixed(1)+') scale('+e.scale.toFixed(2)+')');
           requestAnimationFrame(floatLoop);
         })();

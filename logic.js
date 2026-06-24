@@ -1508,6 +1508,8 @@ function confirmDrops(resultLogs){
       s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
       absorbed.push(drop);
       resultLogs.push({text:tf('MSG_ITEM_ABSORBED_T',{name:name+rankSuffix}), type:'observe', anim:'absorb', drop:drop});
+      // 中道の振る舞い(id:37)取得で∞表示解放
+      if(drop.itemId===37) s.metaUnlocks.infinity=true;
     }else{
       rejected.push(drop);
       resultLogs.push({text:tf('MSG_ITEM_HAVE_T',{name:name+rankSuffix}), type:null, anim:'flow', drop:drop});
