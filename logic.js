@@ -2053,6 +2053,7 @@ function playOpening(){
 let _tickInterval=null;
 function startTick(){
   if(_tickInterval) return;
+  if(typeof _seGameStarted!=='undefined') _seGameStarted=true;
   _tickInterval=setInterval(tick, 1000);
 }
 

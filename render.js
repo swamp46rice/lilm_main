@@ -1040,13 +1040,6 @@ tick = function(){
 offlineCatchup();
 render(); save(); // 起動直後のcharaSeen等をlocalStorageに確実に保存
 initTitleScreen();
-
-// タブが非表示から復帰した際にlastTsを更新してtickのズレをリセット
-if(typeof document!=='undefined'){
-  document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden) s.lastTs=Date.now();
-  });
-}
 initImportButton();
 initSettings();
 initBgmSelect();
