@@ -376,7 +376,7 @@ function buildWalls(){
     const div=document.createElement('div');
     div.className='wall-mark';
     div.title='';
-    div.textContent=name;
+    div.textContent=t(name);
     g.appendChild(div);
   });
 }
@@ -663,7 +663,7 @@ function buildObstacles(){
     const o=OBSTACLES.find(x=>x.key===ao.key);
     const div=document.createElement('div');
     div.className='obstacle-pill '+o.side;
-    div.textContent=tf('MSG_OBSTACLE_REMAIN_T',{name:o.name,n:ao.remain});
+    div.textContent=tf('MSG_OBSTACLE_REMAIN_T',{name:t(o.name),n:ao.remain});
     g.appendChild(div);
   });
 }
