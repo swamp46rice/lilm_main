@@ -158,6 +158,7 @@ function toggleTypeCharSE(){
 /* ===== SE: WAVファイル再生共通関数 ===== */
 function playSE(idx){
   if(!seOn) return;
+  if(typeof document!=='undefined' && document.hidden) return; // 非表示中はSEをスキップ
   const path=SE_FILES[idx];
   if(!path) return;
   const audio=new Audio(path);
@@ -182,6 +183,7 @@ function sfxCommit()        { playSE(11); }  // スロットへノード設定
 let _typeCharAudio=null;
 function sfxTypeChar(){
   if(!seTypeCharOn) return;
+  if(typeof document!=='undefined' && document.hidden) return;
   const path=SE_FILES[12];
   if(!path) return;
   try{
