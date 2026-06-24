@@ -531,7 +531,27 @@ const LANG_JA = {
   "TIER_6": "Tier 6 ― 中道概念",
   "TIER_7": "Tier 7 ― 超越",
   "LABEL_EXPLORE_FULL": "探索 ― {status}(最大{n})",
-  "INV_BONUS_TOOLTIP": "ボーナス合計: +{n}%"
+  "INV_BONUS_TOOLTIP": "ボーナス合計: +{n}%",
+  "SETTINGS_VOLUME": "VOLUME",
+  "SETTINGS_TEXT_SPEED": "TEXT SPEED",
+  "SETTINGS_SPEED_FAST": "速い",
+  "SETTINGS_SPEED_NORM": "普通",
+  "SETTINGS_SPEED_INST": "即時",
+  "SETTINGS_TYPECHAR": "TYPEWRITER SE",
+  "SETTINGS_TYPECHAR_ON": "タイプ音: ON",
+  "SETTINGS_TYPECHAR_OFF": "タイプ音: OFF",
+  "SETTINGS_LANGUAGE": "LANGUAGE",
+  "SETTINGS_SAVE": "SAVE DATA",
+  "SETTINGS_IMPORT": "セーブデータを読み込む",
+  "SETTINGS_CREDIT": "クレジット",
+  "SETTINGS_DANGER": "DANGER ZONE",
+  "EXPORT_TITLE": "観測記録",
+  "INV_COL_EXPAND": "拡張データ",
+  "INV_COL_ACHIEVE": "実績データ",
+  "CHARA_COLL_TITLE": "AI形態コレクション",
+  "CREDIT_FONT": "Font",
+  "CREDIT_SOUND": "Sound",
+  "CREDIT_SPECIAL_THANKS": "Special Thanks"
 };
 
 const LANG_EN = {
@@ -1063,7 +1083,27 @@ const LANG_EN = {
   "TIER_6": "Tier 6 ― Middle Way Concepts",
   "TIER_7": "Tier 7 ― Transcendence",
   "LABEL_EXPLORE_FULL": "Explore ― {status} (max {n})",
-  "INV_BONUS_TOOLTIP": "Total Bonus: +{n}%"
+  "INV_BONUS_TOOLTIP": "Total Bonus: +{n}%",
+  "SETTINGS_VOLUME": "VOLUME",
+  "SETTINGS_TEXT_SPEED": "TEXT SPEED",
+  "SETTINGS_SPEED_FAST": "Fast",
+  "SETTINGS_SPEED_NORM": "Normal",
+  "SETTINGS_SPEED_INST": "Instant",
+  "SETTINGS_TYPECHAR": "TYPEWRITER SE",
+  "SETTINGS_TYPECHAR_ON": "Type SFX: ON",
+  "SETTINGS_TYPECHAR_OFF": "Type SFX: OFF",
+  "SETTINGS_LANGUAGE": "LANGUAGE",
+  "SETTINGS_SAVE": "SAVE DATA",
+  "SETTINGS_IMPORT": "Import Save",
+  "SETTINGS_CREDIT": "Credits",
+  "SETTINGS_DANGER": "DANGER ZONE",
+  "EXPORT_TITLE": "Observation Log",
+  "INV_COL_EXPAND": "Expansion Data",
+  "INV_COL_ACHIEVE": "Achievement Data",
+  "CHARA_COLL_TITLE": "Form Collection",
+  "CREDIT_FONT": "Font",
+  "CREDIT_SOUND": "Sound",
+  "CREDIT_SPECIAL_THANKS": "Special Thanks"
 };
 
 function t(id){

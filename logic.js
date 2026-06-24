@@ -1194,7 +1194,7 @@ function charaJoyClick(){
     if(minKeys.length===1){
       s.statGrowth[minKeys[0]]+=1;
       s.charaJoyBonusTotal+=1;
-      log(tf('MSG_INTEGRITY_UP_T',{name:minKeys[0]}), 'observe');
+      log(tf('MSG_INTEGRITY_UP_T',{name:t(minKeys[0])}), 'observe');
       if(s.charaJoyBonusTotal>=30){
         s.charaJoyWallsAtCap=s.wallsThisRun.length;
         s.charaJoyResetTick=0;
@@ -1297,7 +1297,7 @@ function grantTrack(trackKey){
 function grantInstantItem(itemId, label, deferLog){
   if(s.inventory[itemId]) return null; // 既に所持済みなら何もしない
   s.inventory[itemId]={itemId, rank:0, isNew:true};
-  const name=label||DROP_ITEMS[itemId].name;
+  const name=label||t(DROP_ITEMS[itemId].name);
   if(deferLog) return name; // ログ・SEは呼び出し元(リザルト演出シーケンス)が後でまとめて出す
   log(tf('MSG_ACHIEVE_UNLOCK_T',{name}), 'observe');
   sfxLevelUp();
@@ -1433,7 +1433,7 @@ function grantDrop(itemId, rank){
   s._dropAngleSeq++;
   const drop={itemId, rank, angle, uid};
   s.runDrops.push(drop); // ラン中は常に追加(重複チェックなし)
-  const name=DROP_ITEMS[itemId].name;
+  const name=t(DROP_ITEMS[itemId].name);
   const rankSuffix=rank===0?'':' +'+rank;
   log(tf('MSG_ITEM_RARE_T',{name:name+rankSuffix}), 'observe');
   sfxItemDrop();
@@ -1489,7 +1489,7 @@ function confirmDrops(resultLogs){
   const rejected=[];
   s.runDrops.forEach(drop=>{
     const cur=s.inventory[drop.itemId];
-    const name=DROP_ITEMS[drop.itemId].name;
+    const name=t(DROP_ITEMS[drop.itemId].name);
     const rankSuffix=drop.rank===0?'':' +'+drop.rank;
     if(!cur || drop.rank>cur.rank){
       s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
@@ -1513,7 +1513,7 @@ function loseDrops(resultLogs, failType){
                : (failType==='timeout'||failType==='timeout_nodereq') ? '位相' : t('DIR_CONVERGE');
     const survived=[];
     s.runDrops.forEach(drop=>{
-      const name=DROP_ITEMS[drop.itemId].name;
+      const name=t(DROP_ITEMS[drop.itemId].name);
       const rankSuffix=drop.rank===0?'':' +'+drop.rank;
       if(Math.random()<0.5){
         resultLogs.push({text:tf('MSG_ITEM_SATELLITE_T',{name:name+rankSuffix,wave}), type:'negative', anim:'flow', drop:drop});
@@ -1525,7 +1525,7 @@ function loseDrops(resultLogs, failType){
     // 引き留められた衛星は統合判定を行う(ランクが上ならインベントリへ反映)
     survived.forEach(drop=>{
       const cur=s.inventory[drop.itemId];
-      const name=DROP_ITEMS[drop.itemId].name;
+      const name=t(DROP_ITEMS[drop.itemId].name);
       const rankSuffix=drop.rank===0?'':' +'+drop.rank;
       if(!cur || drop.rank>cur.rank){
         s.inventory[drop.itemId]={itemId:drop.itemId, rank:drop.rank, isNew:true};
@@ -1736,7 +1736,7 @@ function buildExportDigest(){
   const attrLabel=(CHARA_COLLECTION_ATTRS.find(a=>a.key===currentAttr)||{label:t('STAT_HARMONY')}).label;
   // 今回のランで新規入手・更新されたアイテム(isNewフラグが立っているもののみ。リストアップ後もフラグは変更しない)
   const newItems=s.inventory
-    .map((item,i)=>item && item.isNew ? DROP_ITEMS[i].name : null)
+    .map((item,i)=>item && item.isNew ? t(DROP_ITEMS[i].name) : null)
     .filter(name=>name!==null);
   // AI形態コレクション進捗(視認済み件数のみ。ネタバレ防止のため内訳は出さない)
   const charaSeenCount=Object.keys(s.charaSeen).length;
@@ -1857,7 +1857,7 @@ function showInventory(){
       if(hasRankSystem){
         const rankSuffix=held.rank===0?'':'+'+held.rank;
         nameEl.className='inv-name';
-        nameEl.textContent=item.name+(rankSuffix?' '+rankSuffix:'');
+        nameEl.textContent=t(item.name)+(rankSuffix?' '+rankSuffix:'');
         nameEl.style.color=rankColors[held.rank];
         // 未確定バッジ: runDropsに同アイテムがあり、かつランクアップする場合(まだリザルト確認前)
         // 同アイテムが複数ドロップしている場合は最高ランクのものを基準にする
@@ -1884,7 +1884,7 @@ function showInventory(){
         // ランクなしアイテム(位相データ・実績系): 所持していれば名称表示のみ、NEWバッジのみ判定
         nameEl.className='inv-name';
         const bestTh = (typeof BEST_RECORD_THRESHOLD!=='undefined') ? BEST_RECORD_THRESHOLD[i] : undefined;
-        nameEl.textContent = bestTh!==undefined ? (item.name+'：BEST '+bestTh+t('UI_ACHIEVE')) : item.name;
+        nameEl.textContent = bestTh!==undefined ? (t(item.name)+'：BEST '+bestTh+t('UI_ACHIEVE')) : t(item.name);
         nameEl.style.color=rankColors[0];
         if(held.isNew){
           const badge=document.createElement('span');
@@ -1907,7 +1907,7 @@ function showInventory(){
           nameEl.className='inv-name';
           nameEl.style.color=rankColors[pendingNew.rank]||'#888';
           const rankSuffix=pendingNew.rank===0?'':' +'+pendingNew.rank;
-          nameEl.textContent=item.name+rankSuffix;
+          nameEl.textContent=t(item.name)+rankSuffix;
           const badge=document.createElement('span');
           badge.className='inv-pending'; badge.textContent=t('UI_UNCONFIRMED');
           nameEl.appendChild(badge);
@@ -2208,7 +2208,6 @@ function initImportButton(){
 function applyUILang(){
   const set=(id,text)=>{ const el=document.getElementById(id); if(el) el.textContent=text; };
   const setTitle=(id,text)=>{ const el=document.getElementById(id); if(el) el.title=text; };
-  const setBtn=(id,text)=>{ const el=document.getElementById(id); if(el) el.textContent=text; };
   // メインUIラベル
   set('labelDepth',       t('LABEL_DEPTH'));
   set('labelRunInfo',     t('LABEL_RUN_INFO'));
@@ -2226,24 +2225,44 @@ function applyUILang(){
   set('obstacleTitle',    t('LABEL_OBSTACLE'));
   set('labelGraph',       t('LABEL_GRAPH'));
   // ボタン
-  setBtn('btnExport',     t('BTN_EXPORT'));
-  setBtn('btnReset',      t('BTN_RESET'));
-  setBtn('settingsResetLabel', t('SETTINGS_RESET_BTN'));
+  set('btnExport',        t('BTN_EXPORT'));
+  set('btnReset',         t('BTN_RESET'));
+  set('settingsResetLabel', t('SETTINGS_RESET_BTN'));
+  set('settingsImportBtn',  t('SETTINGS_IMPORT'));
+  set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
+  // 設定セクションラベル
+  set('settingsLabelVolume',   t('SETTINGS_VOLUME'));
+  set('settingsLabelSpeed',    t('SETTINGS_TEXT_SPEED'));
+  set('settingsLabelTypechar', t('SETTINGS_TYPECHAR'));
+  set('settingsLabelLang',     t('SETTINGS_LANGUAGE'));
+  set('settingsLabelSave',     t('SETTINGS_SAVE'));
+  set('settingsLabelDanger',   t('SETTINGS_DANGER'));
+  // 速度ラジオラベル
+  set('labelSpeedFast', ' '+t('SETTINGS_SPEED_FAST'));
+  set('labelSpeedNorm', ' '+t('SETTINGS_SPEED_NORM'));
+  set('labelSpeedInst', ' '+t('SETTINGS_SPEED_INST'));
+  // タイプ音ボタン
+  const tcBtn=document.getElementById('typecharSeToggle');
+  if(tcBtn){ const on=tcBtn.classList.contains('on'); tcBtn.textContent=on?t('SETTINGS_TYPECHAR_ON'):t('SETTINGS_TYPECHAR_OFF'); }
   // ウィンドウ見出し
-  set('invTitle',         t('INV_TITLE'));
-  set('charaTitle',       t('CHARA_TITLE'));
-  set('manualTitle',      t('MANUAL_TITLE'));
+  set('invTitle',          t('INV_TITLE'));
+  set('charaTitle',        t('CHARA_TITLE'));
+  set('exportModalTitle',  t('EXPORT_TITLE'));
+  set('invColExpand',      t('INV_COL_EXPAND'));
+  set('invColAchieve',     t('INV_COL_ACHIEVE'));
   // tooltip
   setTitle('tooltipInventory', t('TOOLTIP_INVENTORY'));
   setTitle('tooltipChara',     t('TOOLTIP_CHARA'));
   setTitle('tooltipManual',    t('TOOLTIP_MANUAL'));
   setTitle('tooltipSettings',  t('TOOLTIP_SETTINGS'));
-  // BGM選択
+  // BGM・export
   const bgmSel=document.getElementById('bgmTrackSelect');
   if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
   const exportTextEl=document.getElementById('exportText');
   if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
-  // departBtn・renormBtnはrender()側で管理
+  // 言語ボタン
+  const langBtn=document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
 }
 
 function toggleLang(){
