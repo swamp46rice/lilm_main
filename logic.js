@@ -2318,11 +2318,21 @@ function showLangSelect(){
     // ロゴ画面（白背景）は即表示、ロゴ画像だけフェードイン
     logoScreen.style.display='flex';
     const logoImg=document.getElementById('makerLogoImg');
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        if(logoImg) logoImg.style.opacity='1';
-      });
-    });
+    if(logoImg){
+      logoImg.style.opacity='0';
+      const startFade=()=>{
+        requestAnimationFrame(()=>{
+          requestAnimationFrame(()=>{ logoImg.style.opacity='1'; });
+        });
+      };
+      if(logoImg.complete && logoImg.naturalWidth>0){
+        startFade();
+      } else {
+        logoImg.addEventListener('load', startFade, {once:true});
+        // 画像なし・読み込み失敗時のフォールバック
+        setTimeout(startFade, 200);
+      }
+    }
     setTimeout(showTitle, 3800);
     document.addEventListener('keydown', skipLogo);
     document.addEventListener('click', skipLogo);
