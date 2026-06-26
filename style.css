@@ -336,6 +336,7 @@ button[disabled]:hover{background:transparent;}
   background:url('assets/title_image_00.png') center/cover no-repeat;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   z-index:100;border-radius:10px;overflow:hidden;cursor:pointer;
+  padding-bottom:80px;
 }
 #titleScreen::before{
   content:'';position:absolute;inset:0;

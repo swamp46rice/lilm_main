@@ -734,6 +734,8 @@ function tickDiscovery(){
     if(!n.prereq.every(p=>s.committed.includes(p))) return;
     if(n.infoTh!==null && s.runInfo<n.infoTh) return;
     if(n.axisStat && stats[n.axisStat]<n.axisTh) return;
+    // dtype:"特殊X"（Tier X）はcheckTierXUnlock()で管理するためここではスキップ
+    if(n.dtype==='特殊X') return;
     const wall=WALLS[wallIndexFor(id,n.tier)];
     if(!wall){ console.warn('[tickDiscovery] wall undefined', id, n.tier); return; }
     if(wall.stat!==null && !STAT_KEYS.every(k=>stats[k]>=wall.stat)) return;
@@ -2499,8 +2501,6 @@ function initSettings(){
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
-    if(!window.confirm(t('MSG_RESET_CONFIRM2'))) return;
-    // resetArmedを強制セットしてresetAll()を実行
     resetArmed=true;
     resetAll();
   });
