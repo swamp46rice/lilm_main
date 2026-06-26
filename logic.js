@@ -2501,8 +2501,10 @@ function initSettings(){
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
-    resetArmed=true;
-    resetAll();
+    // 完全初期化: charaSeen・BGMも含めて全消去
+    localStorage.removeItem('ib_v9');
+    localStorage.removeItem('ib_v9_opening_done');
+    location.reload();
   });
   const importBtn=document.getElementById('settingsImportBtn');
   const importInput=document.getElementById('settingsImportInput');
