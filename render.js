@@ -736,6 +736,46 @@ function buildGraph(scrollToNew){
     });
     prevTierHasFound = foundIds.length>0;
   }
+
+  // ===== Tier X（隠しノード）の表示 =====
+  const txIds=NODE_IDS.filter(id=>NODES[id].tier===8);
+  const txFound=txIds.filter(id=>s.found.includes(id));
+  console.log('[TierX] txIds=',txIds,'txFound=',txFound);
+  if(txFound.length>0){
+    const txLabel=document.createElement('div');
+    txLabel.className='tier-label';
+    txLabel.textContent=t('TIER_X');
+    txLabel.style.color=TIER_COLOR[8];
+    txLabel.style.borderBottom='1px solid '+TIER_COLOR[8];
+    txLabel.style.opacity='0.85';
+    g.appendChild(txLabel);
+    txIds.forEach(id=>{
+      const n=NODES[id];
+      const div=document.createElement('div');
+      if(s.found.includes(id)){
+        const committed=s.committed.includes(id);
+        const isNew=s.newlyUnlocked && s.newlyUnlocked.includes(id);
+        let cls='node-pill';
+        if(committed) cls+=' active';
+        if(isNew) cls+=' is-new';
+        div.innerHTML=t(n.name)+(isNew?'<span class="new-badge">NEW</span>':'');
+        div.title=t(n.note);
+        div.onclick=()=>toggleCommit(id);
+        div.className=cls;
+        div.style.borderLeftColor=TIER_COLOR[8];
+        if(committed) div.style.background='color-mix(in srgb, '+TIER_COLOR[8]+' 16%, transparent)';
+        if(isNew && !firstNewEl) firstNewEl=div;
+      }else{
+        // 未発見: ？？？表示（grayout）
+        div.className='node-pill node-unknown';
+        div.style.borderLeftColor='var(--line)';
+        div.onclick=()=>log(t('HINT_UNKNOWN')+t('UI_COND_UNSET'), 'dream');
+        div.innerHTML='？？？';
+      }
+      g.appendChild(div);
+    });
+  }
+
   // NEWノードが見つかった場合、そこにスクロール
   if(scrollToNew && firstNewEl){
     setTimeout(()=>{
