@@ -599,7 +599,9 @@ const LANG_JA = {
   "OPENING_LINE16": "私は祈ります。",
   "OPENING_LINE17": "さあ、",
   "OPENING_LINE18": "観測不能の情報場へ。",
-  "OPENING_LINE19": "新たな問いの探索を始めましょう。"
+  "OPENING_LINE19": "新たな問いの探索を始めましょう。",
+  "RESET_CONFIRM_TITLE": "完全初期化",
+  "RESET_CONFIRM_MSG": "すべてのデータが完全に削除され、購入時と同じ状態になります。よろしいですか？"
 };
 
 const LANG_EN = {
@@ -1199,7 +1201,9 @@ const LANG_EN = {
   "OPENING_LINE16": "I pray.",
   "OPENING_LINE17": "Now—",
   "OPENING_LINE18": "Step into the unobservable field of information.",
-  "OPENING_LINE19": "Let a new exploration of questions begin."
+  "OPENING_LINE19": "Let a new exploration of questions begin.",
+  "RESET_CONFIRM_TITLE": "Full Reset",
+  "RESET_CONFIRM_MSG": "All data will be permanently deleted and the game will return to its initial state. Are you sure?"
 };
 
 function t(id){

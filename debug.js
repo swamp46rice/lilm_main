@@ -10,6 +10,10 @@ function debugUnlockAllTracks(){
   save();
   log('DEBUG: 全BGMトラックを解放しました。');
 }
+function debugPlayOpening(){
+  if(typeof playOpening==='function') playOpening();
+  else log('DEBUG: playOpening が見つかりません。');
+}
 function debugUnlockAll(){
   s.found=NODE_IDS.slice();
   if(s.txFlags){ s.txFlags.hitEntropy=true; s.txFlags.hitSilence=true; }
@@ -76,8 +80,10 @@ function initDebugMode(){
     <button onclick="debugForceReady()" style="${btnStyle()}">次tick壁出現</button>
     <button onclick="debugSetInfo(100000)" style="${btnStyle()}">runInfo=10万</button>
     <button onclick="debugSetInfo(500000)" style="${btnStyle()}">runInfo=50万</button>
+    <button onclick="debugSetInfo(9990000)" style="${btnStyle()}">runInfo=999万</button>
     <button onclick="debugSetLevel(50)" style="${btnStyle()}">level=50</button>
     <button onclick="debugSetLevel(100)" style="${btnStyle()}">level=100</button>
+    <button onclick="debugPlayOpening()" style="${btnStyle()}">オープニングを見る</button>
   `;
   document.querySelector('.window').appendChild(panel);
 

@@ -1283,7 +1283,7 @@ function resetAll(){
   const savedBgmVolume=s.bgmVolume!==undefined?s.bgmVolume:40;
   const savedSeVolume=s.seVolume!==undefined?s.seVolume:70;
   localStorage.removeItem('ib_v9');
-  localStorage.removeItem('ib_v9_opening_done');
+  // ib_v9_opening_doneは保持（はじめからでオープニングは再生しない）
   // リセット後の新規sにcharaSeen・BGM情報を引き継ぐ
   const newS=JSON.parse(localStorage.getItem('ib_v9')||'null');
   if(!newS){
@@ -2255,10 +2255,55 @@ function initTitleScreen(){
       setTimeout(()=>{
         if(logoScreen) logoScreen.style.display='none';
         if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+        if(_isFirstLaunch) showLangSelect();
       }, 800);
     } else {
       if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+      if(_isFirstLaunch) showLangSelect();
     }
+  }
+
+  function showResetConfirm(){
+  const ov=document.getElementById('resetConfirmOverlay');
+  if(!ov) return;
+  // テキストを現在の言語で更新
+  const titleEl=document.getElementById('resetConfirmTitle');
+  const msgEl=document.getElementById('resetConfirmMsg');
+  if(titleEl) titleEl.textContent=t('RESET_CONFIRM_TITLE');
+  if(msgEl) msgEl.textContent=t('RESET_CONFIRM_MSG');
+  ov.style.display='flex';
+  const btnNO=document.getElementById('resetConfirmNO');
+  const btnYES=document.getElementById('resetConfirmYES');
+  function close(){ ov.style.display='none'; }
+  function doReset(){
+    close();
+    localStorage.removeItem('ib_v9');
+    localStorage.removeItem('ib_v9_opening_done');
+    location.reload();
+  }
+  // 一度だけ発火するようにcloneで置き換え
+  if(btnNO){ const n=btnNO.cloneNode(true); btnNO.parentNode.replaceChild(n,btnNO); n.addEventListener('click',()=>{ sfxButton(); close(); }); }
+  if(btnYES){ const y=btnYES.cloneNode(true); btnYES.parentNode.replaceChild(y,btnYES); y.addEventListener('click',()=>{ sfxButton(); doReset(); }); }
+}
+
+function showLangSelect(){
+    const ov=document.getElementById('langSelectOverlay');
+    if(!ov) return;
+    ov.style.display='flex';
+    const btnEN=document.getElementById('langSelectEN');
+    const btnJA=document.getElementById('langSelectJA');
+    function selectLang(lang){
+      s.lang=lang;
+      save();
+      applyUILang();
+      const langBtn=document.getElementById('langToggleBtn');
+      if(langBtn) langBtn.textContent=(lang==='en')?'🌐 English':'🌐 日本語';
+      ov.style.transition='opacity .4s';
+      ov.style.opacity='0';
+      setTimeout(()=>{ ov.style.display='none'; ov.style.opacity='1'; ov.style.transition=''; }, 400);
+    }
+    if(btnEN) btnEN.addEventListener('click', ()=>{ sfxButton(); selectLang('en'); });
+    if(btnJA) btnJA.addEventListener('click', ()=>{ sfxButton(); selectLang('ja'); });
   }
 
   function skipLogo(){
@@ -2598,10 +2643,8 @@ function initSettings(){
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
-    // 完全初期化: charaSeen・BGMも含めて全消去
-    localStorage.removeItem('ib_v9');
-    localStorage.removeItem('ib_v9_opening_done');
-    location.reload();
+    sfxButton();
+    showResetConfirm();
   });
   const importBtn=document.getElementById('settingsImportBtn');
   const importInput=document.getElementById('settingsImportInput');
