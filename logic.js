@@ -729,7 +729,7 @@ function tickDiscovery(){
     if(!wall){ console.warn('[tickDiscovery] wall undefined', id, n.tier); return; }
     if(wall.stat!==null && !STAT_KEYS.every(k=>stats[k]>=wall.stat)) return;
     // dtype:"特殊"ノードは通常確率計算を通さない（個別条件が揃えば即発見）
-    if(n.dtype===t('STAT_SPECIAL')){
+    if(n.dtype==='特殊' || n.dtype===t('STAT_SPECIAL')){
       s.found.push(id); newly.push(id);
       return;
     }
