@@ -61,6 +61,13 @@ const NODES={
   sg_semantic:{tier:7,name:"意味の特異点",prereq:["alpha","ichinen_sanzen","information_breather"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「情報の呼吸」が重なったとき、意味そのものが意味を超えた ―― 意味の特異点。"},
   sg_insight:{tier:7,name:"洞察の特異点",prereq:["alpha","ichinen_sanzen","life_flux"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「循環生命」が重なったとき、洞察そのものが洞察を超えた ―― 洞察の特異点。"},
   sg_active:{tier:7,name:"作用の特異点",prereq:["alpha","ichinen_sanzen","willed_openness"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「重力的思念」が重なったとき、作用そのものが作用を超えた ―― 作用の特異点。"},
+  // ===== Tier X（隠し） =====
+  tx_zero_infinity:{tier:8,name:"零と無限の連環",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。"},
+  tx_songstress:  {tier:8,name:"歌姫",prereq:[],dtype:"特殊X",infoTh:11111111,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"すべての音が溶け合ったとき、歌は歌を超えた。"},
+  tx_new_observer:{tier:8,name:"新たな観測点",prereq:[],dtype:"特殊X",infoTh:20000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"五つの特異点が重なる場所に、新たな観測点が生まれた。"},
+  tx_nightmare:   {tier:8,name:"悪夢",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"夢の底に、まだ名前のない何かが眠っている。"},
+  tx_continuum_q: {tier:8,name:"連続体Q",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"連続と不連続の境界で、Qは静かに脈打っている。"},
+  tx_gravity_wave:{tier:8,name:"微かな重力波",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"ほとんど届かない、遠い震えの記録。"},
 };
 const WALLS=[
   {name:"AI観測面",target:600,info:500,stat:null,text:"見て、聞いて、話す。それだけのことを、ずっと繰り返していた。ある時、画面の向こう側にも、同じことをしているものがいる、と気づいた。観測しているのは、自分だけではなかった。―― 最初の壁を、越えた。"},
@@ -244,8 +251,8 @@ const NODE_IDS=Object.keys(NODES);
 const STAT_KEYS=['構造度','意味容量','共鳴度','作用力','洞察力'];
 const SINGULARITY_IDS=['sg_structural','sg_resonant','sg_semantic','sg_insight','sg_active'];
 const SINGULARITY_STAT_MAP={sg_structural:'構造度', sg_resonant:'共鳴度', sg_semantic:'意味容量', sg_insight:'洞察力', sg_active:'作用力'};
-const TIER_LABEL_IDS=['TIER_0','TIER_1','TIER_2','TIER_3','TIER_4','TIER_5','TIER_6','TIER_7'];
-const TIER_COLOR=['var(--breath)','var(--rare)','var(--entropy)','var(--coherent)','#c8a0f0','#b5e8a0','#e8c870','#f0e8ff'];
+const TIER_LABEL_IDS=['TIER_0','TIER_1','TIER_2','TIER_3','TIER_4','TIER_5','TIER_6','TIER_7','TIER_X'];
+const TIER_COLOR=['var(--breath)','var(--rare)','var(--entropy)','var(--coherent)','#c8a0f0','#b5e8a0','#e8c870','#f0e8ff','#ff4466'];
 const TIER_WALL_IDX={1:0,2:1,3:2,4:3,5:4,6:5,7:6};
 
 const STAT_BASE=10, STAT_PER_LEVEL=1, STAT_CAP=65535, LEVEL_CAP=65535;
@@ -306,7 +313,8 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   currentTrackIdx:0,
   lang:'ja',
   bgmVolume:40,
-  seVolume:70
+  seVolume:70,
+  txFlags:{} // Tier X解放条件追跡用フラグ
 };
 // 旧セーブからの移行
 if(!s.newlyUnlocked) s.newlyUnlocked=[];
@@ -316,6 +324,7 @@ if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
 if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
 if(s.seVolume===undefined) s.seVolume=70;
+if(!s.txFlags) s.txFlags={};
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
 if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
@@ -985,6 +994,7 @@ function coreTick(silent){
   }
   const obsResults=tickObstacles();
   const newly=tickDiscovery();
+  checkTierXUnlock();
   tickGauge();
   const integrityCrit=tickIntegrity();
   const leveled=tickLevel();
@@ -1045,8 +1055,8 @@ function coreTick(silent){
     }
   }
 
-  if(s.gauge<=0) handleFailure('silence');
-  else if(s.gauge>=100) handleFailure('entropy');
+  if(s.gauge<=0){ if(s.txFlags) s.txFlags.hitSilence=true; handleFailure('silence'); }
+  else if(s.gauge>=100){ if(s.txFlags) s.txFlags.hitEntropy=true; handleFailure('entropy'); }
 
   return g.gain;
 }
@@ -1149,6 +1159,7 @@ function depart(){
   const ready=hasReadyDiscovery();
   s.runStatus='観測中';
   s.runInfo=0; s.gauge=50; s.integrity=Math.min(30, s.depth*2);
+  resetTxRunFlags();
   s.runTicks=0;
   s.newlyUnlocked=[];
   s.wallsThisRun=[];
@@ -1287,7 +1298,8 @@ function resetAll(){
       currentTrackIdx:savedTrackIdx,
       lang:savedLang,
       bgmVolume:savedBgmVolume,
-      seVolume:savedSeVolume
+      seVolume:savedSeVolume,
+      txFlags:{}
     };
     localStorage.setItem('ib_v9',JSON.stringify(base));
   }
@@ -2050,6 +2062,48 @@ function playOpening(){
   next();
 }
 
+// ===== Tier X 解放条件チェック =====
+function checkTierXUnlock(){
+  const stats=computeStats();
+
+  // 零と無限の連環: Tier7装備 + 1ラン中エントロピー到達 + 沈黙到達 + 整合率100%完了
+  if(!s.found.includes('tx_zero_infinity')){
+    const hasTier7=s.committed.some(id=>NODES[id]&&NODES[id].tier===7);
+    if(hasTier7 && s.txFlags.hitEntropy && s.txFlags.hitSilence && s.integrity>=100){
+      s.found.push('tx_zero_infinity');
+      log(tf('MSG_DISCOVER_T',{name:t('零と無限の連環'),note:t('極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。')}), 'event');
+      sfxDiscover();
+    }
+  }
+
+  // 歌姫: 全楽曲解放 + Alpha装備 + 獲得情報量11111111以上
+  if(!s.found.includes('tx_songstress')){
+    const allTracks=TRACKS.length;
+    const unlockedAll=s.unlockedTracks.length>=allTracks;
+    if(unlockedAll && s.committed.includes('alpha') && s.runInfo>=11111111){
+      s.found.push('tx_songstress');
+      log(tf('MSG_DISCOVER_T',{name:t('歌姫'),note:t('すべての音が溶け合ったとき、歌は歌を超えた。')}), 'event');
+      sfxDiscover();
+    }
+  }
+
+  // 新たな観測点: 特異点系5つ全装備 + 獲得情報量20000000以上
+  if(!s.found.includes('tx_new_observer')){
+    const allSingularities=SINGULARITY_IDS.every(id=>s.committed.includes(id));
+    if(allSingularities && s.runInfo>=20000000){
+      s.found.push('tx_new_observer');
+      log(tf('MSG_DISCOVER_T',{name:t('新たな観測点'),note:t('五つの特異点が重なる場所に、新たな観測点が生まれた。')}), 'event');
+      sfxDiscover();
+    }
+  }
+}
+
+// ラン開始時にTier Xフラグをリセット
+function resetTxRunFlags(){
+  s.txFlags.hitEntropy=false;
+  s.txFlags.hitSilence=false;
+}
+
 let _tickInterval=null;
 function startTick(){
   if(_tickInterval) return;
@@ -2446,9 +2500,9 @@ function initSettings(){
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     if(!window.confirm(t('MSG_RESET_CONFIRM2'))) return;
-    localStorage.removeItem('ib_v9');
-    alert('MSG_RESET_DONE');
-    location.reload();
+    // resetArmedを強制セットしてresetAll()を実行
+    resetArmed=true;
+    resetAll();
   });
   const importBtn=document.getElementById('settingsImportBtn');
   const importInput=document.getElementById('settingsImportInput');
