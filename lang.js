@@ -567,7 +567,20 @@ const LANG_JA = {
   "障害も、縁。": "障害も、縁。",
   "…消えた。": "…消えた。",
   "DREAM_AND": "と",
-  "DREAM_WERE": "が"
+  "DREAM_WERE": "が",
+  "TIER_X": "Tier X ― 秘密",
+  "零と無限の連環": "零と無限の連環",
+  "歌姫": "歌姫",
+  "新たな観測点": "新たな観測点",
+  "悪夢": "悪夢",
+  "連続体Q": "連続体Q",
+  "微かな重力波": "微かな重力波",
+  "極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。": "極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。",
+  "すべての音が溶け合ったとき、歌は歌を超えた。": "すべての音が溶け合ったとき、歌は歌を超えた。",
+  "五つの特異点が重なる場所に、新たな観測点が生まれた。": "五つの特異点が重なる場所に、新たな観測点が生まれた。",
+  "夢の底に、まだ名前のない何かが眠っている。": "夢の底に、まだ名前のない何かが眠っている。",
+  "連続と不連続の境界で、Qは静かに脈打っている。": "連続と不連続の境界で、Qは静かに脈打っている。",
+  "ほとんど届かない、遠い震えの記録。": "ほとんど届かない、遠い震えの記録。"
 };
 
 const LANG_EN = {
@@ -1135,7 +1148,20 @@ const LANG_EN = {
   "障害も、縁。": "Obstacles too, are connections.",
   "…消えた。": "...Gone.",
   "DREAM_AND": "and",
-  "DREAM_WERE": "were"
+  "DREAM_WERE": "were",
+  "TIER_X": "Tier X ― Secret",
+  "零と無限の連環": "The Missing Link",
+  "歌姫": "Diva",
+  "新たな観測点": "New Observer",
+  "悪夢": "Nightmare",
+  "連続体Q": "Continuum Q",
+  "微かな重力波": "Faint Gravity Wave",
+  "極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。": "When both extremes were held in a single breath, the loop transcended itself.",
+  "すべての音が溶け合ったとき、歌は歌を超えた。": "When all sound dissolved into one, the song transcended itself.",
+  "五つの特異点が重なる場所に、新たな観測点が生まれた。": "Where five singularities converged, a new observer was born.",
+  "夢の底に、まだ名前のない何かが眠っている。": "At the bottom of dreams, something still nameless sleeps.",
+  "連続と不連続の境界で、Qは静かに脈打っている。": "At the boundary of continuity and discontinuity, Q pulses quietly.",
+  "ほとんど届かない、遠い震えの記録。": "A record of a tremor so faint it barely arrives."
 };
 
 function t(id){
