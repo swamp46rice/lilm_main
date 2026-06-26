@@ -2057,18 +2057,18 @@ function playOpening(onComplete){
   }
 
   // ゲーム画面全体を真っ暗な状態で覆う
-  ov.style.display='flex';
-  ov.style.alignItems='flex-end';
-  ov.style.background='rgba(2,6,18,1)';
+  ov.style.display='block';
+  const black=document.getElementById('openingBlack');
+  if(black){ black.style.opacity='1'; black.style.transition='opacity 2s ease'; }
   bg.style.opacity='0';
   textBox.style.display='none';
-  textEl.textContent='';
+  textEl.innerText='';
   let displayed='';
 
-  // bg_image_02をフェードイン
+  // bg_image_02をフェードイン、黒背景をフェードアウト
   setTimeout(()=>{
-    ov.style.background='transparent';
     bg.style.opacity='1';
+    if(black) black.style.opacity='0';
   }, 400);
 
   const lines=[
@@ -2132,6 +2132,7 @@ function playOpening(onComplete){
       ov.style.opacity='1';
       ov.style.transition='';
       bg.style.opacity='0';
+      if(document.getElementById('openingBlack')) document.getElementById('openingBlack').style.opacity='1';
       textBox.style.display='none';
       textEl.textContent='';
       localStorage.setItem('ib_v9_opening_done','1');
@@ -2657,7 +2658,8 @@ function initSettings(){
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     sfxButton();
-    showResetConfirm();
+    hideSettings();
+    setTimeout(showResetConfirm, 100);
   });
   const importBtn=document.getElementById('settingsImportBtn');
   const importInput=document.getElementById('settingsImportInput');
