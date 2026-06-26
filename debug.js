@@ -12,6 +12,7 @@ function debugUnlockAllTracks(){
 }
 function debugUnlockAll(){
   s.found=NODE_IDS.slice();
+  if(s.txFlags){ s.txFlags.hitEntropy=true; s.txFlags.hitSilence=true; }
   checkAllTierCompleteAchievements();
   render();
   log('DEBUG: 全ノードを開放した('+NODE_IDS.length+'個)');
