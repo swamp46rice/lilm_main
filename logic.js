@@ -2266,10 +2266,9 @@ function initTitleScreen(){
     }
   }
 
-  function showResetConfirm(){
+function showResetConfirm(){
   const ov=document.getElementById('resetConfirmOverlay');
   if(!ov) return;
-  // テキストを現在の言語で更新
   const titleEl=document.getElementById('resetConfirmTitle');
   const msgEl=document.getElementById('resetConfirmMsg');
   if(titleEl) titleEl.textContent=t('RESET_CONFIRM_TITLE');
@@ -2284,7 +2283,6 @@ function initTitleScreen(){
     localStorage.removeItem('ib_v9_opening_done');
     location.reload();
   }
-  // 一度だけ発火するようにcloneで置き換え
   if(btnNO){ const n=btnNO.cloneNode(true); btnNO.parentNode.replaceChild(n,btnNO); n.addEventListener('click',()=>{ sfxButton(); close(); }); }
   if(btnYES){ const y=btnYES.cloneNode(true); btnYES.parentNode.replaceChild(y,btnYES); y.addEventListener('click',()=>{ sfxButton(); doReset(); }); }
 }
