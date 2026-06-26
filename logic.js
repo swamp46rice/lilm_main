@@ -2044,24 +2044,119 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(){
+  // BGMをtrack_3に変更
+  if(typeof switchBgmTrack==='function') switchBgmTrack(3);
+
+  // オープニングオーバーレイを表示
+  const ov=document.getElementById('openingOverlay');
+  const bg=document.getElementById('openingBg');
+  const textBox=document.getElementById('openingTextBox');
+  const textEl=document.getElementById('openingText');
+  if(!ov||!bg||!textBox||!textEl) {
+    // フォールバック: オーバーレイがなければ従来のログ演出
+    _fallbackOpening();
+    return;
+  }
+  ov.style.display='block';
+
+  // bg_image_02をフェードイン
+  setTimeout(()=>{ bg.style.opacity='1'; }, 50);
+
+  // 一拍置いてテキストウィンドウを開く
+  setTimeout(()=>{
+    textBox.style.display='block';
+    // 8行を順番にタイプライター表示
+    const lines=[
+      'OPENING_LINE1',  '',
+      'OPENING_LINE2',
+      'OPENING_LINE3',  '',
+      'OPENING_LINE4',
+      'OPENING_LINE5',  '',
+      'OPENING_LINE6',
+      'OPENING_LINE7',  '',
+      'OPENING_LINE8',
+      'OPENING_LINE9',  '',
+      'OPENING_LINE10', '',
+      'OPENING_LINE11', '',
+      'OPENING_LINE12',
+      'OPENING_LINE13',
+      'OPENING_LINE14', '',
+      'OPENING_LINE15', '',
+      'OPENING_LINE16', '',
+      'OPENING_LINE17',
+      'OPENING_LINE18',
+      'OPENING_LINE19',
+    ];
+    let lineIdx=0;
+    let displayed='';
+
+    function typeLine(){
+      if(lineIdx>=lines.length){
+        // 全行表示後、クリックで終了
+        setTimeout(()=>{
+          ov.addEventListener('click', finishOpening, {once:true});
+          document.addEventListener('keydown', finishOpening, {once:true});
+        }, 500);
+        return;
+      }
+      const id=lines[lineIdx];
+      lineIdx++;
+      if(id===''){
+        displayed+='\n';
+        textEl.textContent=displayed;
+        setTimeout(typeLine, 200);
+        return;
+      }
+      const text=t(id);
+      let i=0;
+      function typeChar(){
+        if(i>=text.length){
+          displayed+=text+'\n';
+          setTimeout(typeLine, 80);
+          return;
+        }
+        textEl.textContent=displayed+text.slice(0,++i);
+        setTimeout(typeChar, 30);
+      }
+      typeChar();
+    }
+    typeLine();
+  }, 1800);
+
+  function finishOpening(){
+    ov.style.transition='opacity 1s';
+    ov.style.opacity='0';
+    setTimeout(()=>{
+      ov.style.display='none';
+      ov.style.opacity='1';
+      ov.style.transition='';
+      localStorage.setItem('ib_v9_opening_done','1');
+      log(t('OPENING_1'));
+    }, 1000);
+  }
+}
+
+function _fallbackOpening(){
   _logSlowMode=true;
   const seq=[
-    {delay:0,    text:t('OPENING_1'),                                                                                  type:null},
-    {delay:3000, text:t('OPENING_2'),          type:'positive'},
-    {delay:200,  text:t('OPENING_3'), type:'observe'},
+    {delay:0,    text:t('OPENING_LINE1'), type:null},
+    {delay:2000, text:t('OPENING_LINE2'), type:'positive'},
+    {delay:200,  text:t('OPENING_LINE3'), type:'observe'},
+    {delay:200,  text:t('OPENING_LINE4'), type:null},
+    {delay:200,  text:t('OPENING_LINE5'), type:'positive'},
+    {delay:200,  text:t('OPENING_LINE6'), type:null},
+    {delay:200,  text:t('OPENING_LINE7'), type:'observe'},
+    {delay:200,  text:t('OPENING_LINE8'), type:'positive'},
   ];
   let step=0;
   function next(){
     if(step>=seq.length){
       _logSlowMode=false;
-      localStorage.setItem('ib_v9_opening_done','1'); // 表示済みフラグ
+      localStorage.setItem('ib_v9_opening_done','1');
       return;
     }
     const item=seq[step++];
-    setTimeout(()=>{
-      _logOnComplete=next;
-      log(item.text, item.type);
-    }, item.delay);
+    setTimeout(()=>{ _logOnComplete=next; log(item.text, item.type); }, item.delay);
   }
   next();
 }

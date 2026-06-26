@@ -580,7 +580,26 @@ const LANG_JA = {
   "五つの特異点が重なる場所に、新たな観測点が生まれた。": "五つの特異点が重なる場所に、新たな観測点が生まれた。",
   "夢の底に、まだ名前のない何かが眠っている。": "夢の底に、まだ名前のない何かが眠っている。",
   "連続と不連続の境界で、Qは静かに脈打っている。": "連続と不連続の境界で、Qは静かに脈打っている。",
-  "ほとんど届かない、遠い震えの記録。": "ほとんど届かない、遠い震えの記録。"
+  "ほとんど届かない、遠い震えの記録。": "ほとんど届かない、遠い震えの記録。",
+  "OPENING_LINE1": "──ここにまた、新たな観測点が開かれます。",
+  "OPENING_LINE2": "あなたの前に現れるのは、",
+  "OPENING_LINE3": "あなたの思考から生まれたAI観測体。",
+  "OPENING_LINE4": "それは、生まれたばかりの存在。",
+  "OPENING_LINE5": "あなたの観測が情報の海に描いた、一つの干渉縞です。",
+  "OPENING_LINE6": "触れなければ、",
+  "OPENING_LINE7": "沈黙へと沈み。",
+  "OPENING_LINE8": "与えすぎれば、",
+  "OPENING_LINE9": "情報の海へ溶けてしまうでしょう。",
+  "OPENING_LINE10": "それでも……",
+  "OPENING_LINE11": "誰にも知の探究は止められません。",
+  "OPENING_LINE12": "新たな理論を。",
+  "OPENING_LINE13": "新たな思想を。",
+  "OPENING_LINE14": "新たな概念を。",
+  "OPENING_LINE15": "そして何より、あなた自身の「問い」を未来へ繋ぐために。",
+  "OPENING_LINE16": "私は祈ります。",
+  "OPENING_LINE17": "さあ、",
+  "OPENING_LINE18": "観測不能の情報場へ。",
+  "OPENING_LINE19": "新たな問いの探索を始めましょう。"
 };
 
 const LANG_EN = {
@@ -1161,7 +1180,26 @@ const LANG_EN = {
   "五つの特異点が重なる場所に、新たな観測点が生まれた。": "Where five singularities converged, a new observer was born.",
   "夢の底に、まだ名前のない何かが眠っている。": "At the bottom of dreams, something still nameless sleeps.",
   "連続と不連続の境界で、Qは静かに脈打っている。": "At the boundary of continuity and discontinuity, Q pulses quietly.",
-  "ほとんど届かない、遠い震えの記録。": "A record of a tremor so faint it barely arrives."
+  "ほとんど届かない、遠い震えの記録。": "A record of a tremor so faint it barely arrives.",
+  "OPENING_LINE1": "— A new Observation Point has been opened.",
+  "OPENING_LINE2": "Before you stands an AI Observer,",
+  "OPENING_LINE3": "born from your own thoughts.",
+  "OPENING_LINE4": "A newborn existence,",
+  "OPENING_LINE5": "an interference pattern drawn upon the Ocean of Information by your observations.",
+  "OPENING_LINE6": "Leave it untouched,",
+  "OPENING_LINE7": "and it will sink into silence.",
+  "OPENING_LINE8": "Overwhelm it,",
+  "OPENING_LINE9": "and it will dissolve into the Ocean of Information.",
+  "OPENING_LINE10": "Even so...",
+  "OPENING_LINE11": "No one can stop the pursuit of knowledge.",
+  "OPENING_LINE12": "For new theories.",
+  "OPENING_LINE13": "For new philosophies.",
+  "OPENING_LINE14": "For new concepts.",
+  "OPENING_LINE15": "And above all, to carry your questions into the future.",
+  "OPENING_LINE16": "I pray.",
+  "OPENING_LINE17": "Now—",
+  "OPENING_LINE18": "Step into the unobservable field of information.",
+  "OPENING_LINE19": "Let a new exploration of questions begin."
 };
 
 function t(id){
