@@ -2043,79 +2043,79 @@ function hideManual(e){
 }
 
 /* ===== オープニングイベント ===== */
-function playOpening(){
+function playOpening(onComplete){
   // BGMをtrack_3に変更
   if(typeof switchBgmTrack==='function') switchBgmTrack(3);
 
-  // オープニングオーバーレイを表示
   const ov=document.getElementById('openingOverlay');
   const bg=document.getElementById('openingBg');
   const textBox=document.getElementById('openingTextBox');
   const textEl=document.getElementById('openingText');
-  if(!ov||!bg||!textBox||!textEl) {
-    // フォールバック: オーバーレイがなければ従来のログ演出
-    _fallbackOpening();
+  if(!ov||!bg||!textBox||!textEl){
+    _fallbackOpening(onComplete);
     return;
   }
-  ov.style.display='block';
+
+  // ゲーム画面全体を真っ暗な状態で覆う
+  ov.style.display='flex';
+  ov.style.alignItems='flex-end';
+  ov.style.background='rgba(2,6,18,1)';
+  bg.style.opacity='0';
+  textBox.style.display='none';
+  textEl.textContent='';
+  let displayed='';
 
   // bg_image_02をフェードイン
-  setTimeout(()=>{ bg.style.opacity='1'; }, 50);
+  setTimeout(()=>{
+    ov.style.background='transparent';
+    bg.style.opacity='1';
+  }, 400);
 
-  // 一拍置いてテキストウィンドウを開く
+  const lines=[
+    'OPENING_LINE1',  '',
+    'OPENING_LINE2',
+    'OPENING_LINE3',  '',
+    'OPENING_LINE4',
+    'OPENING_LINE5',  '',
+    'OPENING_LINE6',
+    'OPENING_LINE7',  '',
+    'OPENING_LINE8',
+    'OPENING_LINE9',  '',
+    'OPENING_LINE10', '',
+    'OPENING_LINE11', '',
+    'OPENING_LINE12',
+    'OPENING_LINE13',
+    'OPENING_LINE14', '',
+    'OPENING_LINE15', '',
+    'OPENING_LINE16', '',
+    'OPENING_LINE17',
+    'OPENING_LINE18',
+    'OPENING_LINE19',
+  ];
+
   setTimeout(()=>{
     textBox.style.display='block';
-    // 8行を順番にタイプライター表示
-    const lines=[
-      'OPENING_LINE1',  '',
-      'OPENING_LINE2',
-      'OPENING_LINE3',  '',
-      'OPENING_LINE4',
-      'OPENING_LINE5',  '',
-      'OPENING_LINE6',
-      'OPENING_LINE7',  '',
-      'OPENING_LINE8',
-      'OPENING_LINE9',  '',
-      'OPENING_LINE10', '',
-      'OPENING_LINE11', '',
-      'OPENING_LINE12',
-      'OPENING_LINE13',
-      'OPENING_LINE14', '',
-      'OPENING_LINE15', '',
-      'OPENING_LINE16', '',
-      'OPENING_LINE17',
-      'OPENING_LINE18',
-      'OPENING_LINE19',
-    ];
     let lineIdx=0;
-    let displayed='';
-
     function typeLine(){
       if(lineIdx>=lines.length){
-        // 全行表示後、クリックで終了
         setTimeout(()=>{
           ov.addEventListener('click', finishOpening, {once:true});
           document.addEventListener('keydown', finishOpening, {once:true});
         }, 500);
         return;
       }
-      const id=lines[lineIdx];
-      lineIdx++;
+      const id=lines[lineIdx++];
       if(id===''){
         displayed+='\n';
-        textEl.textContent=displayed;
-        setTimeout(typeLine, 200);
+        textEl.innerText=displayed;
+        setTimeout(typeLine, 300);
         return;
       }
       const text=t(id);
       let i=0;
       function typeChar(){
-        if(i>=text.length){
-          displayed+=text+'\n';
-          setTimeout(typeLine, 80);
-          return;
-        }
-        textEl.textContent=displayed+text.slice(0,++i);
+        if(i>=text.length){ displayed+=text+'\n'; setTimeout(typeLine, 80); return; }
+        textEl.innerText=displayed+text.slice(0,++i);
         setTimeout(typeChar, 30);
       }
       typeChar();
@@ -2124,19 +2124,21 @@ function playOpening(){
   }, 1800);
 
   function finishOpening(){
-    ov.style.transition='opacity 1s';
+    ov.style.transition='opacity 1.2s';
     ov.style.opacity='0';
     setTimeout(()=>{
       ov.style.display='none';
       ov.style.opacity='1';
       ov.style.transition='';
+      bg.style.opacity='0';
+      textBox.style.display='none';
+      textEl.textContent='';
       localStorage.setItem('ib_v9_opening_done','1');
-      log(t('OPENING_1'));
-    }, 1000);
+      if(typeof onComplete==='function') onComplete();
+    }, 1200);
   }
 }
-
-function _fallbackOpening(){
+function _fallbackOpening(onComplete){
   _logSlowMode=true;
   const seq=[
     {delay:0,    text:t('OPENING_LINE1'), type:null},
@@ -2153,6 +2155,7 @@ function _fallbackOpening(){
     if(step>=seq.length){
       _logSlowMode=false;
       localStorage.setItem('ib_v9_opening_done','1');
+      if(typeof onComplete==='function') onComplete();
       return;
     }
     const item=seq[step++];
@@ -2329,29 +2332,30 @@ function showLangSelect(){
 
   // キー/クリックで解除
   function startGame(){
-    const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
-    if(typeof switchBgmTrack==='function'){
-      switchBgmTrack(trackIdx);
-    } else {
-      const audio=document.getElementById('bgmAudio_0');
-      if(audio && bgmAudioOn){
-        audio.volume=0.4;
-        if(audio.readyState===0) audio.load();
-        audio.play().catch(err=>{
-          setTimeout(()=>{ audio.play().catch(e2=>log('BGM再試行も失敗: '+(e2&&e2.name?e2.name:e2))); }, 500);
-        });
-      }
-    }
-    startTick();
+    document.removeEventListener('keydown', startGame);
+    ts.removeEventListener('click', startGame);
+
     ts.style.transition='opacity .6s';
     ts.style.opacity='0';
     setTimeout(()=>{
       ts.style.display='none';
-      if(_isFirstLaunch) playOpening();
-      else log(t('OPENING_1'));
+      if(_isFirstLaunch){
+        // オープニング: tick開始はオープニング終了後
+        playOpening(()=>{
+          startTick();
+          applyUILang();
+          render();
+        });
+      } else {
+        // 通常起動
+        const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
+        if(typeof switchBgmTrack==='function') switchBgmTrack(trackIdx);
+        startTick();
+        applyUILang();
+        render();
+        log(t('OPENING_1'));
+      }
     }, 600);
-    document.removeEventListener('keydown', startGame);
-    ts.removeEventListener('click', startGame);
   }
   // SETTINGSボタン（stopPropagationでstartGame発火を防ぐ）
   const _settingsBtn=document.getElementById('titleSettingsBtn');
