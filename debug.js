@@ -11,7 +11,7 @@ function debugUnlockAllTracks(){
   log('DEBUG: 全BGMトラックを解放しました。');
 }
 function debugUnlockAll(){
-  s.found=NODE_IDS.slice();
+  s.found=NODE_IDS.slice(); // Tier Xを含む全ノード
   if(s.txFlags){ s.txFlags.hitEntropy=true; s.txFlags.hitSilence=true; }
   checkAllTierCompleteAchievements();
   render();
