@@ -740,7 +740,6 @@ function buildGraph(scrollToNew){
   // ===== Tier X（隠しノード）の表示 =====
   const txIds=NODE_IDS.filter(id=>NODES[id].tier===8);
   const txFound=txIds.filter(id=>s.found.includes(id));
-  console.log('[TierX] txIds=',txIds,'txFound=',txFound);
   if(txFound.length>0){
     const txLabel=document.createElement('div');
     txLabel.className='tier-label';
