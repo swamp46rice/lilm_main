@@ -346,12 +346,12 @@ button[disabled]:hover{background:transparent;}
 #titleLogo{width:420px;margin-top:60px;margin-bottom:36px;filter:drop-shadow(0 0 18px #ffffffaa);}
 #titleChara{width:auto;margin-top:-40px;animation:titleFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 14px #ffffff99);}
 @keyframes titleFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
-#titlePressStart{width:200px;margin-top:20px;animation:titleBlink 1.4s ease-in-out infinite;}
+#titlePressStart{width:200px;margin-top:-20px;animation:titleBlink 1.4s ease-in-out infinite;}
 @keyframes titleBlink{0%,100%{opacity:1;}50%{opacity:0.12;}}
 #titleCopyright{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:260px;opacity:0.65;}
 #titleVersion{position:absolute;bottom:20px;right:24px;font-family:var(--font-mono);font-size:11px;color:#111111;opacity:0.9;letter-spacing:.08em;}
 /* SETTINGSボタン (タイトル画面) */
-#titleSettingsBtn{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);max-width:170px;width:auto;opacity:0.75;cursor:pointer;transition:opacity .2s,filter .2s;filter:drop-shadow(0 0 6px #ffffff44);}
+#titleSettingsBtn{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);max-width:170px;width:auto;opacity:0.75;cursor:pointer;transition:opacity .2s,filter .2s;filter:drop-shadow(0 0 6px #ffffff44);}
 #titleSettingsBtn:hover{opacity:1;filter:drop-shadow(0 0 12px #ffffffaa);}
 
 /* セッティング画面オーバーレイ */
