@@ -343,7 +343,7 @@ button[disabled]:hover{background:transparent;}
 }
 #titleScreen>*{position:relative;z-index:1;}
 #titleLogo{width:420px;margin-bottom:36px;filter:drop-shadow(0 0 18px #ffffffaa);}
-#titleChara{width:140px;animation:titleFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 14px #ffffff99);}
+#titleChara{width:auto;animation:titleFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 14px #ffffff99);}
 @keyframes titleFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
 #titlePressStart{width:200px;margin-top:30px;animation:titleBlink 1.4s ease-in-out infinite;}
 @keyframes titleBlink{0%,100%{opacity:1;}50%{opacity:0.12;}}
