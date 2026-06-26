@@ -348,7 +348,7 @@ button[disabled]:hover{background:transparent;}
 #titlePressStart{width:200px;margin-top:30px;animation:titleBlink 1.4s ease-in-out infinite;}
 @keyframes titleBlink{0%,100%{opacity:1;}50%{opacity:0.12;}}
 #titleCopyright{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:260px;opacity:0.65;}
-#titleVersion{position:absolute;bottom:20px;right:24px;font-family:var(--font-mono);font-size:11px;color:#6ab8d8;opacity:0.75;letter-spacing:.08em;}
+#titleVersion{position:absolute;bottom:20px;right:24px;font-family:var(--font-mono);font-size:11px;color:#2d7a3a;opacity:0.9;letter-spacing:.08em;}
 /* SETTINGSボタン (タイトル画面) */
 #titleSettingsBtn{display:block;max-width:170px;width:auto;margin-top:18px;opacity:0.75;cursor:pointer;transition:opacity .2s,filter .2s;filter:drop-shadow(0 0 6px #ffffff44);}
 #titleSettingsBtn:hover{opacity:1;filter:drop-shadow(0 0 12px #ffffffaa);}
