@@ -13,6 +13,7 @@ function debugUnlockAllTracks(){
 function debugUnlockAll(){
   s.found=NODE_IDS.slice(); // Tier Xを含む全ノード
   if(s.txFlags){ s.txFlags.hitEntropy=true; s.txFlags.hitSilence=true; }
+  if(typeof _prevFoundLen!=='undefined') _prevFoundLen=-1;
   checkAllTierCompleteAchievements();
   render();
   log('DEBUG: 全ノードを開放した('+NODE_IDS.length+'個)');
