@@ -2116,6 +2116,7 @@ function playOpening(onComplete){
       function typeChar(){
         if(i>=text.length){ displayed+=text+'\n'; setTimeout(typeLine, 80); return; }
         textEl.innerText=displayed+text.slice(0,++i);
+        textBox.scrollTop=textBox.scrollHeight;
         setTimeout(typeChar, 30);
       }
       typeChar();
