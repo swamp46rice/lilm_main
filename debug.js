@@ -15,6 +15,9 @@ function debugUnlockAll(){
   if(s.txFlags){ s.txFlags.hitEntropy=true; s.txFlags.hitSilence=true; }
   if(typeof _prevFoundLen!=='undefined') _prevFoundLen=-1;
   checkAllTierCompleteAchievements();
+  const txIds=NODE_IDS.filter(id=>NODES[id].tier===8);
+  log('DEBUG: Tier X IDs: '+txIds.join(', '));
+  log('DEBUG: found TierX: '+txIds.filter(id=>s.found.includes(id)).join(', '));
   render();
   log('DEBUG: 全ノードを開放した('+NODE_IDS.length+'個)');
 }
