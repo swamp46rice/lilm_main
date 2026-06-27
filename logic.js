@@ -2044,8 +2044,8 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(onComplete){
-  // 全BGM停止してからtrack_3を再生
-  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+  // オープニングシーンの初期化
+  _seGameStarted=true;
   if(typeof switchBgmTrack==='function') switchBgmTrack(3);
 
   const ov=document.getElementById('openingOverlay');
@@ -2363,40 +2363,41 @@ function showLangSelect(){
   }
 
   // キー/クリックで解除
+  function enterGameScene(){
+    // ゲームシーンの初期化
+    _seGameStarted=true;
+    const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
+    if(typeof switchBgmTrack==='function') switchBgmTrack(trackIdx);
+    startTick();
+    applyUILang();
+    render();
+  }
+
+  function stopAllBgm(){
+    if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+  }
+
+  function fadeOutTitle(then){
+    ts.style.transition='opacity .6s';
+    ts.style.opacity='0';
+    setTimeout(()=>{ ts.style.display='none'; then(); }, 600);
+  }
+
   function startGame(){
     document.removeEventListener('keydown', startGame);
     ts.removeEventListener('click', startGame);
 
-    // 黒幕でゲーム画面を隠す
-    const blackout=document.createElement('div');
-    blackout.style.cssText='position:absolute;inset:0;background:#000;z-index:149;border-radius:10px;pointer-events:none;';
-    document.querySelector('.window').appendChild(blackout);
-
-    ts.style.transition='opacity .6s';
-    ts.style.opacity='0';
-    setTimeout(()=>{
-      ts.style.display='none';
-      // BGMを一旦全停止（オープニングまたはゲーム画面で改めて再生）
-      if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+    stopAllBgm();
+    fadeOutTitle(()=>{
       if(_isFirstLaunch){
-        // オープニング: 黒幕はオープニング完了後に除去
-        playOpening(()=>{
-          blackout.remove();
-          startTick();
-          applyUILang();
-          render();
-        });
+        // オープニングシーン → ゲームシーン
+        playOpening(enterGameScene);
       } else {
-        // 通常起動
-        const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
-        if(typeof switchBgmTrack==='function') switchBgmTrack(trackIdx);
-        startTick();
-        applyUILang();
-        render();
-        blackout.remove();
+        // ゲームシーン直接
         log(t('OPENING_1'));
+        enterGameScene();
       }
-    }, 600);
+    });
   }
   // SETTINGSボタン（stopPropagationでstartGame発火を防ぐ）
   const _settingsBtn=document.getElementById('titleSettingsBtn');
