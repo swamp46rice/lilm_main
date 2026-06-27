@@ -255,3 +255,32 @@ function stopAllBgmGlobal(){
   // track_16（エンディング）
   if(_endingBgm){ _endingBgm.pause(); _endingBgm.currentTime=0; }
 }
+
+/* ===== フェードユーティリティ ===== */
+let _fadeEl=null;
+function _ensureFadeEl(){
+  if(!_fadeEl){
+    _fadeEl=document.createElement('div');
+    _fadeEl.style.cssText='position:absolute;inset:0;background:#000;z-index:400;border-radius:10px;pointer-events:none;opacity:0;';
+    const w=document.querySelector('.window');
+    if(w) w.appendChild(_fadeEl);
+  }
+  return _fadeEl;
+}
+function fadeOut(duration, then){
+  const el=_ensureFadeEl();
+  el.style.transition='none';
+  el.style.opacity='0';
+  el.style.pointerEvents='all';
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+    el.style.transition='opacity '+duration+'ms ease';
+    el.style.opacity='1';
+    setTimeout(then, duration);
+  }); });
+}
+function fadeIn(duration){
+  const el=_ensureFadeEl();
+  el.style.transition='opacity '+duration+'ms ease';
+  el.style.opacity='0';
+  el.style.pointerEvents='none';
+}

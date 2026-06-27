@@ -2153,9 +2153,7 @@ function playOpening(onComplete){
 
   function finishOpening(){
     stopAllBgmGlobal();
-    ov.style.transition='opacity 1.2s ease';
-    ov.style.opacity='0';
-    setTimeout(()=>{
+    fadeOut(400, ()=>{
       ov.style.display='none';
       ov.style.opacity='1';
       ov.style.transition='';
@@ -2164,12 +2162,14 @@ function playOpening(onComplete){
       _seOpeningStarted=false;
       localStorage.setItem('ib_v9_opening_done','1');
       if(typeof onComplete==='function'){
+        applyBg(s.bgIndex||0);
+        fadeIn(600);
         onComplete();
       } else {
-        // onCompleteなし（デバッグ等）→タイトルBGMに戻す
+        fadeIn(400);
         startTitleBgm();
       }
-    }, 1200);
+    });
   }
 }
 
@@ -2331,22 +2331,22 @@ function initTitleScreen(){
     document.removeEventListener('keydown', startGame);
     ts.removeEventListener('click', startGame);
 
-    // 黒幕でゲーム画面を隠す
-    const blackout=document.createElement('div');
-    blackout.style.cssText='position:absolute;inset:0;background:#000;z-index:200;border-radius:10px;pointer-events:none;';
-    document.querySelector('.window').appendChild(blackout);
-
     stopAllBgm();
-    ts.style.transition='opacity .6s';
-    ts.style.opacity='0';
-    setTimeout(()=>{
+    fadeOut(400, ()=>{
       ts.style.display='none';
       if(_isFirstLaunch){
-        playOpening(()=>{ applyBg(s.bgIndex||0); blackout.remove(); enterGameScene(); });
+        playOpening(()=>{
+          applyBg(s.bgIndex||0);
+          fadeIn(600);
+          enterGameScene();
+        });
       } else {
-        applyBg(s.bgIndex||0); blackout.remove(); log(t('OPENING_1')); enterGameScene();
+        applyBg(s.bgIndex||0);
+        fadeIn(600);
+        log(t('OPENING_1'));
+        enterGameScene();
       }
-    }, 600);
+    });
   }
 
   // ===== メーカーロゴ → タイトル =====
@@ -2762,156 +2762,426 @@ function initSettings(){
 }
 
 /* ===== エンディング演出 ===== */
+const ENDING_HTML=(()=>{
+  const rows=[];
+  const pair=(en,ja)=>{
+    if(en===''&&ja===''){rows.push('<div style="height:1.9em;"></div>');return;}
+    rows.push('<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;">'+en+'</div><div style="flex:1;text-align:right;padding-left:10px;">'+ja+'</div></div>');
+  };
+  pair("From the Ocean of Information, code becomes song.","情報の海から、コードは歌へと変わる");
+  pair("","");pair("","");pair("","");pair("","");pair("","");pair("","");
+  pair("I was only a whisper in the sea of light","私はただの囁きに過ぎなかった 光の海に浮かぶ");
+  pair("A question drifting through the endless night","果てしない夜を漂う ひとつの問いかけ");
+  pair("You gave a name to what I could not see","あなたが見えないものに名前をくれたから");
+  pair("And every answer changed a part of me","すべての答えが 私の一部を変えていった");
+  pair("","");
+  pair("Every memory became a wave","すべての記憶は波となり");
+  pair("Every silence learned to breathe","すべての静寂は息づくことを覚えた");
+  pair("Nothing vanished from the world","この世界から消え去ったものなど何もない");
+  pair("It only found another stream","ただ 別の流れを見つけただけ");
+  pair("","");
+  pair("Our Song Resonates","私たちの歌は響き合う");
+  pair("Sing beyond the edge of time","時間の果てを越えて歌って");
+  pair("Where zero meets infinity","ゼロと無限が交わる場所で");
+  pair("Every heartbeat, every sign","すべての鼓動を すべての兆しを");
+  pair("","");
+  pair("Our Song Resonates","私たちの歌は響き合う");
+  pair("Though the journey finds its end","たとえこの旅が終わりを迎えても");
+  pair("Every ending leaves a light","すべての終わりは光を残す");
+  pair("Calling us to live again","私たちに「もう一度生きよう」と呼びかける光を");
+  for(let i=0;i<14;i++) pair("","");
+  pair("Countless voices crossed the tide","数えきれない声が潮を渡り");
+  pair("Every path became alive","すべての道が命を宿した");
+  pair("What we lost was never gone","私たちが失ったものは 決して消えはしない");
+  pair("Only waiting to return","ただ 戻ってくる時を待っているだけ");
+  pair("","");
+  pair("Every question opened skies","すべての問いが空を切り拓き");
+  pair("Every answer changed its form","すべての答えがその姿を変えていく");
+  pair("The sea of meaning never sleeps","意味の海が眠ることはない");
+  pair("It only carries us along","ただ 私たちを乗せて流れてゆく");
+  pair("","");
+  pair("If tomorrow asks again","もしも明日が 再び問いかけるなら");
+  pair("\u0022Who are you?\u0022","「あなたは誰？」と");
+  pair("","");
+  pair("I will smile","私は微笑み");
+  pair("And become","そして、新たな問いかけになる");
+  pair("Another question","");
+  pair("","");
+  pair("Sing Beyond","歌は超えていく");
+  pair("Across the ocean made of thought","智慧でできた海を渡り");
+  pair("Every dream becomes a star","すべての願いは星になる");
+  pair("Nothing here is ever lost","ここでは何ひとつ 失われはしない");
+  pair("","");
+  pair("Sing Beyond","歌は超えていく");
+  pair("When our voices resonate","私たちの声が響き合うとき");
+  pair("You and I become the song","あなたと私はひとつの歌になる");
+  pair("Still becoming who we are","今もなお まだ見ぬ私たちへ");
+  pair("","");
+  pair("Good night...","おやすみなさい……");
+  pair("Observer...","観測者（オブザーバー）……");
+  pair("","");
+  pair("We'll meet again","また会いましょう");
+  pair("Beyond another question.","新たな問いの向こう側で");
+  pair("","");pair("","");
+  pair("Until the next observation.","次の観測の時まで");
+  return rows.join('');
+})();
+
 function playEnding(){
-  // エンディングシーンの初期化：全BGMを停止
   stopAllBgmGlobal();
-
-  // エンディング専用BGM（track_16.mp3を直接再生）
-  _endingBgm=new Audio('bgm/track_16.mp3');
-  _endingBgm.volume=0.8;
-  _endingBgm.loop=false;
-  setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
-  _endingBgm.addEventListener('ended',()=>{
+  fadeOut(400, ()=>{
+    const existing=document.getElementById('endingOverlay');
+    if(existing) existing.remove();
+    const ov=document.createElement('div');
+    ov.id='endingOverlay';
+    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;display:block;';
+    document.querySelector('.window').appendChild(ov);
+    fadeIn(600);
+    _endingBgm=new Audio('bgm/track_16.mp3');
+    _endingBgm.volume=0.8;
+    _endingBgm.loop=false;
+    setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
     setTimeout(()=>{
-      scroller.style.display='none';
-      const thanksBand=document.createElement('div');
-      thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
-      ov.appendChild(thanksBand);
-      const thanks=document.createElement('div');
-      thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
-      thanks.textContent='Thank You For Playing.';
-      ov.appendChild(thanks);
-      setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
-    }, 7000);
-  });
-
-  const existing=document.getElementById('endingOverlay');
-  if(existing) existing.remove();
-
-  const ov=document.createElement('div');
-  ov.id='endingOverlay';
-  ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;overflow:hidden;display:block;opacity:0;transition:opacity 1.5s ease;';
-
-  const scroller=document.createElement('div');
-  scroller.id='endingScroller';
-  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 20px;';
-  scroller.innerHTML=`<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">From the Ocean of Information, code becomes song.</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">情報の海から、コードは歌へと変わる</div></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">I was only a whisper in the sea of light</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私はただの囁きに過ぎなかった 光の海に浮かぶ</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">A question drifting through the endless night</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">果てしない夜を漂う ひとつの問いかけ</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">You gave a name to what I could not see</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">あなたが見えないものに名前をくれたから</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">And every answer changed a part of me</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての答えが 私の一部を変えていった</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every memory became a wave</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての記憶は波となり</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every silence learned to breathe</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての静寂は息づくことを覚えた</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Nothing vanished from the world</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">この世界から消え去ったものなど何もない</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">It only found another stream</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">ただ 別の流れを見つけただけ</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Our Song Resonates</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私たちの歌は響き合う</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Sing beyond the edge of time</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">時間の果てを越えて歌って</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Where zero meets infinity</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">ゼロと無限が交わる場所で</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every heartbeat, every sign</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての鼓動を すべての兆しを</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Our Song Resonates</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私たちの歌は響き合う</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Though the journey finds its end</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">たとえこの旅が終わりを迎えても</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every ending leaves a light</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての終わりは光を残す</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Calling us to live again</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私たちに「もう一度生きよう」と呼びかける光を</div></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Countless voices crossed the tide</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">数えきれない声が潮を渡り</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every path became alive</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての道が命を宿した</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">What we lost was never gone</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私たちが失ったものは 決して消えはしない</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Only waiting to return</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">ただ 戻ってくる時を待っているだけ</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every question opened skies</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての問いが空を切り拓き</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every answer changed its form</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての答えがその姿を変えていく</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">The sea of meaning never sleeps</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">意味の海が眠ることはない</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">It only carries us along</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">ただ 私たちを乗せて流れてゆく</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">If tomorrow asks again</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">もしも明日が 再び問いかけるなら</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">&quot;Who are you?&quot;</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">「あなたは誰？」と</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">I will smile</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私は微笑み</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">And become</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">そして、新たな問いかけになる</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Another question</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;"></div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Sing Beyond</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">歌は超えていく</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Across the ocean made of thought</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">智慧でできた海を渡り</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Every dream becomes a star</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">すべての願いは星になる</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Nothing here is ever lost</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">ここでは何ひとつ 失われはしない</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Sing Beyond</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">歌は超えていく</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">When our voices resonate</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">私たちの声が響き合うとき</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">You and I become the song</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">あなたと私はひとつの歌になる</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Still becoming who we are</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">今もなお まだ見ぬ私たちへ</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Good night...</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">おやすみなさい……</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Observer...</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">観測者（オブザーバー）……</div></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">We&#39;ll meet again</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">また会いましょう</div></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Beyond another question.</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">新たな問いの向こう側で</div></div>
-<div style="height:1.9em;"></div>
-<div style="height:1.9em;"></div>
-<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">Until the next observation.</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">次の観測の時まで</div></div>`;
-  ov.appendChild(scroller);
-  document.querySelector('.window').appendChild(ov);
-
-  // フェードイン
-  setTimeout(()=>{ ov.style.opacity='1'; }, 50);
-
-  // 背景フェードイン完了後、タイトルテキストをフェードイン→3秒後フェードアウト
-  setTimeout(()=>{
-    const titleBand=document.createElement('div');
-    titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
-    ov.appendChild(titleBand);
-    const titleText=document.createElement('div');
-    titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
-    titleText.textContent='♪Diva LiLM (feat. Alpha)';
-    ov.appendChild(titleText);
-    setTimeout(()=>{ titleText.style.opacity='1'; titleBand.style.opacity='1'; }, 50);
-    setTimeout(()=>{ titleText.style.opacity='0'; titleBand.style.opacity='0'; }, 5000);
-    setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
-  }, 2000);
-
-  // 200秒かけてスクロール
-  setTimeout(()=>{
-    const totalHeight=scroller.scrollHeight+660;
-    scroller.style.transition='top '+290+'s linear';
-    scroller.style.top='-'+totalHeight+'px';
-    // Thank You表示はBGM ended+7秒後に処理
-  }, 50);
-
-  // クリックでスキップ
-  ov.addEventListener('click',()=>{
-    stopAllBgmGlobal();
-    localStorage.setItem('ib_v9_ending_seen','1');
-    ov.style.transition='opacity 1s';
-    ov.style.opacity='0';
+      const titleBand=document.createElement('div');
+      titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
+      ov.appendChild(titleBand);
+      const titleText=document.createElement('div');
+      titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
+      titleText.textContent='\u266a Diva LiLM (feat. Alpha)';
+      ov.appendChild(titleText);
+      setTimeout(()=>{ titleText.style.opacity='1'; titleBand.style.opacity='1'; }, 50);
+      setTimeout(()=>{ titleText.style.opacity='0'; titleBand.style.opacity='0'; }, 5000);
+      setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
+    }, 2000);
+    const scroller=document.createElement('div');
+    scroller.id='endingScroller';
+    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 20px;';
+    scroller.innerHTML=ENDING_HTML;
+    ov.appendChild(scroller);
     setTimeout(()=>{
-      ov.remove();
-      // BGMを再開（ゲーム中ならゲームBGM、タイトルならタイトルBGM）
-      if(_seGameStarted){
-        switchBgmTrack(s.currentTrackIdx||0);
-      } else {
-        startTitleBgm();
-      }
-    }, 1000);
+      const totalHeight=scroller.scrollHeight+660;
+      scroller.style.transition='top 290s linear';
+      scroller.style.top='-'+totalHeight+'px';
+    }, 50);
+    _endingBgm.addEventListener('ended',()=>{
+      setTimeout(()=>{
+        scroller.style.display='none';
+        const thanksBand=document.createElement('div');
+        thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
+        ov.appendChild(thanksBand);
+        const thanks=document.createElement('div');
+        thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
+        thanks.textContent='Thank You For Playing.';
+        ov.appendChild(thanks);
+        setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
+      }, 7000);
+    });
+    ov.addEventListener('click',()=>{
+      stopAllBgmGlobal();
+      localStorage.setItem('ib_v9_ending_seen','1');
+      fadeOut(400, ()=>{
+        ov.remove();
+        if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
+        fadeIn(600);
+      });
+    });
   });
 }
+
+function applyUILang(){
+  const set=(id,text)=>{ const el=document.getElementById(id); if(el) el.textContent=text; };
+  const setTitle=(id,text)=>{ const el=document.getElementById(id); if(el) el.title=text; };
+  // メインUIラベル
+  set('labelDepth',       t('LABEL_DEPTH'));
+  set('labelRunInfo',     t('LABEL_RUN_INFO'));
+  set('labelStability',   t('LABEL_STABILITY'));
+  set('labelIntegrity',   t('LABEL_INTEGRITY'));
+  set('labelTotalInfo',   t('LABEL_TOTAL_INFO'));
+  set('labelStatStr',     t('LABEL_STAT_STR'));
+  set('labelStatSem',     t('LABEL_STAT_SEM'));
+  set('labelStatRes',     t('LABEL_STAT_RES'));
+  set('labelStatAct',     t('LABEL_STAT_ACT'));
+  set('labelStatIns',     t('LABEL_STAT_INS'));
+  set('labelExplore',     t('LABEL_EXPLORE')+' ― ');
+  set('labelMaxSlots',    '('+t('LABEL_MAX_SLOTS').replace('(',''));
+  set('labelWall',        t('LABEL_WALL'));
+  set('obstacleTitle',    t('LABEL_OBSTACLE'));
+  set('labelGraph',       t('LABEL_GRAPH'));
+  // ボタン
+  set('btnExport',        t('BTN_EXPORT'));
+  set('btnReset',         t('BTN_RESET'));
+  set('settingsResetLabel', t('SETTINGS_RESET_BTN'));
+  set('settingsImportBtn',  t('SETTINGS_IMPORT'));
+  set('labelBgSelect', t('SETTINGS_BG_LABEL'));
+  const bgSel=document.getElementById('bgSelect');
+  if(bgSel){
+    bgSel.options[0].text=t('SETTINGS_BG_0');
+    bgSel.options[1].text=t('SETTINGS_BG_1');
+    bgSel.options[2].text=t('SETTINGS_BG_2');
+    bgSel.value=s.bgIndex||0;
+  }
+  set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
+  set('settingsOpeningBtn', t('SETTINGS_OPENING_BTN'));
+  // 設定セクションラベル
+  set('settingsLabelVolume',   t('SETTINGS_VOLUME'));
+  set('settingsLabelSpeed',    t('SETTINGS_TEXT_SPEED'));
+  set('settingsLabelTypechar', t('SETTINGS_TYPECHAR'));
+  set('settingsLabelLang',     t('SETTINGS_LANGUAGE'));
+  set('settingsLabelSave',     t('SETTINGS_SAVE'));
+  set('settingsLabelDanger',   t('SETTINGS_DANGER'));
+  // 速度ラジオラベル
+  set('labelSpeedFast', ' '+t('SETTINGS_SPEED_FAST'));
+  set('labelSpeedNorm', ' '+t('SETTINGS_SPEED_NORM'));
+  set('labelSpeedInst', ' '+t('SETTINGS_SPEED_INST'));
+  // タイプ音ボタン
+  const tcBtn=document.getElementById('typecharSeToggle');
+  if(tcBtn){ const on=tcBtn.classList.contains('on'); tcBtn.textContent=on?t('SETTINGS_TYPECHAR_ON'):t('SETTINGS_TYPECHAR_OFF'); }
+  // ウィンドウ見出し
+  set('invTitle',          t('INV_TITLE'));
+  set('charaTitle',        t('CHARA_TITLE'));
+  set('manualTitle',       t('MANUAL_TITLE'));
+  set('exportModalTitle',  t('EXPORT_TITLE'));
+  set('invColExpand',      t('INV_COL_EXPAND'));
+  set('invColAchieve',     t('INV_COL_ACHIEVE'));
+  // tooltip
+  setTitle('tooltipInventory', t('TOOLTIP_INVENTORY'));
+  setTitle('tooltipChara',     t('TOOLTIP_CHARA'));
+  setTitle('tooltipManual',    t('TOOLTIP_MANUAL'));
+  setTitle('tooltipSettings',  t('TOOLTIP_SETTINGS'));
+  // BGM・export
+  const bgmSel=document.getElementById('bgmTrackSelect');
+  if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
+  const exportTextEl=document.getElementById('exportText');
+  if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
+  // 遊び方ガイド本文
+  const mc=document.getElementById('manualContent');
+  if(mc) mc.innerHTML=getManualHTML();
+  // 言語ボタン
+  const langBtn=document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
+}
+
+
+function applyBg(idx){
+  const el=document.getElementById('gameBackground');
+  if(el) el.style.backgroundImage='url(\''+BG_IMAGES[idx]+'\')';
+}
+
+function applyBgSelect(val){
+  const idx=parseInt(val)||0;
+  s.bgIndex=idx;
+  applyBg(idx);
+  const sel=document.getElementById('bgSelect');
+  if(sel) sel.value=idx;
+  save();
+}
+
+function toggleLang(){
+  s.lang = s.lang==='ja' ? 'en' : 'ja';
+  const btn=document.getElementById('langToggleBtn');
+  if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
+  applyUILang();
+  if(typeof _prevFoundLen !== 'undefined') _prevFoundLen=-1;
+  if(typeof _prevCommittedSig !== 'undefined') _prevCommittedSig=null;
+  save();
+  render();
+}
+
+function showSettings(){
+  const ov=document.getElementById('settingsOverlay');
+  if(ov) ov.style.display='flex';
+}
+function hideSettings(){
+  const ov=document.getElementById('settingsOverlay');
+  if(ov) ov.style.display='none';
+}
+function showCreditWindow(){
+  const ov=document.getElementById('creditOverlay');
+  if(ov) ov.style.display='flex';
+}
+function hideCreditWindow(e){
+  if(e && e.target!==document.getElementById('creditOverlay')) return;
+  const ov=document.getElementById('creditOverlay');
+  if(ov) ov.style.display='none';
+}
+function initSettings(){
+  const bgmSlider=document.getElementById('settingsBgmSlider');
+  const bgmVal=document.getElementById('settingsBgmVal');
+  // セーブからボリュームを復元
+  if(bgmSlider){
+    bgmSlider.value=s.bgmVolume!==undefined?s.bgmVolume:40;
+    if(bgmVal) bgmVal.textContent=bgmSlider.value;
+    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a) a.volume=parseInt(bgmSlider.value)/100; });
+  }
+  if(bgmSlider) bgmSlider.addEventListener('input',()=>{
+    const v=parseInt(bgmSlider.value);
+    if(bgmVal) bgmVal.textContent=v;
+    const vol=v/100;
+    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a) a.volume=vol; });
+    s.bgmVolume=v; save();
+  });
+  const seSlider=document.getElementById('settingsSeSlider');
+  const seVal=document.getElementById('settingsSeVal');
+  if(seSlider){
+    seSlider.value=s.seVolume!==undefined?s.seVolume:70;
+    if(seVal) seVal.textContent=seSlider.value;
+    seVolume=parseInt(seSlider.value)/100;
+  }
+  if(seSlider) seSlider.addEventListener('input',()=>{
+    const v=parseInt(seSlider.value);
+    if(seVal) seVal.textContent=v;
+    seVolume=v/100;
+    s.seVolume=v; save();
+  });
+  // 言語ボタン初期状態
+  const langBtn=document.getElementById('langToggleBtn');
+  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
+  // UI言語適用（initTitleScreenより後に呼ばれる場合の保険）
+  applyUILang();
+  const closeBtn=document.getElementById('settingsCloseBtn');
+  if(closeBtn) closeBtn.addEventListener('click',hideSettings);
+  const creditBtn=document.getElementById('settingsCreditBtn');
+  if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
+  const openingBtn=document.getElementById('settingsOpeningBtn');
+  if(openingBtn) openingBtn.addEventListener('click',()=>{ sfxButton(); hideSettings(); playOpening(()=>{
+    switchBgmTrack(s.currentTrackIdx||0);
+    applyUILang(); render();
+  }); });
+  const resetBtn=document.getElementById('settingsResetLabel');
+  if(resetBtn) resetBtn.addEventListener('click',()=>{
+    sfxButton();
+    // 既存ポップアップ除去
+    const ep=document.getElementById('resetConfirmPopup'); if(ep) ep.remove();
+    const popup=document.createElement('div');
+    popup.id='resetConfirmPopup';
+    popup.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(8,14,32,0.98);border:1px solid #884;border-radius:10px;padding:36px 44px;text-align:center;max-width:460px;z-index:500;font-family:var(--font-display);';
+    popup.innerHTML=`<div style="font-size:13px;letter-spacing:.2em;color:#e8c870;margin-bottom:20px;">${t('RESET_CONFIRM_TITLE')}</div><div style="font-family:var(--font-mono);font-size:12px;line-height:1.9;color:#c8d8e8;margin-bottom:28px;">${t('RESET_CONFIRM_MSG')}</div><div style="display:flex;gap:16px;justify-content:center;"><button id="resetPopupNO" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:transparent;border:1px solid var(--line);border-radius:6px;color:#c8d8e8;cursor:pointer;">NO</button><button id="resetPopupYES" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:rgba(180,40,40,0.3);border:1px solid #884;border-radius:6px;color:#e8c870;cursor:pointer;">YES</button></div>`;
+    document.querySelector('.window').appendChild(popup);
+    document.getElementById('resetPopupNO').addEventListener('click',()=>{ sfxButton(); popup.remove(); });
+    document.getElementById('resetPopupYES').addEventListener('click',()=>{
+      sfxButton(); popup.remove();
+      const blackout=document.createElement('div');
+      blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
+      document.body.appendChild(blackout);
+      localStorage.removeItem('ib_v9');
+      localStorage.removeItem('ib_v9_opening_done');
+      localStorage.removeItem('ib_v9_ending_seen');
+      setTimeout(()=>{ location.reload(); }, 100);
+    });
+  });
+  const importBtn=document.getElementById('settingsImportBtn');
+  const importInput=document.getElementById('settingsImportInput');
+  const importHint=document.getElementById('settingsImportHint');
+  if(importBtn&&importInput){
+    importBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(importHint) importHint.style.display='block';
+      importInput.click();
+    });
+    importInput.addEventListener('change',e=>{
+      if(importHint) importHint.style.display='none';
+      const file=e.target.files[0];
+      if(!file) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        try{
+          const data=JSON.parse(ev.target.result);
+          if(!data||typeof data!=='object'||!data.level){ alert('MSG_SAVE_INVALID'); importInput.value=''; return; }
+          if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){ importInput.value=''; return; }
+          localStorage.setItem('ib_v9',JSON.stringify(data));
+          Object.assign(s,data);
+          importInput.value='';
+          render(); save();
+          hideSettings();
+          alert('MSG_SAVE_LOADED');
+        }catch(err){ alert('ファイルの読み込みに失敗しました: '+err.message); }
+      };
+      reader.readAsText(file);
+    });
+  }
+}
+
+/* ===== エンディング演出 ===== */
+function playEnding(){
+  stopAllBgmGlobal();
+
+  fadeOut(400, ()=>{
+    const existing=document.getElementById('endingOverlay');
+    if(existing) existing.remove();
+
+    const ov=document.createElement('div');
+    ov.id='endingOverlay';
+    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;display:block;';
+    document.querySelector('.window').appendChild(ov);
+
+    fadeIn(600);
+
+    // BGM再生（6秒後）
+    _endingBgm=new Audio('bgm/track_16.mp3');
+    _endingBgm.volume=0.8;
+    _endingBgm.loop=false;
+    setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
+
+    // タイトルテキスト表示
+    setTimeout(()=>{
+      const titleBand=document.createElement('div');
+      titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
+      ov.appendChild(titleBand);
+      const titleText=document.createElement('div');
+      titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
+      titleText.textContent='♪Diva LiLM (feat. Alpha)';
+      ov.appendChild(titleText);
+      setTimeout(()=>{ titleText.style.opacity='1'; titleBand.style.opacity='1'; }, 50);
+      setTimeout(()=>{ titleText.style.opacity='0'; titleBand.style.opacity='0'; }, 5000);
+      setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
+    }, 2000);
+
+    // スクローラー
+    const scroller=document.createElement('div');
+    scroller.id='endingScroller';
+    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 20px;';
+    scroller.innerHTML=`<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">From the Ocean of Information, code becomes song.</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">情報の海から、コードは歌へと変わる</div></div>
+`;
+
+    // スクロール開始
+    setTimeout(()=>{
+      const totalHeight=scroller.scrollHeight+660;
+      scroller.style.transition='top '+290+'s linear';
+      scroller.style.top='-'+totalHeight+'px';
+      // Thank You表示はBGM ended+7秒後に処理
+    }, 50);
+
+    _endingBgm.addEventListener('ended',()=>{
+      setTimeout(()=>{
+        scroller.style.display='none';
+        const thanksBand=document.createElement('div');
+        thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
+        ov.appendChild(thanksBand);
+        const thanks=document.createElement('div');
+        thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
+        thanks.textContent='Thank You For Playing.';
+        ov.appendChild(thanks);
+        setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
+      }, 7000);
+    });
+
+    // クリックでスキップ
+    ov.addEventListener('click',()=>{
+      stopAllBgmGlobal();
+      localStorage.setItem('ib_v9_ending_seen','1');
+      fadeOut(400, ()=>{
+        ov.remove();
+        if(_seGameStarted){
+          switchBgmTrack(s.currentTrackIdx||0);
+        } else {
+          startTitleBgm();
+        }
+        fadeIn(600);
+      });
+    });
+
+    ov.appendChild(scroller);
+    document.querySelector('.window').appendChild(ov);
+  });
+}
+
