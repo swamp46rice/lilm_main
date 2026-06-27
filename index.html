@@ -95,75 +95,93 @@
     <div id="settingsBox">
       <div class="settings-title"><img id="iconSettingWin" src="" alt="" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;">SETTINGS</div>
 
-      <!-- ボリューム -->
-      <div class="settings-section">
-        <div class="settings-section-label" id="settingsLabelVolume">VOLUME</div>
-        <div class="settings-row">
-          <span class="settings-item-label">BGM</span>
-          <input type="range" id="settingsBgmSlider" min="0" max="100" value="40" class="settings-slider">
-          <span class="settings-item-value" id="settingsBgmVal">40</span>
+      <div class="settings-columns">
+        <!-- 左カラム -->
+        <div class="settings-col">
+
+          <!-- VOLUME -->
+          <div class="settings-section">
+            <div class="settings-section-label" id="settingsLabelVolume">VOLUME</div>
+            <div class="settings-row">
+              <span class="settings-item-label">BGM</span>
+              <input type="range" id="settingsBgmSlider" min="0" max="100" value="40" class="settings-slider">
+              <span class="settings-item-value" id="settingsBgmVal">40</span>
+            </div>
+            <div class="settings-row">
+              <span class="settings-item-label">SE</span>
+              <input type="range" id="settingsSeSlider" min="0" max="100" value="70" class="settings-slider">
+              <span class="settings-item-value" id="settingsSeVal">70</span>
+            </div>
+          </div>
+
+          <!-- TEXT SPEED -->
+          <div class="settings-section">
+            <div class="settings-section-label" id="settingsLabelSpeed">TEXT SPEED</div>
+            <div class="settings-row settings-radio-row">
+              <label class="settings-radio-label"><input type="radio" name="textSpeed" value="fast"> <span id="labelSpeedFast">速い</span></label>
+              <label class="settings-radio-label"><input type="radio" name="textSpeed" value="normal" checked> <span id="labelSpeedNorm">普通</span></label>
+              <label class="settings-radio-label"><input type="radio" name="textSpeed" value="instant"> <span id="labelSpeedInst">即時</span></label>
+            </div>
+          </div>
+
+          <!-- TYPEWRITER SE -->
+          <div class="settings-section">
+            <div class="settings-section-label" id="settingsLabelTypechar">TYPEWRITER SE</div>
+            <div class="settings-row">
+              <button class="settings-btn on" id="typecharSeToggle" onclick="toggleTypeCharSE()">タイプ音: ON</button>
+            </div>
+          </div>
+
         </div>
-        <div class="settings-row">
-          <span class="settings-item-label">SE</span>
-          <input type="range" id="settingsSeSlider" min="0" max="100" value="70" class="settings-slider">
-          <span class="settings-item-value" id="settingsSeVal">70</span>
+
+        <!-- 右カラム -->
+        <div class="settings-col">
+
+          <!-- LANGUAGE -->
+          <div class="settings-section">
+            <div class="settings-section-label" id="settingsLabelLang">LANGUAGE</div>
+            <div class="settings-row">
+              <button class="settings-btn on" id="langToggleBtn" onclick="toggleLang()">🌐 日本語</button>
+            </div>
+          </div>
+
+          <!-- BACKGROUND -->
+          <div class="settings-section">
+            <div class="settings-section-label" id="labelBgSelect">BACKGROUND</div>
+            <div class="settings-row">
+              <select id="bgSelect" class="settings-select" onchange="applyBgSelect(this.value)">
+                <option value="0">壁紙1</option>
+                <option value="1">壁紙2</option>
+                <option value="2">壁紙3</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- DATA -->
+          <div class="settings-section">
+            <div class="settings-section-label">DATA</div>
+            <div class="settings-row">
+              <button class="settings-btn" id="settingsImportBtn">セーブデータを読み込む</button>
+              <div id="settingsImportHint" style="display:none;font-size:10px;color:#6ab8d8;margin-top:4px;">lilm_save_*.json を選択してください</div>
+              <input type="file" id="settingsImportInput" accept=".json" style="display:none">
+            </div>
+          </div>
+
+          <!-- OTHER -->
+          <div class="settings-section">
+            <div class="settings-section-label">OTHER</div>
+            <div class="settings-row">
+              <button class="settings-btn" id="settingsCreditBtn">クレジット</button>
+            </div>
+            <div class="settings-row">
+              <button class="settings-btn" id="settingsOpeningBtn">オープニングを見る</button>
+            </div>
+            <div class="settings-row">
+              <button class="settings-btn settings-btn-danger" id="settingsResetLabel">完全初期化</button>
+            </div>
+          </div>
+
         </div>
-      </div>
-
-      <!-- テキスト速度 -->
-      <div class="settings-section">
-        <div class="settings-section-label" id="settingsLabelSpeed">TEXT SPEED</div>
-        <div class="settings-row settings-radio-row">
-          <label class="settings-radio-label"><input type="radio" name="textSpeed" value="fast"> <span id="labelSpeedFast">速い</span></label>
-          <label class="settings-radio-label"><input type="radio" name="textSpeed" value="normal" checked> <span id="labelSpeedNorm">普通</span></label>
-          <label class="settings-radio-label"><input type="radio" name="textSpeed" value="instant"> <span id="labelSpeedInst">即時</span></label>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-section-label" id="settingsLabelTypechar">TYPEWRITER SE</div>
-        <div class="settings-row">
-          <button class="settings-btn on" id="typecharSeToggle" onclick="toggleTypeCharSE()">タイプ音: ON</button>
-        </div>
-      </div>
-
-      <!-- 言語 -->
-      <div class="settings-section">
-        <div class="settings-section-label" id="settingsLabelLang">LANGUAGE</div>
-        <div class="settings-row">
-          <button class="settings-btn on" id="langToggleBtn" onclick="toggleLang()">🌐 日本語</button>
-        </div>
-        <div class="settings-row">
-          <span class="settings-label" id="labelBgSelect">背景</span>
-          <select id="bgSelect" class="settings-select" onchange="applyBgSelect(this.value)">
-            <option value="0">壁紙1</option>
-            <option value="1">壁紙2</option>
-            <option value="2">壁紙3</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- セパレータ -->
-      <div class="settings-separator"></div>
-
-      <!-- セーブデータを読み込む -->
-      <div class="settings-section">
-        <button class="settings-btn" id="settingsImportBtn">セーブデータを読み込む</button>
-        <div id="settingsImportHint" style="display:none;font-size:10px;color:#6ab8d8;margin-top:4px;">lilm_save_*.json を選択してください</div>
-        <input type="file" id="settingsImportInput" accept=".json" style="display:none">
-      </div>
-
-      <!-- クレジット -->
-      <div class="settings-section">
-        <button class="settings-btn" id="settingsCreditBtn">クレジット</button>
-        <button class="settings-btn" id="settingsOpeningBtn">オープニングを見る</button>
-      </div>
-
-      <!-- セパレータ -->
-      <div class="settings-separator"></div>
-
-      <!-- 完全初期化 -->
-      <div class="settings-section">
-        <button class="settings-btn settings-btn-danger" id="settingsResetLabel">完全初期化</button>
       </div>
 
       <button class="settings-close-btn" id="settingsCloseBtn">CLOSE</button>

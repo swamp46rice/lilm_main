@@ -356,8 +356,10 @@ button[disabled]:hover{background:transparent;}
 
 /* セッティング画面オーバーレイ */
 #settingsOverlay{position:absolute;inset:0;background:rgba(2,6,18,0.88);z-index:200;display:flex;align-items:center;justify-content:center;border-radius:10px;}
-#settingsBox{background:rgba(5,12,30,0.98);border:1px solid #1e3a5a;border-radius:10px;padding:28px 32px 22px;width:400px;max-height:580px;overflow-y:auto;font-family:var(--font-mono);color:#c0ddf0;position:relative;}
+#settingsBox{background:rgba(5,12,30,0.98);border:1px solid #1e3a5a;border-radius:10px;padding:28px 32px 22px;width:700px;max-height:580px;overflow-y:auto;font-family:var(--font-mono);color:#c0ddf0;position:relative;}
 #settingsBox .settings-title{font-size:18px;letter-spacing:.18em;color:#7ee8d0;text-shadow:0 0 12px #7ee8d066;margin-bottom:22px;text-align:center;}
+.settings-columns{display:flex;gap:32px;}
+.settings-col{flex:1;display:flex;flex-direction:column;gap:0;}
 .settings-section{margin-bottom:18px;}
 .settings-section-label{font-size:10px;letter-spacing:.14em;color:#6ab8d8;opacity:.8;margin-bottom:8px;text-transform:uppercase;}
 .settings-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
