@@ -73,6 +73,7 @@ function switchBgmTrack(idx){
   if(prevAudio){ prevAudio.pause(); prevAudio.currentTime=0; }
 
   currentTrackIdx = idx;
+  if(typeof s !== 'undefined'){ s.currentTrackIdx = idx; if(typeof save==='function') save(); }
   const track = TRACKS[currentTrackIdx];
   const audio = document.getElementById(track.audioId);
   if(audio && bgmAudioOn){
