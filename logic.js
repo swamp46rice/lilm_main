@@ -2304,10 +2304,14 @@ function showResetConfirm(){
   document.getElementById('resetPopupNO').addEventListener('click',()=>{ sfxButton(); popup.remove(); });
   document.getElementById('resetPopupYES').addEventListener('click',()=>{
     sfxButton(); popup.remove();
+    // 即座に黒幕を被せる
+    const blackout=document.createElement('div');
+    blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
+    document.body.appendChild(blackout);
     localStorage.removeItem('ib_v9');
     localStorage.removeItem('ib_v9_opening_done');
     localStorage.removeItem('ib_v9_ending_seen');
-    location.reload();
+    setTimeout(()=>{ location.reload(); }, 100);
   });
 }
 
@@ -2700,10 +2704,13 @@ function initSettings(){
     document.getElementById('resetPopupNO').addEventListener('click',()=>{ sfxButton(); popup.remove(); });
     document.getElementById('resetPopupYES').addEventListener('click',()=>{
       sfxButton(); popup.remove();
+      const blackout=document.createElement('div');
+      blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
+      document.body.appendChild(blackout);
       localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
       localStorage.removeItem('ib_v9_ending_seen');
-      location.reload();
+      setTimeout(()=>{ location.reload(); }, 100);
     });
   });
   const importBtn=document.getElementById('settingsImportBtn');
@@ -2842,6 +2849,17 @@ function playEnding(){
 
   // フェードイン
   setTimeout(()=>{ ov.style.opacity='1'; }, 50);
+
+  // 背景フェードイン完了後、タイトルテキストをフェードイン→3秒後フェードアウト
+  setTimeout(()=>{
+    const titleText=document.createElement('div');
+    titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:16px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
+    titleText.textContent='♪Diva LiLM (feat. Alpha)';
+    ov.appendChild(titleText);
+    setTimeout(()=>{ titleText.style.opacity='1'; }, 50);
+    setTimeout(()=>{ titleText.style.opacity='0'; }, 3500);
+    setTimeout(()=>{ titleText.remove(); }, 5000);
+  }, 2000);
 
   // 200秒かけてスクロール
   setTimeout(()=>{
