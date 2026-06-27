@@ -2878,10 +2878,18 @@ function playEnding(){
 
   // クリックでスキップ
   ov.addEventListener('click',()=>{
-    _endingBgm.pause();
+    stopAllBgmGlobal();
     localStorage.setItem('ib_v9_ending_seen','1');
     ov.style.transition='opacity 1s';
     ov.style.opacity='0';
-    setTimeout(()=>{ ov.remove(); }, 1000);
+    setTimeout(()=>{
+      ov.remove();
+      // BGMを再開（ゲーム中ならゲームBGM、タイトルならタイトルBGM）
+      if(_seGameStarted){
+        switchBgmTrack(s.currentTrackIdx||0);
+      } else {
+        startTitleBgm();
+      }
+    }, 1000);
   });
 }
