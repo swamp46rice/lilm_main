@@ -2096,19 +2096,23 @@ function playOpening(onComplete){
   setTimeout(()=>{
     textBox.style.display='block';
     let lineIdx=0;
+    function waitClick(then){
+      const handler=()=>{ document.removeEventListener('keydown',handler); ov.removeEventListener('click',handler); then(); };
+      ov.addEventListener('click', handler, {once:true});
+      document.addEventListener('keydown', handler, {once:true});
+    }
     function typeLine(){
       if(lineIdx>=lines.length){
-        setTimeout(()=>{
-          ov.addEventListener('click', finishOpening, {once:true});
-          document.addEventListener('keydown', finishOpening, {once:true});
-        }, 500);
+        setTimeout(()=>{ waitClick(finishOpening); }, 400);
         return;
       }
       const id=lines[lineIdx++];
       if(id===''){
+        // 空行=段落区切り：クリック待ち
         displayed+='\n';
         textEl.innerText=displayed;
-        setTimeout(typeLine, 300);
+        textBox.scrollTop=textBox.scrollHeight;
+        waitClick(()=>{ setTimeout(typeLine, 100); });
         return;
       }
       const text=t(id);
