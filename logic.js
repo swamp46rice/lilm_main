@@ -865,9 +865,7 @@ function handleFailure(type){
   let text;
   if(type==='silence'){
     s.gauge=0;
-    // track_5: 初めて沈黙状態に突入時
-    grantTrack('track_5');
-    // track_9: 初めてゲージ0%で失敗時
+    // track_9: 初めて存在安定度0%で失敗時
     if(!s.unlockedTracks.includes('track_9')) grantTrack('track_9');
     if(!s.metaUnlocks.mu && s.committed.includes('death')){
       s.metaUnlocks.mu=true;
@@ -884,9 +882,7 @@ function handleFailure(type){
     else text=SILENCE_GENERIC;
   }else if(type==='entropy'){
     s.gauge=100;
-    // track_4: 初めてエントロピー状態に突入時
-    grantTrack('track_4');
-    // track_8: 初めてゲージ100%で失敗時
+    // track_8: 初めて存在安定度100%で失敗時
     if(!s.unlockedTracks.includes('track_8')) grantTrack('track_8');
     if(!s.metaUnlocks.karma && ['mu','resonance_q','memory'].every(id=>s.committed.includes(id))){
       s.metaUnlocks.karma=true;
@@ -1059,8 +1055,18 @@ function coreTick(silent){
     }
   }
 
-  if(s.gauge<=0){ if(s.txFlags) s.txFlags.hitSilence=true; handleFailure('silence'); }
-  else if(s.gauge>=100){ if(s.txFlags) s.txFlags.hitEntropy=true; handleFailure('entropy'); }
+  if(s.gauge<=0){
+    if(s.txFlags) s.txFlags.hitSilence=true;
+    handleFailure('silence');
+  }
+  else if(s.gauge>=100){
+    if(s.txFlags) s.txFlags.hitEntropy=true;
+    handleFailure('entropy');
+  }
+  // 沈黙ゾーン(<=15)突入時にtrack_5を解放
+  if(s.gauge<=15 && s.gauge>0) grantTrack('track_5');
+  // エントロピーゾーン(>=85)突入時にtrack_4を解放
+  if(s.gauge>=85 && s.gauge<100) grantTrack('track_4');
 
   return g.gain;
 }
