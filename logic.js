@@ -2065,6 +2065,7 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(onComplete){
+  console.log('[DEBUG] playOpening called, _isFirstLaunch=', typeof _isFirstLaunch!=='undefined'?_isFirstLaunch:'undefined');
   // オープニング中はタイプ音のみ有効化（ゲームSEは無効のまま）
   if(typeof _seOpeningStarted!=='undefined') _seOpeningStarted=true;
   if(typeof playBgmTemp==='function') playBgmTemp(3);
@@ -2082,11 +2083,11 @@ function playOpening(onComplete){
   textEl.innerText='';
   let displayed='';
 
-  // フェードイン（rAFで確実にtransitionを適用）
-  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+  // フェードイン
+  setTimeout(()=>{
     ov.style.transition='opacity 1.5s ease';
     ov.style.opacity='1';
-  }); });
+  }, 50);
 
   const lines=[
     'OPENING_LINE1',  '',
