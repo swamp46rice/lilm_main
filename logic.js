@@ -2248,6 +2248,24 @@ function startTick(){
   _tickInterval=setInterval(tick, 1000);
 }
 
+function showLangSelect(){
+  const ov=document.getElementById('langSelectOverlay');
+  if(!ov) return;
+  ov.style.display='flex';
+  const btnEN=document.getElementById('langSelectEN');
+  const btnJA=document.getElementById('langSelectJA');
+  function selectLang(lang){
+    s.lang=lang; save(); applyUILang();
+    const langBtn=document.getElementById('langToggleBtn');
+    if(langBtn) langBtn.textContent=(lang==='en')?'🌐 English':'🌐 日本語';
+    ov.style.transition='opacity .4s';
+    ov.style.opacity='0';
+    setTimeout(()=>{ ov.style.display='none'; ov.style.opacity='1'; ov.style.transition=''; }, 400);
+  }
+  if(btnEN) btnEN.addEventListener('click',()=>{ sfxButton(); selectLang('en'); });
+  if(btnJA) btnJA.addEventListener('click',()=>{ sfxButton(); selectLang('ja'); });
+}
+
 function startTitleBgm(){
   stopAllBgmGlobal();
   if(localStorage.getItem('ib_v9_ending_seen')){
