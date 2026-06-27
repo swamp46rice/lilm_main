@@ -2379,15 +2379,13 @@ function showLangSelect(){
       // BGMを一旦全停止（オープニングまたはゲーム画面で改めて再生）
       if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
       if(_isFirstLaunch){
-        // オープニング: tick開始はオープニング終了後
+        // オープニング: 黒幕はオープニング完了後に除去
         playOpening(()=>{
           blackout.remove();
           startTick();
           applyUILang();
           render();
         });
-        // オープニング表示されたら黒幕は不要
-        setTimeout(()=>{ blackout.remove(); }, 500);
       } else {
         // 通常起動
         const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
