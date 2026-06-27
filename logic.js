@@ -2395,13 +2395,18 @@ function showLangSelect(){
     document.removeEventListener('keydown', startGame);
     ts.removeEventListener('click', startGame);
 
+    // 即座に黒幕（タイトルフェード中もゲーム画面を隠す）
+    const blackout=document.createElement('div');
+    blackout.style.cssText='position:absolute;inset:0;background:#000;z-index:200;border-radius:10px;pointer-events:none;';
+    document.querySelector('.window').appendChild(blackout);
+
     stopAllBgm();
     fadeOutTitle(()=>{
       if(_isFirstLaunch){
-        // オープニングシーン → ゲームシーン
-        playOpening(enterGameScene);
+        // オープニング完了後に黒幕除去→ゲーム開始
+        playOpening(()=>{ blackout.remove(); enterGameScene(); });
       } else {
-        // ゲームシーン直接
+        blackout.remove();
         log(t('OPENING_1'));
         enterGameScene();
       }
