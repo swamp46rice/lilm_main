@@ -2263,33 +2263,70 @@ function startTitleBgm(){
 function initTitleScreen(){
   const ts=document.getElementById('titleScreen');
   if(!ts) return;
-  // 画像セット（全要素を安全にセット）
-  const setImg=(id, src)=>{ const el=document.getElementById(id); if(el && src) el.src=src; };
-  setImg('titleLogo',       typeof TITLE_IMG       !=='undefined' ? TITLE_IMG       : '');
-  setImg('titlePressStart', typeof PRESS_START_IMG !=='undefined' ? PRESS_START_IMG : '');
-  setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined' ? COPYRIGHT_IMG   : '');
-  setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined' ? SETTINGS_IMG    : '');
-  setImg('titleChara', TIRE_IMAGES[3]);
-  setImg('makerLogoImg', typeof SWAMP_LOGO_IMG!=='undefined' ? SWAMP_LOGO_IMG : '');
-  setImg('iconData',       typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
-  setImg('iconAi',         typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
-  setImg('iconHowto',      typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
-  setImg('iconSetting',    typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
-  setImg('iconDataInv',    typeof ICON_DATA    !=='undefined' ? ICON_DATA    : '');
-  setImg('iconAiColl',     typeof ICON_AI      !=='undefined' ? ICON_AI      : '');
-  setImg('iconHowtoMan',   typeof ICON_HOWTO   !=='undefined' ? ICON_HOWTO   : '');
-  setImg('iconSettingWin', typeof ICON_SETTING !=='undefined' ? ICON_SETTING : '');
-  // UI言語を適用
+
+  // ===== 画像セット =====
+  const setImg=(id,src)=>{ const el=document.getElementById(id); if(el&&src) el.src=src; };
+  setImg('titleLogo',       typeof TITLE_IMG       !=='undefined'?TITLE_IMG:'');
+  setImg('titlePressStart', typeof PRESS_START_IMG !=='undefined'?PRESS_START_IMG:'');
+  setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined'?COPYRIGHT_IMG:'');
+  setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined'?SETTINGS_IMG:'');
+  setImg('titleChara',      TIRE_IMAGES[3]);
+  setImg('makerLogoImg',    typeof SWAMP_LOGO_IMG  !=='undefined'?SWAMP_LOGO_IMG:'');
+  setImg('iconData',        typeof ICON_DATA   !=='undefined'?ICON_DATA:'');
+  setImg('iconAi',          typeof ICON_AI     !=='undefined'?ICON_AI:'');
+  setImg('iconHowto',       typeof ICON_HOWTO  !=='undefined'?ICON_HOWTO:'');
+  setImg('iconSetting',     typeof ICON_SETTING!=='undefined'?ICON_SETTING:'');
+  setImg('iconDataInv',     typeof ICON_DATA   !=='undefined'?ICON_DATA:'');
+  setImg('iconAiColl',      typeof ICON_AI     !=='undefined'?ICON_AI:'');
+  setImg('iconHowtoMan',    typeof ICON_HOWTO  !=='undefined'?ICON_HOWTO:'');
+  setImg('iconSettingWin',  typeof ICON_SETTING!=='undefined'?ICON_SETTING:'');
+
   applyUILang();
   const langBtn=document.getElementById('langToggleBtn');
   if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
 
-  // タイトル画面はロゴの裏で最初から表示
-  ts.style.opacity='1';
-  ts.style.display='';
-  ts.style.transition='none';
+  ts.style.opacity='1'; ts.style.display=''; ts.style.transition='none';
 
-  // メーカーロゴ → タイトルのフロー
+  // ===== BGM全停止ユーティリティ =====
+  function stopAllBgm(){
+    if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+    const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
+  }
+
+  // ===== ゲームシーン開始 =====
+  function enterGameScene(){
+    _seGameStarted=true;
+    applyBg(s.bgIndex||0);
+    switchBgmTrack(s.currentTrackIdx||0);
+    startTick();
+    applyUILang();
+    render();
+  }
+
+  // ===== PRESS START =====
+  function startGame(){
+    document.removeEventListener('keydown', startGame);
+    ts.removeEventListener('click', startGame);
+
+    // 黒幕でゲーム画面を隠す
+    const blackout=document.createElement('div');
+    blackout.style.cssText='position:absolute;inset:0;background:#000;z-index:200;border-radius:10px;pointer-events:none;';
+    document.querySelector('.window').appendChild(blackout);
+
+    stopAllBgm();
+    ts.style.transition='opacity .6s';
+    ts.style.opacity='0';
+    setTimeout(()=>{
+      ts.style.display='none';
+      if(_isFirstLaunch){
+        playOpening(()=>{ applyBg(s.bgIndex||0); blackout.remove(); enterGameScene(); });
+      } else {
+        applyBg(s.bgIndex||0); blackout.remove(); log(t('OPENING_1')); enterGameScene();
+      }
+    }, 600);
+  }
+
+  // ===== メーカーロゴ → タイトル =====
   const logoScreen=document.getElementById('makerLogoScreen');
   let _logoSkipped=false;
 
@@ -2299,162 +2336,45 @@ function initTitleScreen(){
     document.removeEventListener('keydown', skipLogo);
     document.removeEventListener('click', skipLogo);
     if(logoScreen){
-      // ロゴ画像だけフェードアウト（白背景は維持）
       const logoImg=document.getElementById('makerLogoImg');
       if(logoImg) logoImg.style.opacity='0';
       setTimeout(()=>{
-        if(logoScreen) logoScreen.style.display='none';
-        if(typeof switchBgmTrack==='function') startTitleBgm();
+        logoScreen.style.display='none';
+        startTitleBgm();
         if(_isFirstLaunch) showLangSelect();
       }, 800);
     } else {
-      if(typeof switchBgmTrack==='function') startTitleBgm();
+      startTitleBgm();
       if(_isFirstLaunch) showLangSelect();
     }
   }
 
-function showResetConfirm(){
-  const existing=document.getElementById('resetConfirmPopup');
-  if(existing) existing.remove();
-  const popup=document.createElement('div');
-  popup.id='resetConfirmPopup';
-  popup.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(8,14,32,0.98);border:1px solid #884;border-radius:10px;padding:36px 44px;text-align:center;max-width:460px;z-index:500;font-family:var(--font-display);';
-  popup.innerHTML=`
-    <div style="font-size:13px;letter-spacing:.2em;color:#e8c870;margin-bottom:20px;">${t('RESET_CONFIRM_TITLE')}</div>
-    <div style="font-family:var(--font-mono);font-size:12px;line-height:1.9;color:#c8d8e8;margin-bottom:28px;">${t('RESET_CONFIRM_MSG')}</div>
-    <div style="display:flex;gap:16px;justify-content:center;">
-      <button id="resetPopupNO" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:transparent;border:1px solid var(--line);border-radius:6px;color:#c8d8e8;cursor:pointer;">NO</button>
-      <button id="resetPopupYES" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:rgba(180,40,40,0.3);border:1px solid #884;border-radius:6px;color:#e8c870;cursor:pointer;">YES</button>
-    </div>
-  `;
-  document.querySelector('.window').appendChild(popup);
-  document.getElementById('resetPopupNO').addEventListener('click',()=>{ sfxButton(); popup.remove(); });
-  document.getElementById('resetPopupYES').addEventListener('click',()=>{
-    sfxButton(); popup.remove();
-    // 即座に黒幕を被せる
-    const blackout=document.createElement('div');
-    blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
-    document.body.appendChild(blackout);
-    localStorage.removeItem('ib_v9');
-    localStorage.removeItem('ib_v9_opening_done');
-    localStorage.removeItem('ib_v9_ending_seen');
-    setTimeout(()=>{ location.reload(); }, 100);
-  });
-}
-
-function showLangSelect(){
-    const ov=document.getElementById('langSelectOverlay');
-    if(!ov) return;
-    ov.style.display='flex';
-    const btnEN=document.getElementById('langSelectEN');
-    const btnJA=document.getElementById('langSelectJA');
-    function selectLang(lang){
-      s.lang=lang;
-      save();
-      applyUILang();
-      const langBtn=document.getElementById('langToggleBtn');
-      if(langBtn) langBtn.textContent=(lang==='en')?'🌐 English':'🌐 日本語';
-      ov.style.transition='opacity .4s';
-      ov.style.opacity='0';
-      setTimeout(()=>{ ov.style.display='none'; ov.style.opacity='1'; ov.style.transition=''; }, 400);
-    }
-    if(btnEN) btnEN.addEventListener('click', ()=>{ sfxButton(); selectLang('en'); });
-    if(btnJA) btnJA.addEventListener('click', ()=>{ sfxButton(); selectLang('ja'); });
-  }
-
-  function skipLogo(){
-    if(_logoSkipped) return;
-    showTitle();
-  }
+  function skipLogo(){ showTitle(); }
 
   if(logoScreen){
-    // ロゴ画面（白背景）は即表示、ロゴ画像だけフェードイン
     logoScreen.style.display='flex';
     const logoImg=document.getElementById('makerLogoImg');
     if(logoImg){
       logoImg.style.opacity='0';
-      const startFade=()=>{
-        requestAnimationFrame(()=>{
-          requestAnimationFrame(()=>{ logoImg.style.opacity='1'; });
-        });
-      };
-      if(logoImg.complete && logoImg.naturalWidth>0){
-        startFade();
-      } else {
-        logoImg.addEventListener('load', startFade, {once:true});
-        // 画像なし・読み込み失敗時のフォールバック
-        setTimeout(startFade, 200);
-      }
+      const startFade=()=>{ requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ logoImg.style.opacity='1'; }); }); };
+      if(logoImg.complete && logoImg.naturalWidth>0) startFade();
+      else { logoImg.addEventListener('load', startFade, {once:true}); setTimeout(startFade, 200); }
     }
     setTimeout(showTitle, 3800);
     document.addEventListener('keydown', skipLogo);
     document.addEventListener('click', skipLogo);
   } else {
-    if(typeof switchBgmTrack==='function') startTitleBgm();
+    startTitleBgm();
   }
 
-  // キー/クリックで解除
-  function enterGameScene(){
-    // ゲームシーンの初期化
-    _seGameStarted=true;
-    const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
-    if(typeof switchBgmTrack==='function') switchBgmTrack(trackIdx);
-    startTick();
-    applyUILang();
-    render();
-  }
-
-  function stopAllBgm(){
-    if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
-    const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
-  }
-
-  function fadeOutTitle(then){
-    ts.style.transition='opacity .6s';
-    ts.style.opacity='0';
-    setTimeout(()=>{ ts.style.display='none'; then(); }, 600);
-  }
-
-  function startGame(){
-    document.removeEventListener('keydown', startGame);
-    ts.removeEventListener('click', startGame);
-
-    // 即座に黒幕（タイトルフェード中もゲーム画面を隠す）
-    const blackout=document.createElement('div');
-    blackout.style.cssText='position:absolute;inset:0;background:#000;z-index:200;border-radius:10px;pointer-events:none;';
-    document.querySelector('.window').appendChild(blackout);
-
-    stopAllBgm();
-    fadeOutTitle(()=>{
-      if(_isFirstLaunch){
-        // オープニング完了後に黒幕除去→ゲーム開始
-        playOpening(()=>{
-          applyBg(s.bgIndex||0);
-          blackout.remove();
-          enterGameScene();
-        });
-      } else {
-        applyBg(s.bgIndex||0);
-        blackout.remove();
-        log(t('OPENING_1'));
-        enterGameScene();
-      }
-    });
-  }
-  // SETTINGSボタン（stopPropagationでstartGame発火を防ぐ）
+  // ===== ボタン設定 =====
   const _settingsBtn=document.getElementById('titleSettingsBtn');
-  if(_settingsBtn){
-    _settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); showSettings(); });
-  }
-  // エンディング視聴済みの場合のみ「Diva LiLMを見る」を表示
+  if(_settingsBtn) _settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); showSettings(); });
   const _endingBtn=document.getElementById('titleEndingBtn');
-  if(_endingBtn){
-    _endingBtn.addEventListener('click', e=>{ e.stopPropagation(); });
-  }
+  if(_endingBtn) _endingBtn.addEventListener('click', e=>{ e.stopPropagation(); });
   ts.addEventListener('click', startGame);
   document.addEventListener('keydown', startGame);
 }
-
 /* ===== セーブデータインポートボタン初期化 =====
    #titleScreenのdisplay変化をMutationObserverで監視し、
    タイトル画面表示中のみボタンを表示する。
