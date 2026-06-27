@@ -2678,7 +2678,21 @@ function initSettings(){
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     sfxButton();
-    showResetConfirm();
+    // 既存ポップアップ除去
+    const ep=document.getElementById('resetConfirmPopup'); if(ep) ep.remove();
+    const popup=document.createElement('div');
+    popup.id='resetConfirmPopup';
+    popup.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(8,14,32,0.98);border:1px solid #884;border-radius:10px;padding:36px 44px;text-align:center;max-width:460px;z-index:500;font-family:var(--font-display);';
+    popup.innerHTML=`<div style="font-size:13px;letter-spacing:.2em;color:#e8c870;margin-bottom:20px;">${t('RESET_CONFIRM_TITLE')}</div><div style="font-family:var(--font-mono);font-size:12px;line-height:1.9;color:#c8d8e8;margin-bottom:28px;">${t('RESET_CONFIRM_MSG')}</div><div style="display:flex;gap:16px;justify-content:center;"><button id="resetPopupNO" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:transparent;border:1px solid var(--line);border-radius:6px;color:#c8d8e8;cursor:pointer;">NO</button><button id="resetPopupYES" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:rgba(180,40,40,0.3);border:1px solid #884;border-radius:6px;color:#e8c870;cursor:pointer;">YES</button></div>`;
+    document.querySelector('.window').appendChild(popup);
+    document.getElementById('resetPopupNO').addEventListener('click',()=>{ sfxButton(); popup.remove(); });
+    document.getElementById('resetPopupYES').addEventListener('click',()=>{
+      sfxButton(); popup.remove();
+      localStorage.removeItem('ib_v9');
+      localStorage.removeItem('ib_v9_opening_done');
+      localStorage.removeItem('ib_v9_ending_seen');
+      location.reload();
+    });
   });
   const importBtn=document.getElementById('settingsImportBtn');
   const importInput=document.getElementById('settingsImportInput');
