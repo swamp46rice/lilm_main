@@ -2067,9 +2067,6 @@ function hideManual(e){
 function playOpening(onComplete){
   // オープニング中はタイプ音のみ有効化（ゲームSEは無効のまま）
   if(typeof _seOpeningStarted!=='undefined') _seOpeningStarted=true;
-  // track_17も含め全BGM停止
-  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
-  const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
   if(typeof switchBgmTrack==='function') switchBgmTrack(3);
 
   const ov=document.getElementById('openingOverlay');
