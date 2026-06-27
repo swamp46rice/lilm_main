@@ -2770,6 +2770,19 @@ function playEnding(){
   _endingBgm.volume=0.8;
   _endingBgm.loop=false;
   setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
+  _endingBgm.addEventListener('ended',()=>{
+    setTimeout(()=>{
+      scroller.style.display='none';
+      const thanksBand=document.createElement('div');
+      thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
+      ov.appendChild(thanksBand);
+      const thanks=document.createElement('div');
+      thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
+      thanks.textContent='Thank You For Playing.';
+      ov.appendChild(thanks);
+      setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
+    }, 7000);
+  });
 
   const existing=document.getElementById('endingOverlay');
   if(existing) existing.remove();
@@ -2879,20 +2892,9 @@ function playEnding(){
   // 200秒かけてスクロール
   setTimeout(()=>{
     const totalHeight=scroller.scrollHeight+660;
-    scroller.style.transition='top '+270+'s linear';
+    scroller.style.transition='top '+290+'s linear';
     scroller.style.top='-'+totalHeight+'px';
-    // スクロール完了後にメッセージ表示
-    setTimeout(()=>{
-      scroller.style.display='none';
-      const thanksBand=document.createElement('div');
-      thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
-      ov.appendChild(thanksBand);
-      const thanks=document.createElement('div');
-      thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
-      thanks.textContent='Thank You For Playing.';
-      ov.appendChild(thanks);
-      setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
-    }, 270000);
+    // Thank You表示はBGM ended+7秒後に処理
   }, 50);
 
   // クリックでスキップ
