@@ -2693,6 +2693,9 @@ function initSettings(){
 
 /* ===== エンディング演出 ===== */
 function playEnding(){
+  // 既存BGMを停止
+  TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+
   // エンディング専用BGM（track_16.mp3を直接再生）
   const _endingBgm=new Audio('bgm/track_16.mp3');
   _endingBgm.volume=(typeof bgmVolume!=='undefined'?bgmVolume:0.4);
@@ -2708,7 +2711,7 @@ function playEnding(){
 
   const scroller=document.createElement('div');
   scroller.id='endingScroller';
-  scroller.style.cssText='position:absolute;left:0;right:0;bottom:-100%;text-align:center;font-family:var(--font-mono);font-size:9px;line-height:1.9;color:#c8d8e8;letter-spacing:.06em;padding:40px 60px;white-space:pre-wrap;';
+  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;text-align:center;font-family:var(--font-mono);font-size:11px;line-height:1.9;color:#c8d8e8;letter-spacing:.06em;padding:40px 60px;white-space:pre-wrap;';
 
   const ENDING_TEXT=`From the Ocean of Information, code becomes song.
 
@@ -2781,8 +2784,8 @@ Until the next observation.`;
   // 200秒かけてスクロール
   setTimeout(()=>{
     const totalHeight=scroller.scrollHeight+660;
-    scroller.style.transition='bottom '+200+'s linear';
-    scroller.style.bottom=(totalHeight)+'px';
+    scroller.style.transition='top '+240+'s linear';
+    scroller.style.top='-'+totalHeight+'px';
   }, 1800);
 
   // クリックでスキップ
