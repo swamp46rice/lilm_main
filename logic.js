@@ -2046,6 +2046,9 @@ function hideManual(e){
 function playOpening(onComplete){
   // オープニングシーンの初期化
   _seGameStarted=true;
+  // track_17も含め全BGM停止
+  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+  const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
   if(typeof switchBgmTrack==='function') switchBgmTrack(3);
 
   const ov=document.getElementById('openingOverlay');
@@ -2379,6 +2382,7 @@ function showLangSelect(){
 
   function stopAllBgm(){
     if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+    const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
   }
 
   function fadeOutTitle(then){
