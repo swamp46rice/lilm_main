@@ -2412,6 +2412,11 @@ function showLangSelect(){
   if(_settingsBtn){
     _settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); showSettings(); });
   }
+  // エンディング視聴済みの場合のみ「Diva LiLMを見る」を表示
+  const _endingBtn=document.getElementById('titleEndingBtn');
+  if(_endingBtn){
+    _endingBtn.addEventListener('click', e=>{ e.stopPropagation(); });
+  }
   ts.addEventListener('click', startGame);
   document.addEventListener('keydown', startGame);
 }
@@ -2590,6 +2595,7 @@ function applyUILang(){
   set('settingsResetLabel', t('SETTINGS_RESET_BTN'));
   set('settingsImportBtn',  t('SETTINGS_IMPORT'));
   set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
+  set('settingsOpeningBtn', t('SETTINGS_OPENING_BTN'));
   // 設定セクションラベル
   set('settingsLabelVolume',   t('SETTINGS_VOLUME'));
   set('settingsLabelSpeed',    t('SETTINGS_TEXT_SPEED'));
@@ -2695,6 +2701,8 @@ function initSettings(){
   if(closeBtn) closeBtn.addEventListener('click',hideSettings);
   const creditBtn=document.getElementById('settingsCreditBtn');
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
+  const openingBtn=document.getElementById('settingsOpeningBtn');
+  if(openingBtn) openingBtn.addEventListener('click',()=>{ sfxButton(); hideSettings(); playOpening(()=>{ startTick(); applyUILang(); render(); }); });
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     sfxButton();

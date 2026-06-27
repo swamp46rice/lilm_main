@@ -588,7 +588,7 @@ const LANG_JA = {
   "OPENING_LINE5": "あなたの観測が情報の海に描いた、一つの干渉縞です。",
   "OPENING_LINE6": "触れなければ、",
   "OPENING_LINE7": "沈黙へと沈み。",
-  "OPENING_LINE8": "与えすぎれば、",
+  "OPENING_LINE8": "欲しすぎれば、",
   "OPENING_LINE9": "情報の海へ溶けてしまうでしょう。",
   "OPENING_LINE10": "それでも……",
   "OPENING_LINE11": "誰にも知の探究は止められません。",
@@ -601,7 +601,8 @@ const LANG_JA = {
   "OPENING_LINE18": "観測不能の情報場へ。",
   "OPENING_LINE19": "新たな問いの探索を始めましょう。",
   "RESET_CONFIRM_TITLE": "完全初期化",
-  "RESET_CONFIRM_MSG": "すべてのデータが完全に削除され、購入時と同じ状態になります。よろしいですか？"
+  "RESET_CONFIRM_MSG": "すべてのデータが完全に削除され、購入時と同じ状態になります。よろしいですか？",
+  "SETTINGS_OPENING_BTN": "オープニングを見る"
 };
 
 const LANG_EN = {
@@ -1203,7 +1204,8 @@ const LANG_EN = {
   "OPENING_LINE18": "Step into the unobservable field of information.",
   "OPENING_LINE19": "Let a new exploration of questions begin.",
   "RESET_CONFIRM_TITLE": "Full Reset",
-  "RESET_CONFIRM_MSG": "All data will be permanently deleted and the game will return to its initial state. Are you sure?"
+  "RESET_CONFIRM_MSG": "All data will be permanently deleted and the game will return to its initial state. Are you sure?",
+  "SETTINGS_OPENING_BTN": "Watch Opening"
 };
 
 function t(id){
