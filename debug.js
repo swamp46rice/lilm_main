@@ -98,6 +98,17 @@ function initDebugMode(){
       panel.style.display=debugMode?'block':'none';
     }
   });
+
+  // 画面切り替わり時に閉じる（titleScreen・gameScreenの表示変化を監視）
+  const closePanel=()=>{ debugMode=false; panel.style.display='none'; };
+  const targets=['titleScreen','openingOverlay','endingOverlay'];
+  targets.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) new MutationObserver(()=>{ if(el.style.display!=='none') closePanel(); })
+      .observe(el,{attributes:true,attributeFilter:['style']});
+  });
+  // グローバルに公開（startTick等から呼べるように）
+  window._closeDebugPanel=closePanel;
 }
 
 // debug.jsが読み込まれた時点でinitTitleScreen()は完了しているため、即時実行
