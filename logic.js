@@ -2148,6 +2148,7 @@ function playOpening(onComplete){
   }, 2000);
 
   function finishOpening(){
+    stopAllBgmGlobal();
     ov.style.transition='opacity 1.2s ease';
     ov.style.opacity='0';
     setTimeout(()=>{
@@ -2156,8 +2157,14 @@ function playOpening(onComplete){
       ov.style.transition='';
       textBox.style.display='none';
       textEl.innerText='';
+      _seOpeningStarted=false;
       localStorage.setItem('ib_v9_opening_done','1');
-      if(typeof onComplete==='function') onComplete();
+      if(typeof onComplete==='function'){
+        onComplete();
+      } else {
+        // onCompleteなし（デバッグ等）→タイトルBGMに戻す
+        startTitleBgm();
+      }
     }, 1200);
   }
 }
@@ -2674,7 +2681,10 @@ function initSettings(){
   const creditBtn=document.getElementById('settingsCreditBtn');
   if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
   const openingBtn=document.getElementById('settingsOpeningBtn');
-  if(openingBtn) openingBtn.addEventListener('click',()=>{ sfxButton(); hideSettings(); playOpening(()=>{ startTick(); applyUILang(); render(); }); });
+  if(openingBtn) openingBtn.addEventListener('click',()=>{ sfxButton(); hideSettings(); playOpening(()=>{
+    switchBgmTrack(s.currentTrackIdx||0);
+    applyUILang(); render();
+  }); });
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     sfxButton();
