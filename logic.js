@@ -2819,6 +2819,15 @@ function playEnding(){
     const totalHeight=scroller.scrollHeight+660;
     scroller.style.transition='top '+300+'s linear';
     scroller.style.top='-'+totalHeight+'px';
+    // スクロール完了後にメッセージ表示
+    setTimeout(()=>{
+      scroller.style.display='none';
+      const thanks=document.createElement('div');
+      thanks.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
+      thanks.textContent='Thank You For Playing.';
+      ov.appendChild(thanks);
+      setTimeout(()=>{ thanks.style.opacity='1'; }, 50);
+    }, 300000);
   }, 50);
 
   // クリックでスキップ
