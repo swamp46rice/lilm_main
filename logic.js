@@ -2780,7 +2780,7 @@ function playEnding(){
 
   const scroller=document.createElement('div');
   scroller.id='endingScroller';
-  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#ffffff;letter-spacing:.04em;padding:40px 60px;';
+  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 60px;';
   scroller.innerHTML=`<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">From the Ocean of Information, code becomes song.</div><div style="flex:1;text-align:right;padding-left:20px;">情報の海から、コードは歌へと変わる</div></div>
 <div style="height:1.9em;"></div>
 <div style="height:1.9em;"></div>
