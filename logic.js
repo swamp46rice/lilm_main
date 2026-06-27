@@ -2130,7 +2130,6 @@ function playOpening(onComplete){
       }
       const id=lines[lineIdx++];
       if(id===''){
-        textBox.scrollTop=textBox.scrollHeight;
         waitClick(()=>{
           displayed='';
           textEl.innerText='';
@@ -2143,7 +2142,6 @@ function playOpening(onComplete){
       function typeChar(){
         if(i>=text.length){ displayed+=text+'\n'; setTimeout(typeLine, 80); return; }
         textEl.innerText=displayed+text.slice(0,++i);
-        textBox.scrollTop=textBox.scrollHeight;
         if(i%3===1 && typeof sfxTypeChar==='function') sfxTypeChar();
         setTimeout(typeChar, 30);
       }
