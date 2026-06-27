@@ -2111,8 +2111,13 @@ function playOpening(onComplete){
     textBox.style.display='block';
     let lineIdx=0;
 
+    const promptEl=document.getElementById('openingPrompt');
+    function showPrompt(){ if(promptEl) promptEl.style.display='block'; }
+    function hidePrompt(){ if(promptEl) promptEl.style.display='none'; }
+
     function waitClick(then){
-      const handler=()=>{ document.removeEventListener('keydown',handler); ov.removeEventListener('click',handler); then(); };
+      showPrompt();
+      const handler=()=>{ document.removeEventListener('keydown',handler); ov.removeEventListener('click',handler); hidePrompt(); then(); };
       ov.addEventListener('click', handler, {once:true});
       document.addEventListener('keydown', handler, {once:true});
     }
