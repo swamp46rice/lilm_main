@@ -2853,12 +2853,12 @@ function playEnding(){
   // 背景フェードイン完了後、タイトルテキストをフェードイン→3秒後フェードアウト
   setTimeout(()=>{
     const titleText=document.createElement('div');
-    titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:16px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
+    titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
     titleText.textContent='♪Diva LiLM (feat. Alpha)';
     ov.appendChild(titleText);
     setTimeout(()=>{ titleText.style.opacity='1'; }, 50);
-    setTimeout(()=>{ titleText.style.opacity='0'; }, 3500);
-    setTimeout(()=>{ titleText.remove(); }, 5000);
+    setTimeout(()=>{ titleText.style.opacity='0'; }, 5000);
+    setTimeout(()=>{ titleText.remove(); }, 6500);
   }, 2000);
 
   // 200秒かけてスクロール
