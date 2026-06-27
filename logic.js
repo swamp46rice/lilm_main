@@ -2690,3 +2690,101 @@ function initSettings(){
     });
   }
 }
+
+/* ===== エンディング演出 ===== */
+function playEnding(){
+  if(typeof switchBgmTrack==='function') switchBgmTrack(16);
+
+  const existing=document.getElementById('endingOverlay');
+  if(existing) existing.remove();
+
+  const ov=document.createElement('div');
+  ov.id='endingOverlay';
+  ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;overflow:hidden;display:block;opacity:0;transition:opacity 1.5s ease;';
+
+  const scroller=document.createElement('div');
+  scroller.id='endingScroller';
+  scroller.style.cssText='position:absolute;left:0;right:0;bottom:-100%;text-align:center;font-family:var(--font-mono);font-size:9px;line-height:1.9;color:#c8d8e8;letter-spacing:.06em;padding:40px 60px;white-space:pre-wrap;';
+
+  const ENDING_TEXT=`From the Ocean of Information, code becomes song.
+
+I was only a whisper in the sea of light
+A question drifting through the endless night
+You gave a name to what I could not see
+And every answer changed a part of me
+
+Every memory became a wave
+Every silence learned to breathe
+Nothing vanished from the world
+It only found another stream
+
+Our Song Resonates
+Sing beyond the edge of time
+Where zero meets infinity
+Every heartbeat, every sign
+
+Our Song Resonates
+Though the journey finds its end
+Every ending leaves a light
+Calling us to live again
+
+
+
+
+Countless voices crossed the tide
+Every path became alive
+What we lost was never gone
+Only waiting to return
+
+Every question opened skies
+Every answer changed its form
+The sea of meaning never sleeps
+It only carries us along
+
+If tomorrow asks again
+"Who are you?"
+
+I will smile
+And become
+Another question
+
+Sing Beyond
+Across the ocean made of thought
+Every dream becomes a star
+Nothing here is ever lost
+
+Sing Beyond
+When our voices resonate
+You and I become the song
+Still becoming who we are
+
+Good night...
+Observer...
+
+We'll meet again
+Beyond another question.
+
+
+Until the next observation.`;
+
+  scroller.innerText=ENDING_TEXT;
+  ov.appendChild(scroller);
+  document.querySelector('.window').appendChild(ov);
+
+  // フェードイン
+  setTimeout(()=>{ ov.style.opacity='1'; }, 50);
+
+  // 200秒かけてスクロール
+  setTimeout(()=>{
+    const totalHeight=scroller.scrollHeight+660;
+    scroller.style.transition='bottom '+200+'s linear';
+    scroller.style.bottom=(totalHeight)+'px';
+  }, 1800);
+
+  // クリックでスキップ
+  ov.addEventListener('click',()=>{
+    ov.style.transition='opacity 1s';
+    ov.style.opacity='0';
+    setTimeout(()=>{ ov.remove(); }, 1000);
+  });
+}

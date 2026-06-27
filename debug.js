@@ -63,14 +63,17 @@ function debugSetLevel(val){
   log('DEBUG: levelを'+val+'に設定しました。');
 }
 
-/* ===== タイトル画面にデバッグモードボタンを追加 ===== */
+/* ===== Shift+D でデバッグメニュー開閉 ===== */
 function initDebugMode(){
   let debugMode=false;
 
-  // デバッグパネルのHTML生成
+  function btnStyle(){
+    return 'display:block;width:100%;margin:3px 0;padding:3px 8px;background:rgba(255,80,80,0.15);border:1px solid #f55;border-radius:3px;color:#f99;font-family:monospace;font-size:11px;cursor:pointer;text-align:left;';
+  }
+
   const panel=document.createElement('div');
   panel.id='debugPanel';
-  panel.style.cssText='display:none;position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.85);border:1px solid #f55;border-radius:6px;padding:10px 14px;z-index:200;font-family:monospace;font-size:11px;color:#f99;min-width:200px;';
+  panel.style.cssText='display:none;position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.85);border:1px solid #f55;border-radius:6px;padding:10px 14px;z-index:500;font-family:monospace;font-size:11px;color:#f99;min-width:200px;max-height:580px;overflow-y:auto;';
   panel.innerHTML=`
     <div style="color:#f55;font-weight:bold;margin-bottom:8px;">⚠ DEBUG MODE</div>
     <button onclick="debugUnlockAll()" style="${btnStyle()}">全ノード開放</button>
@@ -84,41 +87,23 @@ function initDebugMode(){
     <button onclick="debugSetLevel(50)" style="${btnStyle()}">level=50</button>
     <button onclick="debugSetLevel(100)" style="${btnStyle()}">level=100</button>
     <button onclick="debugPlayOpening()" style="${btnStyle()}">オープニングを見る</button>
+    <button onclick="debugPlayEnding()" style="${btnStyle()}">エンディングを見る</button>
   `;
   document.querySelector('.window').appendChild(panel);
 
-  function btnStyle(){
-    return 'display:block;width:100%;margin:3px 0;padding:3px 8px;background:rgba(255,80,80,0.15);border:1px solid #f55;border-radius:3px;color:#f99;font-family:monospace;font-size:11px;cursor:pointer;text-align:left;';
-  }
-
-  // タイトル画面のデバッグモードボタン
-  const ts=document.getElementById('titleScreen');
-  if(!ts) return;
-  const btn=document.createElement('button');
-  btn.id='debugModeBtn';
-  btn.textContent='DEBUG MODE';
-  btn.style.cssText='position:absolute;top:20px;right:24px;font-family:monospace;font-size:14px;color:#f55;opacity:0.5;background:none;border:none;padding:3px 6px;cursor:pointer;z-index:101;';
-  btn.addEventListener('click', e=>{
-    e.stopPropagation();
-    debugMode=!debugMode;
-    panel.style.display=debugMode?'block':'none';
-    btn.style.opacity=debugMode?'1':'0.5';
-    btn.textContent='DEBUG MODE';
+  // Shift+D でトグル
+  document.addEventListener('keydown', e=>{
+    if(e.shiftKey && e.key==='D'){
+      debugMode=!debugMode;
+      panel.style.display=debugMode?'block':'none';
+    }
   });
-
-  // titleScreenのdisplay変化に連動してボタンを表示/非表示
-  const observer=new MutationObserver(()=>{
-    const visible=ts.style.display!=='none' && ts.style.opacity!=='0';
-    btn.style.display=visible?'block':'none';
-    if(!visible){ debugMode=false; panel.style.display='none'; }
-  });
-  observer.observe(ts,{attributes:true,attributeFilter:['style']});
-
-  document.querySelector('.window').appendChild(btn);
-  // 初期状態を反映
-  const visible=ts.style.display!=='none';
-  btn.style.display=visible?'block':'none';
 }
 
 // debug.jsが読み込まれた時点でinitTitleScreen()は完了しているため、即時実行
 initDebugMode();
+
+function debugPlayEnding(){
+  if(typeof playEnding==='function') playEnding();
+  else log('DEBUG: playEnding が見つかりません。');
+}
