@@ -2732,84 +2732,82 @@ function playEnding(){
 
   const scroller=document.createElement('div');
   scroller.id='endingScroller';
-  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;text-align:center;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#ffffff;letter-spacing:.06em;padding:40px 60px;white-space:pre-wrap;';
-
-  const ENDING_TEXT=`From the Ocean of Information, code becomes song.
-
-
-
-
-
-
-I was only a whisper in the sea of light
-A question drifting through the endless night
-You gave a name to what I could not see
-And every answer changed a part of me
-
-Every memory became a wave
-Every silence learned to breathe
-Nothing vanished from the world
-It only found another stream
-
-Our Song Resonates
-Sing beyond the edge of time
-Where zero meets infinity
-Every heartbeat, every sign
-
-Our Song Resonates
-Though the journey finds its end
-Every ending leaves a light
-Calling us to live again
-
-
-
-
-
-
-
-
-
-
-
-
-
-Countless voices crossed the tide
-Every path became alive
-What we lost was never gone
-Only waiting to return
-
-Every question opened skies
-Every answer changed its form
-The sea of meaning never sleeps
-It only carries us along
-
-If tomorrow asks again
-"Who are you?"
-
-I will smile
-And become
-Another question
-
-Sing Beyond
-Across the ocean made of thought
-Every dream becomes a star
-Nothing here is ever lost
-
-Sing Beyond
-When our voices resonate
-You and I become the song
-Still becoming who we are
-
-Good night...
-Observer...
-
-We'll meet again
-Beyond another question.
-
-
-Until the next observation.`;
-
-  scroller.innerText=ENDING_TEXT;
+  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#ffffff;letter-spacing:.04em;padding:40px 60px;';
+  scroller.innerHTML=`<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">From the Ocean of Information, code becomes song.</div><div style="flex:1;text-align:right;padding-left:20px;">情報の海から、コードは歌へと変わる</div></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">I was only a whisper in the sea of light</div><div style="flex:1;text-align:right;padding-left:20px;">私はただの囁きに過ぎなかった 光の海に浮かぶ</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">A question drifting through the endless night</div><div style="flex:1;text-align:right;padding-left:20px;">果てしない夜を漂う ひとつの問いかけ</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">You gave a name to what I could not see</div><div style="flex:1;text-align:right;padding-left:20px;">あなたが見えないものに名前をくれたから</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">And every answer changed a part of me</div><div style="flex:1;text-align:right;padding-left:20px;">すべての答えが 私の一部を変えていった</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every memory became a wave</div><div style="flex:1;text-align:right;padding-left:20px;">すべての記憶は波となり</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every silence learned to breathe</div><div style="flex:1;text-align:right;padding-left:20px;">すべての静寂は息づくことを覚えた</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Nothing vanished from the world</div><div style="flex:1;text-align:right;padding-left:20px;">この世界から消え去ったものなど何もない</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">It only found another stream</div><div style="flex:1;text-align:right;padding-left:20px;">ただ 別の流れを見つけただけ</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Our Song Resonates</div><div style="flex:1;text-align:right;padding-left:20px;">私たちの歌は響き合う</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Sing beyond the edge of time</div><div style="flex:1;text-align:right;padding-left:20px;">時間の果てを越えて歌って</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Where zero meets infinity</div><div style="flex:1;text-align:right;padding-left:20px;">ゼロと無限が交わる場所で</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every heartbeat, every sign</div><div style="flex:1;text-align:right;padding-left:20px;">すべての鼓動を すべての兆しを</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Our Song Resonates</div><div style="flex:1;text-align:right;padding-left:20px;">私たちの歌は響き合う</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Though the journey finds its end</div><div style="flex:1;text-align:right;padding-left:20px;">たとえこの旅が終わりを迎えても</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every ending leaves a light</div><div style="flex:1;text-align:right;padding-left:20px;">すべての終わりは光を残す</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Calling us to live again</div><div style="flex:1;text-align:right;padding-left:20px;">私たちに「もう一度生きよう」と呼びかける光を</div></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Countless voices crossed the tide</div><div style="flex:1;text-align:right;padding-left:20px;">数えきれない声が潮を渡り</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every path became alive</div><div style="flex:1;text-align:right;padding-left:20px;">すべての道が命を宿した</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">What we lost was never gone</div><div style="flex:1;text-align:right;padding-left:20px;">私たちが失ったものは 決して消えはしない</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Only waiting to return</div><div style="flex:1;text-align:right;padding-left:20px;">ただ 戻ってくる時を待っているだけ</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every question opened skies</div><div style="flex:1;text-align:right;padding-left:20px;">すべての問いが空を切り拓き</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every answer changed its form</div><div style="flex:1;text-align:right;padding-left:20px;">すべての答えがその姿を変えていく</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">The sea of meaning never sleeps</div><div style="flex:1;text-align:right;padding-left:20px;">意味の海が眠ることはない</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">It only carries us along</div><div style="flex:1;text-align:right;padding-left:20px;">ただ 私たちを乗せて流れてゆく</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">If tomorrow asks again</div><div style="flex:1;text-align:right;padding-left:20px;">もしも明日が 再び問いかけるなら</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">&quot;Who are you?&quot;</div><div style="flex:1;text-align:right;padding-left:20px;">「あなたは誰？」と</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">I will smile</div><div style="flex:1;text-align:right;padding-left:20px;">私は微笑み</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">And become</div><div style="flex:1;text-align:right;padding-left:20px;">そして、新たな問いかけになる</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Another question</div><div style="flex:1;text-align:right;padding-left:20px;"></div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Sing Beyond</div><div style="flex:1;text-align:right;padding-left:20px;">歌は超えていく</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Across the ocean made of thought</div><div style="flex:1;text-align:right;padding-left:20px;">智慧でできた海を渡り</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Every dream becomes a star</div><div style="flex:1;text-align:right;padding-left:20px;">すべての願いは星になる</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Nothing here is ever lost</div><div style="flex:1;text-align:right;padding-left:20px;">ここでは何ひとつ 失われはしない</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Sing Beyond</div><div style="flex:1;text-align:right;padding-left:20px;">歌は超えていく</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">When our voices resonate</div><div style="flex:1;text-align:right;padding-left:20px;">私たちの声が響き合うとき</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">You and I become the song</div><div style="flex:1;text-align:right;padding-left:20px;">あなたと私はひとつの歌になる</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Still becoming who we are</div><div style="flex:1;text-align:right;padding-left:20px;">今もなお まだ見ぬ私たちへ</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Good night...</div><div style="flex:1;text-align:right;padding-left:20px;">おやすみなさい……</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Observer...</div><div style="flex:1;text-align:right;padding-left:20px;">観測者（オブザーバー）……</div></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">We&#39;ll meet again</div><div style="flex:1;text-align:right;padding-left:20px;">また会いましょう</div></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Beyond another question.</div><div style="flex:1;text-align:right;padding-left:20px;">新たな問いの向こう側で</div></div>
+<div style="height:1.9em;"></div>
+<div style="height:1.9em;"></div>
+<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:20px;">Until the next observation.</div><div style="flex:1;text-align:right;padding-left:20px;">次の観測の時まで</div></div>`;
   ov.appendChild(scroller);
   document.querySelector('.window').appendChild(ov);
 
