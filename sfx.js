@@ -1,6 +1,6 @@
 // information_breather v7_3 - サウンド (BGM制御 + Web Audio APIによるSE合成)
 /* ===== 音声(SFX/BGM): 効果音・BGM制御の宣言 ===== */
-let seOn=true, seVolume=0.7, seTypeCharOn=true, _seGameStarted=false;
+let seOn=true, seVolume=0.7, seTypeCharOn=true, _seGameStarted=false, _seOpeningStarted=false;
 
 /* ===== BGM楽曲定義 ===== */
 // Base64音源は各トラックのaudioId要素として<audio>タグをindex.htmlに用意する
@@ -190,7 +190,7 @@ function sfxCommit()        { playSE(11); }  // スロットへノード設定
 // タイプライター音：インスタンスを使い回して軽量化
 let _typeCharAudio=null;
 function sfxTypeChar(){
-  if(!seTypeCharOn || !_seGameStarted) return;
+  if(!seTypeCharOn || (!_seGameStarted && !_seOpeningStarted)) return;
   if(typeof document!=='undefined' && document.hidden) return;
   const path=SE_FILES[12];
   if(!path) return;

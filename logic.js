@@ -1335,8 +1335,8 @@ function grantTrack(trackKey){
   const title=track?track.title:t('UI_BGM_TRACK');
   log(tf('MSG_BGM_UNLOCK_T',{name:title}), 'observe');
   if(typeof updateBgmSelect==='function') updateBgmSelect();
-  // 入手時に即座にそのBGMに切り替え
-  if(track && typeof switchBgmTrack==='function'){
+  // 入手時に即座にそのBGMに切り替え（ゲーム中のみ）
+  if(track && typeof switchBgmTrack==='function' && _seGameStarted){
     const idx=TRACKS.indexOf(track);
     if(idx>=0) switchBgmTrack(idx);
   }
@@ -2065,8 +2065,8 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(onComplete){
-  // オープニングシーンの初期化
-  _seGameStarted=true;
+  // オープニング中はタイプ音のみ有効化（ゲームSEは無効のまま）
+  if(typeof _seOpeningStarted!=='undefined') _seOpeningStarted=true;
   // track_17も含め全BGM停止
   if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
   const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
