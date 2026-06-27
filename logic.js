@@ -1153,8 +1153,10 @@ function hasReadyDiscovery(){
     if(s.found.includes(id)) return false;
     const n=NODES[id];
     if(n.tier===0) return false;
+    if(n.dtype==='特殊X') return false;
     if(id==='mu' && !s.metaUnlocks.mu) return false;
     if(id==='karma' && !s.metaUnlocks.karma) return false;
+    if(n.prereq.length===0) return false;
     if(!n.prereq.every(p=>s.found.includes(p))) return false;
     if(!n.prereq.every(p=>s.committed.includes(p))) return false;
     return true;
