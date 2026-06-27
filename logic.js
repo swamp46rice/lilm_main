@@ -2238,9 +2238,9 @@ function startTick(){
 }
 
 function startTitleBgm(){
+  stopAllBgmGlobal();
   if(localStorage.getItem('ib_v9_ending_seen')){
     // エンディング視聴済み → track_17
-    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
     const t17=document.getElementById('bgmAudio_title17');
     if(!t17){
       const a=document.createElement('audio');
@@ -2285,10 +2285,7 @@ function initTitleScreen(){
   ts.style.opacity='1'; ts.style.display=''; ts.style.transition='none';
 
   // ===== BGM全停止ユーティリティ =====
-  function stopAllBgm(){
-    if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
-    const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
-  }
+  function stopAllBgm(){ stopAllBgmGlobal(); }
 
   // ===== ゲームシーン開始 =====
   function enterGameScene(){
@@ -2734,12 +2731,11 @@ function initSettings(){
 
 /* ===== エンディング演出 ===== */
 function playEnding(){
-  // エンディングシーンの初期化：全BGMを停止・リセット
-  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
-  const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
+  // エンディングシーンの初期化：全BGMを停止
+  stopAllBgmGlobal();
 
   // エンディング専用BGM（track_16.mp3を直接再生）
-  const _endingBgm=new Audio('bgm/track_16.mp3');
+  _endingBgm=new Audio('bgm/track_16.mp3');
   _endingBgm.volume=0.8;
   _endingBgm.loop=false;
   setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);

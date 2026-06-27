@@ -228,3 +228,18 @@ function sfxWallStop(){
   _wallLoopAudio.currentTime = 0;
   _wallLoopAudio = null;
 }
+
+/* ===== グローバルBGM管理 ===== */
+let _endingBgm=null; // エンディング専用BGM（グローバル管理）
+
+function stopAllBgmGlobal(){
+  // TRACKS配列のBGM
+  if(typeof TRACKS!=='undefined'){
+    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+  }
+  // track_17
+  const t17=document.getElementById('bgmAudio_title17');
+  if(t17){ t17.pause(); t17.currentTime=0; }
+  // track_16（エンディング）
+  if(_endingBgm){ _endingBgm.pause(); _endingBgm.currentTime=0; }
+}
