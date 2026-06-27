@@ -2698,9 +2698,9 @@ function playEnding(){
 
   // エンディング専用BGM（track_16.mp3を直接再生）
   const _endingBgm=new Audio('bgm/track_16.mp3');
-  _endingBgm.volume=(typeof bgmVolume!=='undefined'?bgmVolume:0.4);
+  _endingBgm.volume=0.8;
   _endingBgm.loop=false;
-  _endingBgm.play().catch(()=>{});
+  setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 3000);
 
   const existing=document.getElementById('endingOverlay');
   if(existing) existing.remove();
@@ -2711,9 +2711,14 @@ function playEnding(){
 
   const scroller=document.createElement('div');
   scroller.id='endingScroller';
-  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;text-align:center;font-family:var(--font-mono);font-size:11px;line-height:1.9;color:#c8d8e8;letter-spacing:.06em;padding:40px 60px;white-space:pre-wrap;';
+  scroller.style.cssText='position:absolute;left:0;right:0;top:660px;text-align:center;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#ffffff;letter-spacing:.06em;padding:40px 60px;white-space:pre-wrap;';
 
   const ENDING_TEXT=`From the Ocean of Information, code becomes song.
+
+
+
+
+
 
 I was only a whisper in the sea of light
 A question drifting through the endless night
