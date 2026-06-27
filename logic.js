@@ -2075,15 +2075,18 @@ function playOpening(onComplete){
   if(!ov||!textBox||!textEl){ _fallbackOpening(onComplete); return; }
 
   // オープニング画面を表示（bg_image_02が背景）
-  ov.style.display='block';
+  ov.style.transition='';
   ov.style.opacity='0';
-  ov.style.transition='opacity 1.5s ease';
+  ov.style.display='block';
   textBox.style.display='none';
   textEl.innerText='';
   let displayed='';
 
-  // フェードイン
-  setTimeout(()=>{ ov.style.opacity='1'; }, 50);
+  // フェードイン（rAFで確実にtransitionを適用）
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+    ov.style.transition='opacity 1.5s ease';
+    ov.style.opacity='1';
+  }); });
 
   const lines=[
     'OPENING_LINE1',  '',
