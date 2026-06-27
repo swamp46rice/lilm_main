@@ -60,7 +60,11 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
 .window{
   width:860px; height:660px;
   display:flex;flex-direction:column;
-  background:var(--bg-img) center/cover no-repeat;
+  background-color:var(--bg-deep);
+  background-image:none;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
   border:1px solid var(--line);border-radius:10px;
   box-shadow:0 10px 50px rgba(0,0,0,.6);overflow:hidden;
   color:var(--text);font-size:13.5px;

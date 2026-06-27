@@ -2397,7 +2397,6 @@ function showLangSelect(){
   function enterGameScene(){
     // ゲームシーンの初期化
     _seGameStarted=true;
-    applyBg(s.bgIndex||0);
     const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
     if(typeof switchBgmTrack==='function') switchBgmTrack(trackIdx);
     startTick();
@@ -2429,8 +2428,13 @@ function showLangSelect(){
     fadeOutTitle(()=>{
       if(_isFirstLaunch){
         // オープニング完了後に黒幕除去→ゲーム開始
-        playOpening(()=>{ blackout.remove(); enterGameScene(); });
+        playOpening(()=>{
+          applyBg(s.bgIndex||0);
+          blackout.remove();
+          enterGameScene();
+        });
       } else {
+        applyBg(s.bgIndex||0);
         blackout.remove();
         log(t('OPENING_1'));
         enterGameScene();
