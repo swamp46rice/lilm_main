@@ -2074,13 +2074,10 @@ function playOpening(onComplete){
     'OPENING_LINE9',  '',
     'OPENING_LINE10', '',
     'OPENING_LINE11', '',
-    'OPENING_LINE12',
-    'OPENING_LINE13',
-    'OPENING_LINE14', '',
+    'OPENING_LINE12', '',
     'OPENING_LINE15', '',
     'OPENING_LINE16', '',
     'OPENING_LINE17',
-    'OPENING_LINE18',
     'OPENING_LINE19',
   ];
 
@@ -2116,6 +2113,7 @@ function playOpening(onComplete){
         if(i>=text.length){ displayed+=text+'\n'; setTimeout(typeLine, 80); return; }
         textEl.innerText=displayed+text.slice(0,++i);
         textBox.scrollTop=textBox.scrollHeight;
+        if(i%3===1 && typeof sfxTypeChar==='function') sfxTypeChar();
         setTimeout(typeChar, 30);
       }
       typeChar();
