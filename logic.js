@@ -2044,6 +2044,8 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(onComplete){
+  // 全BGM停止してからtrack_3を再生
+  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
   if(typeof switchBgmTrack==='function') switchBgmTrack(3);
 
   const ov=document.getElementById('openingOverlay');
@@ -2365,17 +2367,27 @@ function showLangSelect(){
     document.removeEventListener('keydown', startGame);
     ts.removeEventListener('click', startGame);
 
+    // 黒幕でゲーム画面を隠す
+    const blackout=document.createElement('div');
+    blackout.style.cssText='position:absolute;inset:0;background:#000;z-index:149;border-radius:10px;pointer-events:none;';
+    document.querySelector('.window').appendChild(blackout);
+
     ts.style.transition='opacity .6s';
     ts.style.opacity='0';
     setTimeout(()=>{
       ts.style.display='none';
+      // BGMを一旦全停止（オープニングまたはゲーム画面で改めて再生）
+      if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
       if(_isFirstLaunch){
         // オープニング: tick開始はオープニング終了後
         playOpening(()=>{
+          blackout.remove();
           startTick();
           applyUILang();
           render();
         });
+        // オープニング表示されたら黒幕は不要
+        setTimeout(()=>{ blackout.remove(); }, 500);
       } else {
         // 通常起動
         const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
@@ -2383,6 +2395,7 @@ function showLangSelect(){
         startTick();
         applyUILang();
         render();
+        blackout.remove();
         log(t('OPENING_1'));
       }
     }, 600);
