@@ -2721,7 +2721,7 @@ function playEnding(){
   const _endingBgm=new Audio('bgm/track_16.mp3');
   _endingBgm.volume=0.8;
   _endingBgm.loop=false;
-  setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 3000);
+  setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
 
   const existing=document.getElementById('endingOverlay');
   if(existing) existing.remove();
