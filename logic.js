@@ -2759,11 +2759,9 @@ function initSettings(){
 
 /* ===== エンディング演出 ===== */
 function playEnding(){
-  // SE有効化（startTickより前だが、オープニングのタイプ音は鳴らす）
-  if(typeof _seGameStarted!=='undefined') _seGameStarted=true;
-
-  // 既存BGMを停止
-  TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+  // エンディングシーンの初期化：全BGMを停止・リセット
+  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+  const t17=document.getElementById('bgmAudio_title17'); if(t17){ t17.pause(); t17.currentTime=0; }
 
   // エンディング専用BGM（track_16.mp3を直接再生）
   const _endingBgm=new Audio('bgm/track_16.mp3');
