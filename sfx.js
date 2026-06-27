@@ -232,6 +232,18 @@ function sfxWallStop(){
 /* ===== グローバルBGM管理 ===== */
 let _endingBgm=null; // エンディング専用BGM（グローバル管理）
 
+// currentTrackIdxを変更せずに指定トラックを再生（オープニング等の一時再生用）
+function playBgmTemp(idx){
+  const track=TRACKS[idx];
+  if(!track) return;
+  const audio=document.getElementById(track.audioId);
+  if(audio && bgmAudioOn){
+    audio.volume=bgmVolume/100||0.4;
+    audio.loop=true;
+    audio.play().catch(()=>{});
+  }
+}
+
 function stopAllBgmGlobal(){
   // TRACKS配列のBGM
   if(typeof TRACKS!=='undefined'){
