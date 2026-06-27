@@ -2211,6 +2211,26 @@ function startTick(){
   _tickInterval=setInterval(tick, 1000);
 }
 
+function startTitleBgm(){
+  if(localStorage.getItem('ib_v9_ending_seen')){
+    // エンディング視聴済み → track_17
+    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
+    const t17=document.getElementById('bgmAudio_title17');
+    if(!t17){
+      const a=document.createElement('audio');
+      a.id='bgmAudio_title17'; a.src='bgm/track_17.mp3'; a.loop=true;
+      a.volume=(typeof s!=='undefined'&&s.bgmVolume!==undefined)?s.bgmVolume/100:0.4;
+      document.body.appendChild(a);
+      a.play().catch(()=>{});
+    } else {
+      t17.volume=(typeof s!=='undefined'&&s.bgmVolume!==undefined)?s.bgmVolume/100:0.4;
+      t17.currentTime=0; t17.play().catch(()=>{});
+    }
+  } else {
+    switchBgmTrack(2);
+  }
+}
+
 function initTitleScreen(){
   const ts=document.getElementById('titleScreen');
   if(!ts) return;
@@ -2255,11 +2275,11 @@ function initTitleScreen(){
       if(logoImg) logoImg.style.opacity='0';
       setTimeout(()=>{
         if(logoScreen) logoScreen.style.display='none';
-        if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+        if(typeof switchBgmTrack==='function') startTitleBgm();
         if(_isFirstLaunch) showLangSelect();
       }, 800);
     } else {
-      if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+      if(typeof switchBgmTrack==='function') startTitleBgm();
       if(_isFirstLaunch) showLangSelect();
     }
   }
@@ -2284,6 +2304,7 @@ function showResetConfirm(){
     sfxButton(); popup.remove();
     localStorage.removeItem('ib_v9');
     localStorage.removeItem('ib_v9_opening_done');
+    localStorage.removeItem('ib_v9_ending_seen');
     location.reload();
   });
 }
@@ -2336,7 +2357,7 @@ function showLangSelect(){
     document.addEventListener('keydown', skipLogo);
     document.addEventListener('click', skipLogo);
   } else {
-    if(typeof switchBgmTrack==='function') switchBgmTrack(2);
+    if(typeof switchBgmTrack==='function') startTitleBgm();
   }
 
   // キー/クリックで解除
@@ -2805,6 +2826,7 @@ Until the next observation.`;
   // クリックでスキップ
   ov.addEventListener('click',()=>{
     _endingBgm.pause();
+    localStorage.setItem('ib_v9_ending_seen','1');
     ov.style.transition='opacity 1s';
     ov.style.opacity='0';
     setTimeout(()=>{ ov.remove(); }, 1000);
