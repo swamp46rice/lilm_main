@@ -602,7 +602,11 @@ const LANG_JA = {
   "OPENING_LINE19": "新たな問いの探索を始めましょう。",
   "RESET_CONFIRM_TITLE": "完全初期化",
   "RESET_CONFIRM_MSG": "すべてのデータが完全に削除され、購入時と同じ状態になります。よろしいですか？",
-  "SETTINGS_OPENING_BTN": "オープニングを見る"
+  "SETTINGS_OPENING_BTN": "オープニングを見る",
+  "SETTINGS_BG_LABEL": "背景",
+  "SETTINGS_BG_0": "壁紙1",
+  "SETTINGS_BG_1": "壁紙2",
+  "SETTINGS_BG_2": "壁紙3"
 };
 
 const LANG_EN = {
@@ -1205,7 +1209,11 @@ const LANG_EN = {
   "OPENING_LINE19": "Let a new exploration of questions begin.",
   "RESET_CONFIRM_TITLE": "Full Reset",
   "RESET_CONFIRM_MSG": "All data will be permanently deleted and the game will return to its initial state. Are you sure?",
-  "SETTINGS_OPENING_BTN": "Watch Opening"
+  "SETTINGS_OPENING_BTN": "Watch Opening",
+  "SETTINGS_BG_LABEL": "Background",
+  "SETTINGS_BG_0": "Wallpaper 1",
+  "SETTINGS_BG_1": "Wallpaper 2",
+  "SETTINGS_BG_2": "Wallpaper 3"
 };
 
 function t(id){

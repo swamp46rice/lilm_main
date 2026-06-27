@@ -316,6 +316,7 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   lang:'ja',
   bgmVolume:40,
   seVolume:70,
+  bgIndex:0,
   txFlags:{} // Tier X解放条件追跡用フラグ
 };
 // 旧セーブからの移行
@@ -326,6 +327,7 @@ if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
 if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
 if(s.seVolume===undefined) s.seVolume=70;
+if(s.bgIndex===undefined) s.bgIndex=0;
 if(!s.txFlags) s.txFlags={};
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
@@ -2385,6 +2387,7 @@ function showLangSelect(){
   function enterGameScene(){
     // ゲームシーンの初期化
     _seGameStarted=true;
+    applyBg(s.bgIndex||0);
     const trackIdx=(typeof s!=='undefined' && s.currentTrackIdx) ? s.currentTrackIdx : 0;
     if(typeof switchBgmTrack==='function') switchBgmTrack(trackIdx);
     startTick();
@@ -2611,6 +2614,14 @@ function applyUILang(){
   set('btnReset',         t('BTN_RESET'));
   set('settingsResetLabel', t('SETTINGS_RESET_BTN'));
   set('settingsImportBtn',  t('SETTINGS_IMPORT'));
+  set('labelBgSelect', t('SETTINGS_BG_LABEL'));
+  const bgSel=document.getElementById('bgSelect');
+  if(bgSel){
+    bgSel.options[0].text=t('SETTINGS_BG_0');
+    bgSel.options[1].text=t('SETTINGS_BG_1');
+    bgSel.options[2].text=t('SETTINGS_BG_2');
+    bgSel.value=s.bgIndex||0;
+  }
   set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
   set('settingsOpeningBtn', t('SETTINGS_OPENING_BTN'));
   // 設定セクションラベル
@@ -2650,6 +2661,22 @@ function applyUILang(){
   // 言語ボタン
   const langBtn=document.getElementById('langToggleBtn');
   if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
+}
+
+const BG_IMAGES=['assets/bg_image_00.png','assets/bg_image_01.png','assets/bg_image_03.png'];
+
+function applyBg(idx){
+  const el=document.getElementById('gameBackground');
+  if(el) el.style.backgroundImage='url(\''+BG_IMAGES[idx]+'\')';
+}
+
+function applyBgSelect(val){
+  const idx=parseInt(val)||0;
+  s.bgIndex=idx;
+  applyBg(idx);
+  const sel=document.getElementById('bgSelect');
+  if(sel) sel.value=idx;
+  save();
 }
 
 function toggleLang(){
