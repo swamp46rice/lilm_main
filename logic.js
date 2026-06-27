@@ -1100,7 +1100,7 @@ function dreamEvent(chance){
       const shown=knownPrereqs.slice(0,2).map(p=>'"'+t(NODES[p].name)+'"');
       const connector=shown.length>1?' '+t('DREAM_AND')+' ':' '+t('DREAM_WERE')+' ';
       const suffixes=[
-        tf('WALL_DREAM_NODES_T',{nodes:shown.join('と')+connector}),
+        tf('WALL_DREAM_NODES_T',{nodes:shown.join(s.lang==='en'?' and ':' と ')+connector}),
       ];
       log(t('WALL_DREAM')+suffixes[Math.floor(Math.random()*suffixes.length)], 'dream');
     }else{
@@ -1325,6 +1325,11 @@ function grantTrack(trackKey){
   const title=track?track.title:t('UI_BGM_TRACK');
   log(tf('MSG_BGM_UNLOCK_T',{name:title}), 'observe');
   if(typeof updateBgmSelect==='function') updateBgmSelect();
+  // 入手時に即座にそのBGMに切り替え
+  if(track && typeof switchBgmTrack==='function'){
+    const idx=TRACKS.indexOf(track);
+    if(idx>=0) switchBgmTrack(idx);
+  }
   save();
 }
 
