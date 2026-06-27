@@ -2728,6 +2728,9 @@ function initSettings(){
 
 /* ===== エンディング演出 ===== */
 function playEnding(){
+  // SE有効化（startTickより前だが、オープニングのタイプ音は鳴らす）
+  if(typeof _seGameStarted!=='undefined') _seGameStarted=true;
+
   // 既存BGMを停止
   TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a){ a.pause(); a.currentTime=0; } });
 
