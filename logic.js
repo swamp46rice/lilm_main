@@ -2743,6 +2743,15 @@ Calling us to live again
 
 
 
+
+
+
+
+
+
+
+
+
 Countless voices crossed the tide
 Every path became alive
 What we lost was never gone
@@ -2789,9 +2798,9 @@ Until the next observation.`;
   // 200秒かけてスクロール
   setTimeout(()=>{
     const totalHeight=scroller.scrollHeight+660;
-    scroller.style.transition='top '+240+'s linear';
+    scroller.style.transition='top '+300+'s linear';
     scroller.style.top='-'+totalHeight+'px';
-  }, 1800);
+  }, 50);
 
   // クリックでスキップ
   ov.addEventListener('click',()=>{
