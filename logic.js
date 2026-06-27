@@ -2067,6 +2067,7 @@ function hideManual(e){
 function playOpening(onComplete){
   // オープニング中はタイプ音のみ有効化（ゲームSEは無効のまま）
   if(typeof _seOpeningStarted!=='undefined') _seOpeningStarted=true;
+  stopAllBgmGlobal();
   if(typeof playBgmTemp==='function') playBgmTemp(3);
 
   const ov=document.getElementById('openingOverlay');
