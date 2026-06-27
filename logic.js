@@ -159,7 +159,8 @@ const WALL_DROP_RANGE=[
   [1,8], // 統合面   2～9
   [2,9], // 縁起面   3～10
 ];
-const DEPART_READY_HINTS=["観測：情報の海が、大きなうねりを見せる。", "観測：現在の干渉の波に、情報海が静かに応答している。", "観測：新しい何かが、すぐ近くまで来ているような気配がする。"];
+const DEPART_READY_HINT_IDS=['HINT_READY_1','HINT_READY_2','HINT_READY_3'];
+function getReadyHint(){ return t(DEPART_READY_HINT_IDS[Math.floor(Math.random()*DEPART_READY_HINT_IDS.length)]); }
 
 /* ===== キャラのセリフ設定(吹き出し表示) =====
    ここに条件(key)ごとのセリフ一覧を追加・編集できます。
@@ -1191,7 +1192,7 @@ function depart(){
   resetStarField();
   log(t('MSG_DEPART'));
   if(ready){
-    log(DEPART_READY_HINTS[Math.floor(Math.random()*DEPART_READY_HINTS.length)], 'observe');
+    log(getReadyHint(), 'observe');
   }
   render(); save();
 }
@@ -1272,7 +1273,7 @@ function toggleCommit(id){
     log(commitFeedbackText(n, penaltyText));
   }
   if(observing && !readyBefore && hasReadyDiscovery()){
-    log(DEPART_READY_HINTS[Math.floor(Math.random()*DEPART_READY_HINTS.length)], 'observe');
+    log(getReadyHint(), 'observe');
   }
   render(); save();
 }

@@ -607,7 +607,10 @@ const LANG_JA = {
   "SETTINGS_BG_0": "壁紙1",
   "SETTINGS_BG_1": "壁紙2",
   "SETTINGS_BG_2": "壁紙3",
-  "MSG_TIERX_LOCKED": "このノードは、観測中には変更できない。"
+  "MSG_TIERX_LOCKED": "このノードは、観測中には変更できない。",
+  "HINT_READY_1": "観測：情報の海が、大きなうねりを見せる。",
+  "HINT_READY_2": "観測：現在の干渉の波に、情報海が静かに応答している。",
+  "HINT_READY_3": "観測：新しい何かが、すぐ近くまで来ているような気配がする。"
 };
 
 const LANG_EN = {
@@ -1215,7 +1218,10 @@ const LANG_EN = {
   "SETTINGS_BG_0": "Wallpaper 1",
   "SETTINGS_BG_1": "Wallpaper 2",
   "SETTINGS_BG_2": "Wallpaper 3",
-  "MSG_TIERX_LOCKED": "This node cannot be changed during observation."
+  "MSG_TIERX_LOCKED": "This node cannot be changed during observation.",
+  "HINT_READY_1": "Observation: The ocean of information shows a great surge.",
+  "HINT_READY_2": "Observation: The sea of information quietly responds to the current wave of interference.",
+  "HINT_READY_3": "Observation: Something new feels like it is drawing very close."
 };
 
 function t(id){
