@@ -2693,7 +2693,11 @@ function initSettings(){
 
 /* ===== エンディング演出 ===== */
 function playEnding(){
-  if(typeof switchBgmTrack==='function') switchBgmTrack(16);
+  // エンディング専用BGM（track_16.mp3を直接再生）
+  const _endingBgm=new Audio('bgm/track_16.mp3');
+  _endingBgm.volume=(typeof bgmVolume!=='undefined'?bgmVolume:0.4);
+  _endingBgm.loop=false;
+  _endingBgm.play().catch(()=>{});
 
   const existing=document.getElementById('endingOverlay');
   if(existing) existing.remove();
@@ -2783,6 +2787,7 @@ Until the next observation.`;
 
   // クリックでスキップ
   ov.addEventListener('click',()=>{
+    _endingBgm.pause();
     ov.style.transition='opacity 1s';
     ov.style.opacity='0';
     setTimeout(()=>{ ov.remove(); }, 1000);
