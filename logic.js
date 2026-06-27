@@ -316,7 +316,7 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   lang:'ja',
   bgmVolume:40,
   seVolume:70,
-  bgIndex:0,
+  bgIndex:1,
   txFlags:{} // Tier X解放条件追跡用フラグ
 };
 // 旧セーブからの移行
@@ -327,7 +327,7 @@ if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
 if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
 if(s.seVolume===undefined) s.seVolume=70;
-if(s.bgIndex===undefined) s.bgIndex=0;
+if(s.bgIndex===undefined) s.bgIndex=1;
 if(!s.txFlags) s.txFlags={};
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
