@@ -2044,32 +2044,23 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(onComplete){
-  // BGMをtrack_3に変更
   if(typeof switchBgmTrack==='function') switchBgmTrack(3);
 
   const ov=document.getElementById('openingOverlay');
-  const bg=document.getElementById('openingBg');
   const textBox=document.getElementById('openingTextBox');
   const textEl=document.getElementById('openingText');
-  if(!ov||!bg||!textBox||!textEl){
-    _fallbackOpening(onComplete);
-    return;
-  }
+  if(!ov||!textBox||!textEl){ _fallbackOpening(onComplete); return; }
 
-  // ゲーム画面全体を真っ暗な状態で覆う
+  // オープニング画面を表示（bg_image_02が背景）
   ov.style.display='block';
-  const black=document.getElementById('openingBlack');
-  if(black){ black.style.opacity='1'; black.style.transition='opacity 2s ease'; }
-  bg.style.opacity='0';
+  ov.style.opacity='0';
+  ov.style.transition='opacity 1.5s ease';
   textBox.style.display='none';
   textEl.innerText='';
   let displayed='';
 
-  // bg_image_02をフェードイン、黒背景をフェードアウト
-  setTimeout(()=>{
-    bg.style.opacity='1';
-    if(black) black.style.opacity='0';
-  }, 400);
+  // フェードイン
+  setTimeout(()=>{ ov.style.opacity='1'; }, 50);
 
   const lines=[
     'OPENING_LINE1',  '',
@@ -2093,14 +2084,17 @@ function playOpening(onComplete){
     'OPENING_LINE19',
   ];
 
+  // テキスト開始
   setTimeout(()=>{
     textBox.style.display='block';
     let lineIdx=0;
+
     function waitClick(then){
       const handler=()=>{ document.removeEventListener('keydown',handler); ov.removeEventListener('click',handler); then(); };
       ov.addEventListener('click', handler, {once:true});
       document.addEventListener('keydown', handler, {once:true});
     }
+
     function typeLine(){
       if(lineIdx>=lines.length){
         setTimeout(()=>{ waitClick(finishOpening); }, 400);
@@ -2108,11 +2102,12 @@ function playOpening(onComplete){
       }
       const id=lines[lineIdx++];
       if(id===''){
-        // 空行=段落区切り：クリック待ち
-        displayed+='\n';
-        textEl.innerText=displayed;
         textBox.scrollTop=textBox.scrollHeight;
-        waitClick(()=>{ setTimeout(typeLine, 100); });
+        waitClick(()=>{
+          displayed='';
+          textEl.innerText='';
+          setTimeout(typeLine, 100);
+        });
         return;
       }
       const text=t(id);
@@ -2126,24 +2121,23 @@ function playOpening(onComplete){
       typeChar();
     }
     typeLine();
-  }, 1800);
+  }, 2000);
 
   function finishOpening(){
-    ov.style.transition='opacity 1.2s';
+    ov.style.transition='opacity 1.2s ease';
     ov.style.opacity='0';
     setTimeout(()=>{
       ov.style.display='none';
       ov.style.opacity='1';
       ov.style.transition='';
-      bg.style.opacity='0';
-      if(document.getElementById('openingBlack')) document.getElementById('openingBlack').style.opacity='1';
       textBox.style.display='none';
-      textEl.textContent='';
+      textEl.innerText='';
       localStorage.setItem('ib_v9_opening_done','1');
       if(typeof onComplete==='function') onComplete();
     }, 1200);
   }
 }
+
 function _fallbackOpening(onComplete){
   _logSlowMode=true;
   const seq=[
