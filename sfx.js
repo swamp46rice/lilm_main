@@ -157,14 +157,21 @@ function toggleTypeCharSE(){
 }
 
 /* ===== SE: WAVファイル再生共通関数 ===== */
+const _seCache={};
 function playSE(idx){
   if(!seOn || !_seGameStarted) return;
   if(typeof document!=='undefined' && document.hidden) return;
   const path=SE_FILES[idx];
   if(!path) return;
-  const audio=new Audio(path);
-  audio.volume=seVolume;
-  audio.play().catch(err=>{ /* 再生失敗は無視 */ });
+  try{
+    if(!_seCache[idx]){
+      _seCache[idx]=new Audio(path);
+    }
+    const a=_seCache[idx];
+    a.volume=seVolume;
+    a.currentTime=0;
+    a.play().catch(()=>{});
+  }catch(e){}
 }
 
 /* ===== SFX: 各イベントの効果音 ===== */
