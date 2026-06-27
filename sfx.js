@@ -238,7 +238,7 @@ function playBgmTemp(idx){
   if(!track) return;
   const audio=document.getElementById(track.audioId);
   if(audio && bgmAudioOn){
-    audio.volume=bgmVolume/100||0.4;
+    audio.volume=(typeof s!=='undefined'&&s.bgmVolume!==undefined)?s.bgmVolume/100:0.4;
     audio.loop=true;
     audio.play().catch(()=>{});
   }

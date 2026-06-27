@@ -2065,7 +2065,6 @@ function hideManual(e){
 
 /* ===== オープニングイベント ===== */
 function playOpening(onComplete){
-  console.log('[DEBUG] playOpening called, _isFirstLaunch=', typeof _isFirstLaunch!=='undefined'?_isFirstLaunch:'undefined');
   // オープニング中はタイプ音のみ有効化（ゲームSEは無効のまま）
   if(typeof _seOpeningStarted!=='undefined') _seOpeningStarted=true;
   if(typeof playBgmTemp==='function') playBgmTemp(3);
