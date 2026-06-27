@@ -1246,6 +1246,12 @@ function toggleCommit(id){
   const n=NODES[id];
   if(!s.found.includes(id)) return;
   const observing=s.runStatus==='観測中';
+  // Tier Xノードは探索中につけ外し不可
+  if(observing && n.tier===8){
+    log(t('MSG_TIERX_LOCKED'), 'negative');
+    playSE(18);
+    return;
+  }
   if(observing && s.integrity<=30){
     log(t('MSG_INTEGRITY_WARN'), 'negative');
     sfxIntegWarn();

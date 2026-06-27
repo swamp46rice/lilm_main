@@ -606,7 +606,8 @@ const LANG_JA = {
   "SETTINGS_BG_LABEL": "BACK  GROUND",
   "SETTINGS_BG_0": "壁紙1",
   "SETTINGS_BG_1": "壁紙2",
-  "SETTINGS_BG_2": "壁紙3"
+  "SETTINGS_BG_2": "壁紙3",
+  "MSG_TIERX_LOCKED": "このノードは、観測中には変更できない。"
 };
 
 const LANG_EN = {
@@ -1213,7 +1214,8 @@ const LANG_EN = {
   "SETTINGS_BG_LABEL": "BACK  GROUND",
   "SETTINGS_BG_0": "Wallpaper 1",
   "SETTINGS_BG_1": "Wallpaper 2",
-  "SETTINGS_BG_2": "Wallpaper 3"
+  "SETTINGS_BG_2": "Wallpaper 3",
+  "MSG_TIERX_LOCKED": "This node cannot be changed during observation."
 };
 
 function t(id){
