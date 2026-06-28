@@ -778,15 +778,8 @@ function buildGraph(scrollToNew){
   // NEWノードが見つかった場合、そこにスクロール
   if(scrollToNew && firstNewEl){
     setTimeout(()=>{
-      const container=document.querySelector('.col-right-graph');
-      if(container){
-        const containerTop=container.getBoundingClientRect().top;
-        const elTop=firstNewEl.getBoundingClientRect().top;
-        container.scrollTop+=elTop-containerTop-40;
-      } else {
-        firstNewEl.scrollIntoView({block:'nearest',behavior:'smooth'});
-      }
-    }, 50);
+      firstNewEl.scrollIntoView({block:'nearest', behavior:'smooth'});
+    }, 100);
   }
 }
 const BUFF_STAT_ID_MAP={
