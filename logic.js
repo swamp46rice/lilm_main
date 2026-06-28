@@ -3136,21 +3136,16 @@ function playEnding(){
       setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
     }, 2000);
 
-    // スクローラー
     const scroller=document.createElement('div');
     scroller.id='endingScroller';
     scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 20px;';
-    scroller.innerHTML=`<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;padding-left:0;">From the Ocean of Information, code becomes song.</div><div style="flex:1;text-align:right;padding-right:0;padding-left:10px;">情報の海から、コードは歌へと変わる</div></div>
-`;
-
-    // スクロール開始
+    scroller.innerHTML=ENDING_HTML;
+    ov.appendChild(scroller);
     setTimeout(()=>{
       const totalHeight=scroller.scrollHeight+660;
-      scroller.style.transition='top '+290+'s linear';
+      scroller.style.transition='top 290s linear';
       scroller.style.top='-'+totalHeight+'px';
-      // Thank You表示はBGM ended+7秒後に処理
     }, 50);
-
     _endingBgm.addEventListener('ended',()=>{
       setTimeout(()=>{
         scroller.style.display='none';
@@ -3164,24 +3159,14 @@ function playEnding(){
         setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
       }, 7000);
     });
-
-    // クリックでスキップ
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
       localStorage.setItem('ib_v9_ending_seen','1');
       fadeOut(400, ()=>{
         ov.remove();
-        if(_seGameStarted){
-          switchBgmTrack(s.currentTrackIdx||0);
-        } else {
-          startTitleBgm();
-        }
+        if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
         fadeIn(600);
       });
     });
-
-    ov.appendChild(scroller);
-    document.querySelector('.window').appendChild(ov);
   });
 }
-
