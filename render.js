@@ -895,7 +895,12 @@ function render(){
   const _rsLabel=document.getElementById('runStatusBadge');
   if(_rsLabel){
     _rsLabel.textContent=t(_rsMap[s.runStatus]||'STATUS_STOPPED');
-    _rsLabel.style.color=s.runStatus==='観測中'?'#ff9040':'#8899aa';
+    _rsLabel.style.color=s.runStatus==='観測中'?'#e8d840':'#8899aa';
+  }
+  const _rsLabel2=document.getElementById('runStatusLabel');
+  if(_rsLabel2){
+    _rsLabel2.textContent=t(_rsMap[s.runStatus]||'STATUS_STOPPED');
+    _rsLabel2.style.color=s.runStatus==='観測中'?'#e8d840':'#8899aa';
   }
   document.getElementById('maxSlotsLabel').textContent=maxSlots();
 
