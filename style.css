@@ -456,10 +456,18 @@ button[disabled]:hover{background:transparent;}
 }
 
 /* ===== 悪夢装備時の数値明滅 ===== */
+
+
 @keyframes nightmareBlink{
   0%,100%{opacity:1;}
   50%{opacity:.55;}
 }
-#slots.nightmare-active{
+.nightmare-blink{
+  animation:nightmareBlink 1.6s ease-in-out infinite;
+}
+
+#nightmareOverlay.active{
+  display:block;
+  background:rgba(255,68,102,0.08);
   animation:nightmareBlink 1.6s ease-in-out infinite;
 }

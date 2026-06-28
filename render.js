@@ -802,12 +802,11 @@ function dirText(n){
   if(Math.abs(diff)<0.005*mult) return '<div class="dir neutral">'+t('DIR_NEUTRAL')+' 0.00</div>';
   const dir = diff>0 ? t('DIR_DIFFUSE') : t('DIR_CONVERGE');
   const cls = diff>0 ? 'entropy' : 'silence';
-  return '<div class="dir '+cls+'">'+dir+' '+Math.abs(diff).toFixed(2)+'</div>';
+  const blink = nightmareMode ? ' nightmare-blink' : '';
+  return '<div class="dir '+cls+blink+'">'+dir+' '+Math.abs(diff).toFixed(2)+'</div>';
 }
 function buildSlots(){
   const slots=document.getElementById('slots'); slots.innerHTML='';
-  const nightmareMode=typeof s!=='undefined' && s.committed && s.committed.includes('tx_nightmare');
-  slots.classList.toggle('nightmare-active', nightmareMode);
   for(let i=0;i<maxSlots();i++){
     const id=s.committed[i];
     const div=document.createElement('div');
@@ -1029,6 +1028,8 @@ function render(){
   buildWalls(); buildWallCountdown(); updateBarrier();
   const _langChanged = (typeof _prevLang !== 'undefined') && _prevLang !== s.lang;
   buildObstacles(); buildGraph(s.found.length!==_prevFoundLen || _langChanged); buildSlots();
+  const _nmOv=document.getElementById('nightmareOverlay');
+  if(_nmOv) _nmOv.classList.toggle('active', s.committed.includes('tx_nightmare'));
 
   const committedSig=s.committed.join(',');
   if(committedSig!==_prevCommittedSig || _langChanged){ buildParticles(); _prevCommittedSig=committedSig; }
