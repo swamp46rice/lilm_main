@@ -831,6 +831,7 @@ const ATTR_IMAGES={
   'semantic': typeof SEMANTIC_IMAGES!=='undefined' ? SEMANTIC_IMAGES : TIRE_IMAGES,
   'alpha': typeof ALPHA_IMAGES!=='undefined' ? ALPHA_IMAGES : TIRE_IMAGES,
   'lumina': typeof LUMINA_IMAGES!=='undefined' ? LUMINA_IMAGES : TIRE_IMAGES,
+  'drak': typeof DRAK_IMAGES!=='undefined' ? DRAK_IMAGES : TIRE_IMAGES,
 };
 // コレクション画面での表示順・ラベル
 const CHARA_COLLECTION_ATTRS=[
@@ -842,6 +843,7 @@ const CHARA_COLLECTION_ATTRS=[
   {key:'insight', label:t('STAT_INSIGHT_S')},
   {key:'alpha', label:'Alpha'},
   {key:'lumina', label:'Lumina'},
+  {key:'drak', label:'Drak'},
 ];
 
 /* ===== メイン render ===== */

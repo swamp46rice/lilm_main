@@ -82,4 +82,13 @@ const RESONANT_IMAGES=[
   "assets/lumina_images_05.png",
   "assets/lumina_images_06.png",
   "assets/lumina_images_07.png"
+];const DRAK_IMAGES=[
+  "assets/drak_images_00.png",
+  "assets/drak_images_01.png",
+  "assets/drak_images_02.png",
+  "assets/drak_images_03.png",
+  "assets/drak_images_04.png",
+  "assets/drak_images_05.png",
+  "assets/drak_images_06.png",
+  "assets/drak_images_07.png"
 ];

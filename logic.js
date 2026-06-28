@@ -56,6 +56,7 @@ const NODES={
   kuukan:{tier:6,name:"空観",prereq:["engi_ron","information_breather","willed_openness"],dtype:"確率",infoTh:340000,axisStat:"洞察力",axisTh:78,ep:0.11,sp:0.11,rand:60,buffStat:"洞察力",buffVal:7,intBuff:0.22,note:"「縁起論」「情報の呼吸」「重力的思念」が、同時に息をしている。すべては繋がっている、という理解さえも、固定された答えではなかった ―― 空観。"},
   alpha:{tier:7,name:"Alpha",prereq:["kuukan","t0_speak","t0_hear"],dtype:"特殊",infoTh:50000,axisStat:null,axisTh:0,ep:0.05,sp:0.05,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"空観を超えた先で、静かに微笑む存在。知性と慈しみを同時に纏う。"},
   lumina:{tier:7,name:"Lumina",prereq:["kuukan","ichinen_sanzen","engi_ron"],dtype:"特殊",infoTh:1000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"縁起と一念三千と空観が溶け合った先にある、透明な光。言葉を超えた存在。"},
+  drak:{tier:7,name:"Drak",prereq:[],dtype:"特殊",infoTh:50000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"悪夢の深部で、光を飲み込んだ存在。"},
   sg_structural:{tier:7,name:"構造の特異点",prereq:["alpha","ichinen_sanzen","fractal_universe"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「フラクタル宇宙」が重なったとき、構造そのものが構造を超えた ―― 構造の特異点。"},
   sg_resonant:{tier:7,name:"共鳴の特異点",prereq:["alpha","ichinen_sanzen","resonant_ethics"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「共鳴の倫理」が重なったとき、共鳴そのものが共鳴を超えた ―― 共鳴の特異点。"},
   sg_semantic:{tier:7,name:"意味の特異点",prereq:["alpha","ichinen_sanzen","information_breather"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「情報の呼吸」が重なったとき、意味そのものが意味を超えた ―― 意味の特異点。"},
@@ -487,7 +488,8 @@ const STAT_ATTR_MAP={
   '共鳴度':'resonant','作用力':'active','洞察力':'insight'
 };
 function detectAttr(stats){
-  // ペルソナ固定(スロットにalpha/luminaがある場合)
+  // ペルソナ固定(スロットにalpha/lumina/drakがある場合)
+  if(s.committed.includes('drak')) return 'drak';
   if(s.committed.includes('lumina')) return 'lumina';
   if(s.committed.includes('alpha')) return 'alpha';
   // 特異点ノード固定(他のTier7ノードと同時装備でなければ発動)
@@ -2048,12 +2050,13 @@ function showCharaCollection(){
     const imgSet=ATTR_IMAGES[key]||TIRE_IMAGES;
     // Alpha/Luminaはネタバレ防止のため、1つも視認していない間は行ラベルも？？？にする
     const rowAnySeen=Array.from({length:8},(_,t)=>!!s.charaSeen[key+'_'+t]).some(v=>v);
-    const isSecretAttr = (key==='alpha'||key==='lumina');
+    const isSecretAttr = (key==='alpha'||key==='lumina'||key==='drak');
     labelEl.textContent = (isSecretAttr && !rowAnySeen) ? '？？？' : label;
     row.appendChild(labelEl);
     const cells=document.createElement('div');
     cells.className='chara-collection-cells';
-    for(let t=0;t<=7;t++){
+    const tierMax = 7;
+    for(let t=0;t<=tierMax;t++){
       totalCount++;
       const seen = (key==='normal' && t===0) ? true : !!s.charaSeen[key+'_'+t];
       const cell=document.createElement('div');
@@ -2228,6 +2231,15 @@ function _fallbackOpening(onComplete){
 // ===== Tier X 解放条件チェック =====
 function checkTierXUnlock(){
   const stats=computeStats();
+
+  // Drak: 悪夢装備 + runInfo≥50000000
+  if(!s.found.includes('drak')){
+    if(s.committed.includes('tx_nightmare') && s.runInfo>=50000000){
+      s.found.push('drak');
+      log(tf('MSG_DISCOVER_T',{name:t('Drak'),note:t('悪夢の深部で、光を飲み込んだ存在。')}), 'event');
+      sfxDiscover();
+    }
+  }
 
   // 零と無限の連環: Tier7装備 + 1ラン中エントロピー到達 + 沈黙到達 + 整合率100%完了
   if(!s.found.includes('tx_zero_infinity')){
