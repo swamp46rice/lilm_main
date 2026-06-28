@@ -317,7 +317,7 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   lang:'ja',
   bgmVolume:40,
   seVolume:70,
-  bgIndex:1,
+  bgIndex:0,
   txFlags:{} // Tier X解放条件追跡用フラグ
 };
 // 旧セーブからの移行
@@ -328,7 +328,7 @@ if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
 if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
 if(s.seVolume===undefined) s.seVolume=70;
-if(s.bgIndex===undefined) s.bgIndex=1;
+if(s.bgIndex===undefined) s.bgIndex=0;
 if(!s.txFlags) s.txFlags={};
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 if(!s.wallsThisRun) s.wallsThisRun=[];
@@ -572,7 +572,7 @@ function tickGain(){
   const gain=base*(1+fluct);
   s.runInfo+=gain;
   checkMiddleWayAchievement(); // runInfoが1000万に達した瞬間の属性を見て中道の振る舞いを判定
-  if(!s.metaUnlocks.infinity) s.totalInfo=Math.min(Number.MAX_SAFE_INTEGER, s.totalInfo+gain);
+  s.totalInfo=Math.min(Number.MAX_SAFE_INTEGER, s.totalInfo+gain);
   let fluctText=null;
   const FLUCT_RANGE=FLUCT_MAX-FLUCT_MIN;
   if(fluct>=FLUCT_MAX-FLUCT_RANGE*0.02) fluctText=t('構造の残滓を見つけた。');
