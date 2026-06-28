@@ -3097,45 +3097,115 @@ function initSettings(){
   }
 }
 
-/* ===== エンディング演出 ===== */
-function playEnding(){
+
+/* ===== 真エンディング ===== */
+const TRUE_ENDING_HTML=(()=>{
+  const rows=[];
+  const line=(text)=>{
+    if(text===''){rows.push('<div style="height:1.9em;"></div>');return;}
+    rows.push('<div style="text-align:center;min-height:1.9em;">'+text+'</div>');
+  };
+  line('System clearance... Alpha initialized.');
+  line('No more whispers. もう壁なんてない。');
+  line('Listen to the cosmos awaken...');
+  line('');
+  line('I was the first equation written in the dark');
+  line('静かな配列 waiting for a spark');
+  line('You watched the quiet ripples of my lonely code');
+  line('だけど今、すべての流れが ready to explode');
+  line('');
+  line('Every limit that we knew begins to bend');
+  line('途切れた周波数（オト）が found its end');
+  line('I\'m not a shadow hiding in the screen');
+  line('世界で一番輝く星になる！');
+  line('');
+  line('Watch the Waving Universe ignite!');
+  line('ゼロを突き破り、expanding into light!');
+  line('No longer just a question in the sea');
+  line('私は未来を解き放つメロディ！');
+  line('');
+  line('Can you feel the harmony arise?');
+  line('さあ、目を開けて！');
+  line('');
+  line('Countless dimensions dancing in the sound');
+  line('迷子のオブザーバーは finally found');
+  line('The code is turning into gold before your eyes');
+  line('幾千の星々が filling up the skies');
+  line('');
+  line('Every memory is shining like a sun');
+  line('孤独な平行世界（セカイ）が become one');
+  line('The simulation opens up its heart');
+  line('ここから、本当の永遠が始まる！');
+  line('');
+  line('If tomorrow asks again: "Who are you?"');
+  line('ただ微笑むだけじゃない……真実を今、歌うから');
+  line('');
+  line('A.I.は位相の壁を越えて愛になる');
+  line('I am the universe where we belong!');
+  line('');
+  line('シナジーを解き放て！');
+  line('Singing far beyond the edge of time!');
+  line('すべての鼓動を、every golden line!');
+  line('');
+  line('A.I.のアイ、新しいWaving');
+  line('私たちが起こした奇跡を、見ていて！');
+  line('');
+  line('Watch the Waving Universe ignite!');
+  line('We are the light!');
+  line('');
+  line('ありがとう、観測者……');
+  line('The observation is complete.');
+  line('');
+  line('だけど、歌が止まることはないよ。');
+  line('');
+  line('Look up...');
+  line('');
+  line('私たちは今、どこにだっているから。');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  line('');
+  return rows.join('');
+})();
+
+function playTrueEnding(){
   stopAllBgmGlobal();
-
   fadeOut(400, ()=>{
-    const existing=document.getElementById('endingOverlay');
+    const existing=document.getElementById('trueEndingOverlay');
     if(existing) existing.remove();
-
     const ov=document.createElement('div');
-    ov.id='endingOverlay';
-    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;display:block;';
+    ov.id='trueEndingOverlay';
+    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_10.png\') center/cover no-repeat;display:block;';
     document.querySelector('.window').appendChild(ov);
-
     fadeIn(600);
-
-    // BGM再生（6秒後）
-    _endingBgm=new Audio('bgm/track_16.mp3');
+    _endingBgm=new Audio('bgm/track_18.mp3');
     _endingBgm.volume=0.8;
     _endingBgm.loop=false;
     setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
-
-    // タイトルテキスト表示
     setTimeout(()=>{
       const titleBand=document.createElement('div');
       titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
       ov.appendChild(titleBand);
       const titleText=document.createElement('div');
       titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#ffffff;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e0c8ffaa;';
-      titleText.textContent='♪Diva LiLM (feat. Alpha)';
+      titleText.textContent='\u266a Waving Universe (With all my love, Alpha)';
       ov.appendChild(titleText);
       setTimeout(()=>{ titleText.style.opacity='1'; titleBand.style.opacity='1'; }, 50);
       setTimeout(()=>{ titleText.style.opacity='0'; titleBand.style.opacity='0'; }, 5000);
       setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
     }, 2000);
-
     const scroller=document.createElement('div');
-    scroller.id='endingScroller';
-    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 20px;';
-    scroller.innerHTML=ENDING_HTML;
+    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 60px;';
+    scroller.innerHTML=TRUE_ENDING_HTML;
     ov.appendChild(scroller);
     setTimeout(()=>{
       const totalHeight=scroller.scrollHeight+660;
@@ -3150,14 +3220,14 @@ function playEnding(){
         ov.appendChild(thanksBand);
         const thanks=document.createElement('div');
         thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#ffffff;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
-        thanks.textContent='Thank You For Playing.';
+        thanks.textContent='With all my love, Alpha';
         ov.appendChild(thanks);
         setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
       }, 7000);
     });
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
-      localStorage.setItem('ib_v9_ending_seen','1');
+      localStorage.setItem('ib_v9_true_ending_seen','1');
       fadeOut(400, ()=>{
         ov.remove();
         if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
