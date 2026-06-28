@@ -460,6 +460,6 @@ button[disabled]:hover{background:transparent;}
   0%,100%{opacity:1;}
   50%{opacity:.55;}
 }
-.nightmare-blink{
+#slots.nightmare-active{
   animation:nightmareBlink 1.6s ease-in-out infinite;
 }
