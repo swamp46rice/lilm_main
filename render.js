@@ -716,6 +716,7 @@ function buildGraph(scrollToNew){
           const tier7hints={
             alpha:t('WALL_EMPTY'),
             lumina:t('WALL_SKY'),
+            dark:t('WALL_DARK'),
             sg_structural:t('WALL_TRANSIT_STR'),
             sg_resonant:t('WALL_TRANSIT_RES'),
             sg_semantic:t('WALL_TRANSIT_SEM'),
