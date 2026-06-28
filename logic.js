@@ -65,7 +65,7 @@ const NODES={
   tx_zero_infinity:{tier:8,name:"零と無限の連環",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。"},
   tx_songstress:  {tier:8,name:"歌姫",prereq:[],dtype:"特殊X",infoTh:11111111,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"すべての音が溶け合ったとき、歌は歌を超えた。"},
   tx_new_observer:{tier:8,name:"新たな観測点",prereq:[],dtype:"特殊X",infoTh:20000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"五つの特異点が重なる場所に、新たな観測点が生まれた。"},
-  tx_nightmare:   {tier:8,name:"悪夢",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"夢の底に、まだ名前のない何かが眠っている。"},
+  tx_nightmare:   {tier:8,name:"悪夢",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0.15,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"夢の底に、まだ名前のない何かが眠っている。"},
   tx_continuum_q: {tier:8,name:"連続体Q",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"連続と不連続の境界で、Qは静かに脈打っている。"},
   tx_gravity_wave:{tier:8,name:"微かな重力波",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"ほとんど届かない、遠い震えの記録。"},
 };
@@ -474,7 +474,8 @@ function activeObstacleEffect(){
     randMult*=1+(o.randMult-1)*st;
     gaugePush+=o.gaugePush*st;
   });
-  return {discMult,buffMult,gainMult,randAdd,randMult,gaugePush};
+  const nightmarePush=s.committed.includes('tx_nightmare')?10:1;
+  return {discMult,buffMult,gainMult,randAdd,randMult,gaugePush:gaugePush*nightmarePush};
 }
 /* ===== 属性判定 =====
    5パラメータの平均より15%以上飛び抜けていて最大値のパラメータの属性になる。
@@ -769,12 +770,14 @@ function tickGauge(){
   const resonantMode=detectAttr(stats)==='resonant';
   let entropySum=0, silenceSum=0;
   const contrib={};
+  const nightmareMode=s.committed.includes('tx_nightmare');
   s.committed.forEach(id=>{
     const n=NODES[id];
     const baseRand=n.rand/100;
     const effRand=Math.min(0.95, baseRand*obs.randMult + obs.randAdd/100);
     const factor=1+(Math.random()*2-1)*effRand;
-    const e=n.ep*factor, sl=n.sp*factor;
+    const nightmareMult=nightmareMode?10:1;
+    const e=n.ep*factor*nightmareMult, sl=n.sp*factor*nightmareMult;
     entropySum+=e; silenceSum+=sl;
     contrib[id]=(contrib[id]||0)+(e-sl);
   });
@@ -2241,6 +2244,16 @@ function checkTierXUnlock(){
       s.found.push('tx_songstress');
       log(tf('MSG_DISCOVER_T',{name:t('歌姫'),note:t('すべての音が溶け合ったとき、歌は歌を超えた。')}), 'event');
       sfxDiscover();
+    }
+  }
+
+  // 悪夢: alpha装備 + future装備 + karma装備 + runInfo≥30000000
+  if(!s.found.includes('tx_nightmare')){
+    if(s.committed.includes('alpha') && s.committed.includes('future') && s.committed.includes('karma') && s.runInfo>=30000000){
+      s.found.push('tx_nightmare');
+      log(tf('MSG_DISCOVER_T',{name:t('悪夢'),note:t('夢の底に、まだ名前のない何かが眠っている。')}), 'event');
+      sfxDiscover();
+      if(typeof showItemPopup==='function') showItemPopup('node', t('悪夢'));
     }
   }
 
