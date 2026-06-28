@@ -2077,17 +2077,14 @@ function playOpening(onComplete){
 
   // オープニング画面を表示（bg_image_02が背景）
   ov.style.transition='';
-  ov.style.opacity='0';
+  ov.style.opacity='1';
   ov.style.display='block';
   textBox.style.display='none';
   textEl.innerText='';
   let displayed='';
 
-  // フェードイン
-  setTimeout(()=>{
-    ov.style.transition='opacity 1.5s ease';
-    ov.style.opacity='1';
-  }, 50);
+  // 黒幕を消してオープニング画面を見せる
+  fadeIn(600);
 
   const lines=[
     'OPENING_LINE1',  '',
