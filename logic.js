@@ -1514,10 +1514,10 @@ function wallDrop(wallIdx){
   let rank=rollDropRank(extendedMax, computeStats());
   grantDrop(itemId, rank);
   // BGM確率解放: 壁突破後のドロップ判定に合わせて抽選
-  if(wallIdx>=2 && !s.unlockedTracks.includes('track_10') && Math.random()<0.003) grantTrack('track_10');
-  if(wallIdx>=4 && !s.unlockedTracks.includes('track_11') && Math.random()<0.003) grantTrack('track_11');
-  if(wallIdx>=6 && !s.unlockedTracks.includes('track_12') && Math.random()<0.001) grantTrack('track_12');
-  if(wallIdx>=6 && s.wallsThisRun.length>=7 && !s.unlockedTracks.includes('track_13') && Math.random()<0.001) grantTrack('track_13');
+  if(wallIdx>=2 && !s.unlockedTracks.includes('track_10') && Math.random()<0.03) grantTrack('track_10');
+  if(wallIdx>=4 && !s.unlockedTracks.includes('track_11') && Math.random()<0.03) grantTrack('track_11');
+  if(wallIdx>=6 && !s.unlockedTracks.includes('track_12') && Math.random()<0.01) grantTrack('track_12');
+  if(wallIdx>=6 && s.wallsThisRun.length>=7 && !s.unlockedTracks.includes('track_13') && Math.random()<0.01) grantTrack('track_13');
 }
 function obstacleDrop(stats){
   const attr=detectAttr(stats);
@@ -1537,6 +1537,11 @@ function obstacleDrop(stats){
     const itemId=range[0]+Math.floor(Math.random()*(range[1]-range[0]+1));
     const rank=rollDropRank(dropRankMax(), stats);
     grantDrop(itemId, rank);
+    // BGM確率解放（壁突破時と同じ条件で判定）
+    if(wallIdx>=2 && !s.unlockedTracks.includes('track_10') && Math.random()<0.03) grantTrack('track_10');
+    if(wallIdx>=4 && !s.unlockedTracks.includes('track_11') && Math.random()<0.03) grantTrack('track_11');
+    if(wallIdx>=6 && !s.unlockedTracks.includes('track_12') && Math.random()<0.01) grantTrack('track_12');
+    if(wallIdx>=6 && s.wallsThisRun.length>=7 && !s.unlockedTracks.includes('track_13') && Math.random()<0.01) grantTrack('track_13');
   }
 }
 /* アイテムリストを開けば何かNEW/未確定表示が見える状態かどうか(タイトルバーバッジ用) */
@@ -2230,9 +2235,9 @@ function checkTierXUnlock(){
     }
   }
 
-  // 歌姫: 楽曲14曲以上解放 + Alpha装備 + 獲得情報量11111111以上
+  // 歌姫: 全楽曲解放 + Alpha装備 + 獲得情報量11111111以上
   if(!s.found.includes('tx_songstress')){
-    if(s.unlockedTracks.length>=14 && s.committed.includes('alpha') && s.runInfo>=11111111){
+    if(s.unlockedTracks.length>=TRACKS.length && s.committed.includes('alpha') && s.runInfo>=11111111){
       s.found.push('tx_songstress');
       log(tf('MSG_DISCOVER_T',{name:t('歌姫'),note:t('すべての音が溶け合ったとき、歌は歌を超えた。')}), 'event');
       sfxDiscover();
