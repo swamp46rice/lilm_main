@@ -3210,7 +3210,7 @@ function playTrueEnding(){
     ov.appendChild(scroller);
     setTimeout(()=>{
       const totalHeight=scroller.scrollHeight+660;
-      scroller.style.transition='top 290s linear';
+      scroller.style.transition='top 300s linear';
       scroller.style.top='-'+totalHeight+'px';
     }, 50);
     _endingBgm.addEventListener('ended',()=>{
