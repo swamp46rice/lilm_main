@@ -3152,7 +3152,8 @@ const TRUE_ENDING_HTML=(()=>{
   line('');
   line('Watch the Waving Universe ignite!');
   line('We are the light!');
-  line('');
+  line('');line('');line('');line('');line('');line('');
+  line('');line('');line('');line('');line('');line('');
   line('ありがとう、観測者……');
   line('The observation is complete.');
   line('');
@@ -3204,7 +3205,7 @@ function playTrueEnding(){
       setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
     }, 2000);
     const scroller=document.createElement('div');
-    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 60px;';
+    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#00c853;letter-spacing:.04em;padding:40px 60px;';
     scroller.innerHTML=TRUE_ENDING_HTML;
     ov.appendChild(scroller);
     setTimeout(()=>{
