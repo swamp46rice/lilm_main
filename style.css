@@ -406,3 +406,51 @@ button[disabled]:hover{background:transparent;}
   50%{border-color:#a0ffe8;color:#a0ffe8;box-shadow:0 0 16px #a0ffe8aa;}
 }
 .result-pending-btn{animation:resultPulseBtn 1.1s ease-in-out infinite;}
+
+/* ===== アイテム取得ポップアップ ===== */
+#itemPopupContainer{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:350;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  pointer-events:none;
+}
+.item-popup{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:rgba(5,12,30,0.92);
+  border:1px solid #2a4a7a;
+  border-radius:8px;
+  padding:8px 18px 8px 12px;
+  font-family:var(--font-mono);
+  font-size:12px;
+  color:#c0ddf0;
+  letter-spacing:.06em;
+  white-space:nowrap;
+  transform:scale(0);
+  opacity:0;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1), opacity .25s ease;
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+.item-popup.show{
+  transform:scale(1);
+  opacity:1;
+}
+.item-popup.hide{
+  transform:scale(0);
+  opacity:0;
+}
+.item-popup img{
+  width:28px;
+  height:28px;
+  object-fit:contain;
+}
+.item-popup-label{
+  color:#7ee8d0;
+  margin-right:4px;
+}

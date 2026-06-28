@@ -1094,3 +1094,48 @@ initBgmSelect();
 })();
 // tickはPress Startまで停止（メーカーロゴ・タイトル表示中は不要）
 // startTick()はinitTitleScreen内のstartGame()から呼ばれる
+
+/* ===== アイテム取得ポップアップ ===== */
+function showItemPopup(type, name){
+  if(!_seGameStarted) return;
+  const container=document.getElementById('itemPopupContainer');
+  if(!container) return;
+
+  const iconMap={
+    'node':  'assets/item_00.png',
+    'achv':  'assets/item_01.png',
+    'track': 'assets/item_02.png',
+  };
+  const labelMap={
+    'node':  '拡張データ',
+    'achv':  '実績データ',
+    'track': '音源データ',
+  };
+
+  const popup=document.createElement('div');
+  popup.className='item-popup';
+
+  const img=document.createElement('img');
+  img.src=iconMap[type]||'assets/item_00.png';
+  popup.appendChild(img);
+
+  const text=document.createElement('span');
+  const label=document.createElement('span');
+  label.className='item-popup-label';
+  label.textContent=(labelMap[type]||'データ')+'：';
+  text.appendChild(label);
+  text.appendChild(document.createTextNode(name));
+  popup.appendChild(text);
+
+  container.appendChild(popup);
+
+  // フェードイン
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{ popup.classList.add('show'); }); });
+
+  // 3秒後にフェードアウト→削除
+  setTimeout(()=>{
+    popup.classList.remove('show');
+    popup.classList.add('hide');
+    setTimeout(()=>{ popup.remove(); }, 300);
+  }, 3000);
+}

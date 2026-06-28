@@ -1335,6 +1335,7 @@ function grantTrack(trackKey){
   const title=track?track.title:t('UI_BGM_TRACK');
   log(tf('MSG_BGM_UNLOCK_T',{name:title}), 'observe');
   if(typeof updateBgmSelect==='function') updateBgmSelect();
+  if(typeof showItemPopup==='function') showItemPopup('track', title);
   // 入手時に即座にそのBGMに切り替え（ゲーム中のみ）
   if(track && typeof switchBgmTrack==='function' && _seGameStarted){
     const idx=TRACKS.indexOf(track);
@@ -1351,6 +1352,10 @@ function grantInstantItem(itemId, label, deferLog){
   if(deferLog) return name; // ログ・SEは呼び出し元(リザルト演出シーケンス)が後でまとめて出す
   log(tf('MSG_ACHIEVE_UNLOCK_T',{name}), 'observe');
   sfxLevelUp();
+  if(typeof showItemPopup==='function'){
+    const popupType = itemId <= 9 ? 'node' : 'achv';
+    showItemPopup(popupType, name);
+  }
   return name;
 }
 // 位相の壁を1つ突破するたびに、対応する位相データを即時付与(称号のようなもの。壁突破ボーナスとの二重取りで実績として残る)
