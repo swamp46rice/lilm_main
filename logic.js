@@ -563,9 +563,9 @@ function commitFeedbackText(n, penaltyText){
 }
 
 /* ===== コア処理(1tick) ===== */
-function tickGain(){
-  const stats=computeStats();
-  const obs=activeObstacleEffect();
+function tickGain(stats,obs){
+  if(!stats) stats=computeStats();
+  if(!obs) obs=activeObstacleEffect();
   const knowledgeMult=1+s.found.reduce((sum,id)=>{
     const n=NODES[id];
     return sum+(0.04+n.tier*0.03);
@@ -735,9 +735,9 @@ function tickObstacles(){
   return texts;
 }
 
-function tickDiscovery(){
-  const stats=computeStats();
-  const obs=activeObstacleEffect();
+function tickDiscovery(stats,obs){
+  if(!stats) stats=computeStats();
+  if(!obs) obs=activeObstacleEffect();
   const newly=[];
   NODE_IDS.forEach(id=>{
     if(s.found.includes(id)) return;
@@ -773,9 +773,9 @@ function tickDiscovery(){
   return newly;
 }
 
-function tickGauge(){
-  const stats=computeStats();
-  const obs=activeObstacleEffect();
+function tickGauge(stats,obs){
+  if(!stats) stats=computeStats();
+  if(!obs) obs=activeObstacleEffect();
   const alphaMode=s.committed.includes('alpha')||s.committed.includes('lumina');
   const resonantMode=detectAttr(stats)==='resonant';
   let entropySum=0, silenceSum=0;
@@ -819,8 +819,8 @@ function tickGauge(){
   return delta;
 }
 
-function tickIntegrity(){
-  const stats=computeStats();
+function tickIntegrity(stats){
+  if(!stats) stats=computeStats();
   const stabilityFactor=1-Math.abs(s.gauge-50)/50;
   let intBuffSum=0;
   s.committed.forEach(id=>{ intBuffSum+=NODES[id].intBuff||0; });
@@ -1010,17 +1010,19 @@ function renormalize(){
 function coreTick(silent){
   if(s.runStatus!=='観測中') return 0;
   s.runTicks++;
-  const g=tickGain();
+  const _stats=computeStats();
+  const _obs=activeObstacleEffect();
+  const g=tickGain(_stats,_obs);
   const wallResult=tickWalls();
   if(wallResult.timeout){
     handleFailure(wallResult.nodeReqFailed ? 'timeout_nodereq' : 'timeout');
     return g.gain;
   }
   const obsResults=tickObstacles();
-  const newly=tickDiscovery();
+  const newly=tickDiscovery(_stats,_obs);
   checkTierXUnlock();
-  tickGauge();
-  const integrityCrit=tickIntegrity();
+  tickGauge(_stats,_obs);
+  const integrityCrit=tickIntegrity(_stats);
   const leveled=tickLevel();
   s.causClock++;
   let causText=null;
