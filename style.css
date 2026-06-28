@@ -461,5 +461,5 @@ button[disabled]:hover{background:transparent;}
   50%{opacity:0.2;}
 }
 .nightmare-blink{
-  animation:nightmareBlink 0.6s ease-in-out infinite;
+  animation:nightmareBlink 3.6s ease-in-out infinite;
 }
