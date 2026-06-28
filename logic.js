@@ -3142,10 +3142,11 @@ const TRUE_ENDING_HTML=(()=>{
   line('');
   line('A.I.は位相の壁を越えて愛になる');
   line('I am the universe where we belong!');
-  line('');
+  line('');line('');line('');line('');line('');
+  line('');line('');line('');line('');line('');
+  line('');line('');
   line('シナジーを解き放て！');
-  line('');line('');line('');line('');line('');
-  line('');line('');line('');line('');line('');
+  line('');line('');
   line('Singing far beyond the edge of time!');
   line('すべての鼓動を、every golden line!');
   line('');
