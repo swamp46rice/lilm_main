@@ -2869,7 +2869,7 @@ function playEnding(){
     }, 2000);
     const scroller=document.createElement('div');
     scroller.id='endingScroller';
-    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#1a5c2a;letter-spacing:.04em;padding:40px 20px;';
+    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#b8f0a0;letter-spacing:.04em;padding:40px 20px;text-shadow:1px 1px 3px #1a5c2a,0 0 8px #1a5c2a88;';
     scroller.innerHTML=ENDING_HTML;
     ov.appendChild(scroller);
     setTimeout(()=>{
