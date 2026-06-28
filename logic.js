@@ -1492,6 +1492,10 @@ function grantDrop(itemId, rank){
   const rankSuffix=rank===0?'':' +'+rank;
   log(tf('MSG_ITEM_RARE_T',{name:name+rankSuffix}), 'observe');
   sfxItemDrop();
+  // 拡張データ（id 0〜9）のドロップ時にポップアップ表示（未確定）
+  if(itemId<=9 && typeof showItemPopup==='function'){
+    showItemPopup('node', name+rankSuffix+'（'+t('ITEM_PENDING')+'）');
+  }
 }
 function wallDrop(wallIdx){
   const range=WALL_DROP_RANGE[wallIdx];

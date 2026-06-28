@@ -892,7 +892,7 @@ function render(){
   document.getElementById('bestRunInfo').textContent= Math.floor(s.bestRunInfo);
   document.getElementById('depth').textContent=s.depth;
   const _rsMap={'観測中':'STATUS_OBSERVING','停止中':'STATUS_STOPPED','停止中(エントロピー拡散による終了)':'STATUS_ENTROPY','停止中(沈黙による終了)':'STATUS_SILENCE','停止中(時間切れによる終了)':'STATUS_TIMEOUT','停止中(再正規化)':'STATUS_RENORM','停止中(準備中)':'STATUS_READY'};
-  const _rsLabel=document.getElementById('runStatusLabel');
+  const _rsLabel=document.getElementById('runStatusBadge');
   if(_rsLabel){
     _rsLabel.textContent=t(_rsMap[s.runStatus]||'STATUS_STOPPED');
     _rsLabel.style.color=s.runStatus==='観測中'?'#ff9040':'#8899aa';
