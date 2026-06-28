@@ -454,3 +454,12 @@ button[disabled]:hover{background:transparent;}
   color:#7ee8d0;
   margin-right:4px;
 }
+
+/* ===== 悪夢装備時の数値明滅 ===== */
+@keyframes nightmareBlink{
+  0%,100%{opacity:1;}
+  50%{opacity:0.2;}
+}
+.nightmare-blink{
+  animation:nightmareBlink 0.6s ease-in-out infinite;
+}

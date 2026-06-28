@@ -796,11 +796,14 @@ function effText(n){
   return parts.join(' / ');
 }
 function dirText(n){
-  const diff=n.ep-n.sp;
-  if(Math.abs(diff)<0.005) return '<div class="dir neutral">'+t('DIR_NEUTRAL')+' 0.00</div>';
+  const nightmareMode=typeof s!=='undefined' && s.committed && s.committed.includes('tx_nightmare');
+  const mult=nightmareMode?10:1;
+  const diff=(n.ep-n.sp)*mult;
+  if(Math.abs(diff)<0.005*mult) return '<div class="dir neutral">'+t('DIR_NEUTRAL')+' 0.00</div>';
   const dir = diff>0 ? t('DIR_DIFFUSE') : t('DIR_CONVERGE');
   const cls = diff>0 ? 'entropy' : 'silence';
-  return '<div class="dir '+cls+'">'+dir+' '+Math.abs(diff).toFixed(2)+'</div>';
+  const blink = nightmareMode ? ' nightmare-blink' : '';
+  return '<div class="dir '+cls+blink+'">'+dir+' '+Math.abs(diff).toFixed(2)+'</div>';
 }
 function buildSlots(){
   const slots=document.getElementById('slots'); slots.innerHTML='';
@@ -1116,21 +1119,25 @@ function _renderItemPopup(type, name, onDone){
   const container=document.getElementById('itemPopupContainer');
   if(!container){ if(onDone) onDone(); return; }
 
-  const iconMap={ 'node':'assets/item_00.png', 'achv':'assets/item_01.png', 'track':'assets/item_02.png' };
-  const labelMap={ 'node':'拡張データ', 'achv':'実績データ', 'track':'音源データ' };
+  const iconMap={ 'node':'assets/item_00.png', 'achv':'assets/item_01.png', 'track':'assets/item_02.png', 'end':null };
+  const labelMap={ 'node':'拡張データ', 'achv':'実績データ', 'track':'音源データ', 'end':null };
 
   const popup=document.createElement('div');
   popup.className='item-popup';
 
-  const img=document.createElement('img');
-  img.src=iconMap[type]||'assets/item_00.png';
-  popup.appendChild(img);
+  if(iconMap[type]){
+    const img=document.createElement('img');
+    img.src=iconMap[type];
+    popup.appendChild(img);
+  }
 
   const text=document.createElement('span');
-  const label=document.createElement('span');
-  label.className='item-popup-label';
-  label.textContent=(labelMap[type]||'データ')+'：';
-  text.appendChild(label);
+  if(labelMap[type]){
+    const label=document.createElement('span');
+    label.className='item-popup-label';
+    label.textContent=labelMap[type]+'：';
+    text.appendChild(label);
+  }
   text.appendChild(document.createTextNode(name));
   popup.appendChild(text);
 
@@ -1141,7 +1148,7 @@ function _renderItemPopup(type, name, onDone){
     popup.classList.remove('show');
     popup.classList.add('hide');
     setTimeout(()=>{ popup.remove(); if(onDone) onDone(); }, 300);
-  }, 3000);
+  }, 5000);
 }
 
 function showItemPopup(type, name){
@@ -1150,7 +1157,7 @@ function showItemPopup(type, name){
     // 拡張データは即時表示（キューなし）
     _renderItemPopup(type, name, null);
   } else {
-    // 実績・音源はキューで順番に表示
+    // 実績・音源・終了通知はキューで順番に表示
     _itemPopupQueue.push({type, name});
     _showNextItemPopup();
   }

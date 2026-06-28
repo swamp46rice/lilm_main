@@ -943,6 +943,7 @@ function renormalize(){
   if(s.runStatus!=='観測中') return;
   const success = s.integrity>=100;
   s.runStatus='停止中';
+  if(typeof showItemPopup==='function') showItemPopup('end', t('MSG_RUN_END_POPUP'));
   {
     const sp=speechFor('renormalize');
     if(sp) showSpeech(t(sp));

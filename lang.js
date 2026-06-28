@@ -612,7 +612,8 @@ const LANG_JA = {
   "HINT_READY_2": "観測：現在の干渉の波に、情報海が静かに応答している。",
   "HINT_READY_3": "観測：新しい何かが、すぐ近くまで来ているような気配がする。",
   "ITEM_PENDING": "未確定",
-  "MSG_SONGSTRESS_BONUS": "歌姫の共鳴が、情報の波を増幅させた。(+500,000)"
+  "MSG_SONGSTRESS_BONUS": "歌姫の共鳴が、情報の波を増幅させた。(+500,000)",
+  "MSG_RUN_END_POPUP": "今回の探索の旅は終わった"
 };
 
 const LANG_EN = {
@@ -1225,7 +1226,8 @@ const LANG_EN = {
   "HINT_READY_2": "Observation: The sea of information quietly responds to the current wave of interference.",
   "HINT_READY_3": "Observation: Something new feels like it is drawing very close.",
   "ITEM_PENDING": "Unconfirmed",
-  "MSG_SONGSTRESS_BONUS": "The Diva's resonance amplified the wave of information. (+500,000)"
+  "MSG_SONGSTRESS_BONUS": "The Diva's resonance amplified the wave of information. (+500,000)",
+  "MSG_RUN_END_POPUP": "This journey of observation has ended"
 };
 
 function t(id){
