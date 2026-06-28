@@ -2337,7 +2337,6 @@ function initTitleScreen(){
       if(_isFirstLaunch){
         playOpening(()=>{
           applyBg(s.bgIndex||0);
-          fadeIn(600);
           enterGameScene();
         });
       } else {
