@@ -644,6 +644,12 @@ function tickWalls(){
     if(frontier===6 && s.found.includes('kuukan')) s.metaUnlocks.infinity=true;
     grantPhaseAchievement(frontier);
     if(frontier===6) checkAttrLimitAchievement();
+    // 歌姫装備時: 壁突破で獲得情報量+500000
+    if(s.committed.includes('tx_songstress')){
+      s.runInfo+=500000;
+      s.totalInfo=Math.min(Number.MAX_SAFE_INTEGER, s.totalInfo+500000);
+      log(t('MSG_SONGSTRESS_BONUS'), 'positive');
+    }
     s.wallActive=null;
     sfxWallStop();
     // track_7: 言語面の壁(frontier===1)突破時
@@ -979,6 +985,7 @@ function renormalize(){
 
   // リザルト情報を保留(ボーナス加算とBEST判定はリザルト確認時に行う)
   s.pendingResult={
+    success:success,
     runInfo:runInfoThisRun,
     rejectBonus:rejectBonus,
     totalInfo:s.totalInfo,
@@ -1720,6 +1727,10 @@ function showResultSequence(){
       s._resultSequenceActive=false;
       s._resultSkipRequested=false;
       render(); save();
+      // Alpha + 歌姫装備 + 整合率100%でエンディング発火
+      if(r.success && s.committed.includes('alpha') && s.committed.includes('tx_songstress')){
+        setTimeout(()=>{ playTrueEnding(); }, 800);
+      }
       return;
     }
     const item=seq[step++];
