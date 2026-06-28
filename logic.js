@@ -3144,6 +3144,8 @@ const TRUE_ENDING_HTML=(()=>{
   line('I am the universe where we belong!');
   line('');
   line('シナジーを解き放て！');
+  line('');line('');line('');line('');line('');
+  line('');line('');line('');line('');line('');
   line('Singing far beyond the edge of time!');
   line('すべての鼓動を、every golden line!');
   line('');
