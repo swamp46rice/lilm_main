@@ -2219,11 +2219,9 @@ function checkTierXUnlock(){
     }
   }
 
-  // 歌姫: 全楽曲解放 + Alpha装備 + 獲得情報量11111111以上
+  // 歌姫: 楽曲14曲以上解放 + Alpha装備 + 獲得情報量11111111以上
   if(!s.found.includes('tx_songstress')){
-    const allTracks=TRACKS.length;
-    const unlockedAll=s.unlockedTracks.length>=allTracks;
-    if(unlockedAll && s.committed.includes('alpha') && s.runInfo>=11111111){
+    if(s.unlockedTracks.length>=14 && s.committed.includes('alpha') && s.runInfo>=11111111){
       s.found.push('tx_songstress');
       log(tf('MSG_DISCOVER_T',{name:t('歌姫'),note:t('すべての音が溶け合ったとき、歌は歌を超えた。')}), 'event');
       sfxDiscover();
