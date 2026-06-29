@@ -131,6 +131,8 @@ const SE_FILES = [
   'se/sfx_21.wav', // sfxCharaChange   キャラ形態変化
   'se/sfx_22.wav', // sfxMonday        Monday障害発生
   'se/sfx_23.wav', // sfxGaugeAlert    ゲージ80%超/20%未満アラート
+  'se/sfx_24.wav', // (予備)
+  'se/sfx_25.wav', // sfxDepart追加SE  出発追加
 ];
 
 /* ===== SE: 初期化・ON/OFFトグル ===== */
@@ -175,7 +177,7 @@ function playSE(idx){
 }
 
 /* ===== SFX: 各イベントの効果音 ===== */
-function sfxDepart()        { playSE(0); }   // 出発
+function sfxDepart()        { playSE(0); playSE(25); }   // 出発
 function sfxDiscover()      { playSE(1); }   // ノード発見
 function sfxWallBreak()     { playSE(2); }   // 位相の壁突破
 function sfxObstacle()      { playSE(3); }   // 障害発生
