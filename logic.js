@@ -2427,6 +2427,7 @@ function initTitleScreen(){
   // ===== ゲームシーン開始 =====
   function enterGameScene(){
     _seGameStarted=true;
+    stopAllBgmGlobal();
     applyBg(s.bgIndex||0);
     switchBgmTrack(s.currentTrackIdx||0);
     startTick();
