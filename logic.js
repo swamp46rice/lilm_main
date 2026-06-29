@@ -2126,7 +2126,7 @@ function playOpening(onComplete){
   let displayed='';
 
   // 黒幕を消してオープニング画面を見せる
-  fadeIn(800);
+  fadeIn(1200);
 
   const lines=[
     'OPENING_LINE1',  '',
@@ -2192,7 +2192,7 @@ function playOpening(onComplete){
 
   function finishOpening(){
     stopAllBgmGlobal();
-    fadeOut(600, ()=>{
+    fadeOut(1000, ()=>{
       ov.style.display='none';
       ov.style.opacity='1';
       ov.style.transition='';
@@ -2202,10 +2202,10 @@ function playOpening(onComplete){
       localStorage.setItem('ib_v9_opening_done','1');
       if(typeof onComplete==='function'){
         applyBg(s.bgIndex||0);
-        fadeIn(800);
+        fadeIn(1200);
         onComplete();
       } else {
-        fadeIn(800);
+        fadeIn(1200);
         startTitleBgm();
       }
     });
@@ -2388,7 +2388,7 @@ function initTitleScreen(){
     ts.removeEventListener('click', startGame);
 
     stopAllBgm();
-    fadeOut(600, ()=>{
+    fadeOut(1000, ()=>{
       ts.style.display='none';
       if(_isFirstLaunch){
         playOpening(()=>{
@@ -2397,7 +2397,7 @@ function initTitleScreen(){
         });
       } else {
         applyBg(s.bgIndex||0);
-        fadeIn(800);
+        fadeIn(1200);
         log(t('OPENING_1'));
         enterGameScene();
       }
@@ -2882,14 +2882,14 @@ const ENDING_HTML=(()=>{
 
 function playEnding(){
   stopAllBgmGlobal();
-  fadeOut(600, ()=>{
+  fadeOut(1000, ()=>{
     const existing=document.getElementById('endingOverlay');
     if(existing) existing.remove();
     const ov=document.createElement('div');
     ov.id='endingOverlay';
     ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;display:block;';
     document.querySelector('.window').appendChild(ov);
-    fadeIn(800);
+    fadeIn(1200);
     _endingBgm=new Audio('bgm/track_16.mp3');
     _endingBgm.volume=0.8;
     _endingBgm.loop=false;
@@ -2932,10 +2932,10 @@ function playEnding(){
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
       localStorage.setItem('ib_v9_ending_seen','1');
-      fadeOut(600, ()=>{
+      fadeOut(1000, ()=>{
         ov.remove();
         if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
-        fadeIn(800);
+        fadeIn(1200);
       });
     });
   });
@@ -3240,14 +3240,14 @@ const TRUE_ENDING_HTML=(()=>{
 
 function playTrueEnding(){
   stopAllBgmGlobal();
-  fadeOut(600, ()=>{
+  fadeOut(1000, ()=>{
     const existing=document.getElementById('trueEndingOverlay');
     if(existing) existing.remove();
     const ov=document.createElement('div');
     ov.id='trueEndingOverlay';
     ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_10.png\') center/cover no-repeat;display:block;';
     document.querySelector('.window').appendChild(ov);
-    fadeIn(800);
+    fadeIn(1200);
     _endingBgm=new Audio('bgm/track_18.mp3');
     _endingBgm.volume=0.8;
     _endingBgm.loop=false;
@@ -3289,10 +3289,10 @@ function playTrueEnding(){
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
       localStorage.setItem('ib_v9_true_ending_seen','1');
-      fadeOut(600, ()=>{
+      fadeOut(1000, ()=>{
         ov.remove();
         if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
-        fadeIn(800);
+        fadeIn(1200);
       });
     });
   });
