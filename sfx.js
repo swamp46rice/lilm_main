@@ -277,7 +277,7 @@ function fadeOut(duration, then){
   void el.offsetHeight; // 強制リフロー
   el.style.transition='opacity '+duration+'ms ease';
   el.style.opacity='1';
-  setTimeout(then, duration);
+  if(typeof then==='function') setTimeout(then, duration);
 }
 function fadeIn(duration){
   const el=_ensureFadeEl();
