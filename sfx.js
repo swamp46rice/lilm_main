@@ -262,9 +262,9 @@ function _ensureFadeEl(){
   if(!_fadeEl){
     _fadeEl=document.createElement('div');
     _fadeEl.style.cssText='position:absolute;inset:0;background:#000;z-index:400;border-radius:10px;pointer-events:none;opacity:0;';
-    const w=document.querySelector('.window');
-    if(w) w.appendChild(_fadeEl);
   }
+  const w=document.querySelector('.window');
+  if(w) w.appendChild(_fadeEl); // 常に最後の子要素（最前面）に移動
   return _fadeEl;
 }
 function fadeOut(duration, then){
@@ -272,11 +272,10 @@ function fadeOut(duration, then){
   el.style.transition='none';
   el.style.opacity='0';
   el.style.pointerEvents='all';
-  requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
-    el.style.transition='opacity '+duration+'ms ease';
-    el.style.opacity='1';
-    setTimeout(then, duration);
-  }); });
+  void el.offsetHeight; // 強制リフロー
+  el.style.transition='opacity '+duration+'ms ease';
+  el.style.opacity='1';
+  setTimeout(then, duration);
 }
 function fadeIn(duration){
   const el=_ensureFadeEl();

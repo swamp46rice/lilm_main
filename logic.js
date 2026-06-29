@@ -871,7 +871,7 @@ function causalityDigest(){
       text=tf('MSG_OBSTACLE_EFFECT_T',{name:t(NODES[top[0]].name),dir,word,sign,delta:netDelta.toFixed(1)});
     }
   }else if(obstacleMag>=0.3 && s.activeObstacles.length>0){
-    const name=OBSTACLES.find(o=>o.key===s.activeObstacles[0].key).name;
+    const name=t(OBSTACLES.find(o=>o.key===s.activeObstacles[0].key).name);
     text=tf('OBS_IMPACT_T',{name,sign,delta:netDelta.toFixed(1)});
   }else{
     text=tf('OBS_EFFECT_T',{dir,sign,delta:netDelta.toFixed(1)});
