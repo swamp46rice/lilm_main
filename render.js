@@ -1058,7 +1058,7 @@ function render(){
     departBtn.disabled=false;
     departBtn.textContent=t('UI_DEPART');
     departBtn.classList.remove('result-pending-btn');
-    departBtn.onclick=function(){ depart(); };
+    departBtn.onclick=function(){ sfxDepart2(); depart(); };
     renormBtn.style.display='none';
   }else{
     departBtn.style.display='none';

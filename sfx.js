@@ -177,7 +177,8 @@ function playSE(idx){
 }
 
 /* ===== SFX: 各イベントの効果音 ===== */
-function sfxDepart()        { playSE(0); playSE(25); }   // 出発
+function sfxDepart()        { playSE(0); }   // 出発
+function sfxDepart2()       { playSE(25); }  // 出発追加SE（出発ボタン押下時のみ）
 function sfxDiscover()      { playSE(1); }   // ノード発見
 function sfxWallBreak()     { playSE(2); }   // 位相の壁突破
 function sfxObstacle()      { playSE(3); }   // 障害発生
