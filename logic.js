@@ -1763,8 +1763,8 @@ function showResultSequence(){
             setTimeout(()=>{ playTrueEnding(); }, 3000);
           }, 3000);
         });
-      // Alpha装備 + 整合率100% → ノーマルエンド
-      } else if(r.success && s.committed.includes('alpha')){
+      // Alpha装備 + Alpha最終形態 + 整合率100% → ノーマルエンド
+      } else if(r.success && s.committed.includes('alpha') && s.tireIdxDisplay>=7){
         bgmFadeOut(2000, ()=>{
           setTimeout(()=>{
             showSpeech(t('SPEECH_BEFORE_ENDING'));
