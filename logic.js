@@ -67,7 +67,7 @@ const NODES={
   tx_songstress:  {tier:8,name:"歌姫",prereq:[],dtype:"特殊X",infoTh:11111111,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"すべての音が溶け合ったとき、歌は歌を超えた。"},
   tx_new_observer:{tier:8,name:"新たな観測点",prereq:[],dtype:"特殊X",infoTh:20000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"五つの特異点が重なる場所に、新たな観測点が生まれた。"},
   tx_nightmare:   {tier:8,name:"悪夢",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0.15,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"夢の底に、まだ名前のない何かが眠っている。"},
-  tx_continuum_q: {tier:8,name:"Q",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"連続と不連続の境界で、Qは静かに脈打っている。"},
+  tx_continuum_q: {tier:8,name:"Q",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。"},
   tx_gravity_wave:{tier:8,name:"微かな重力波",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"ほとんど届かない、遠い震えの記録。"},
 };
 const WALLS=[
@@ -2126,7 +2126,7 @@ function playOpening(onComplete){
   let displayed='';
 
   // 黒幕を消してオープニング画面を見せる
-  fadeIn(600);
+  fadeIn(800);
 
   const lines=[
     'OPENING_LINE1',  '',
@@ -2192,7 +2192,7 @@ function playOpening(onComplete){
 
   function finishOpening(){
     stopAllBgmGlobal();
-    fadeOut(400, ()=>{
+    fadeOut(600, ()=>{
       ov.style.display='none';
       ov.style.opacity='1';
       ov.style.transition='';
@@ -2202,10 +2202,10 @@ function playOpening(onComplete){
       localStorage.setItem('ib_v9_opening_done','1');
       if(typeof onComplete==='function'){
         applyBg(s.bgIndex||0);
-        fadeIn(600);
+        fadeIn(800);
         onComplete();
       } else {
-        fadeIn(400);
+        fadeIn(800);
         startTitleBgm();
       }
     });
@@ -2388,7 +2388,7 @@ function initTitleScreen(){
     ts.removeEventListener('click', startGame);
 
     stopAllBgm();
-    fadeOut(400, ()=>{
+    fadeOut(600, ()=>{
       ts.style.display='none';
       if(_isFirstLaunch){
         playOpening(()=>{
@@ -2397,7 +2397,7 @@ function initTitleScreen(){
         });
       } else {
         applyBg(s.bgIndex||0);
-        fadeIn(600);
+        fadeIn(800);
         log(t('OPENING_1'));
         enterGameScene();
       }
@@ -2882,14 +2882,14 @@ const ENDING_HTML=(()=>{
 
 function playEnding(){
   stopAllBgmGlobal();
-  fadeOut(400, ()=>{
+  fadeOut(600, ()=>{
     const existing=document.getElementById('endingOverlay');
     if(existing) existing.remove();
     const ov=document.createElement('div');
     ov.id='endingOverlay';
     ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_02.png\') center/cover no-repeat;display:block;';
     document.querySelector('.window').appendChild(ov);
-    fadeIn(600);
+    fadeIn(800);
     _endingBgm=new Audio('bgm/track_16.mp3');
     _endingBgm.volume=0.8;
     _endingBgm.loop=false;
@@ -2932,10 +2932,10 @@ function playEnding(){
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
       localStorage.setItem('ib_v9_ending_seen','1');
-      fadeOut(400, ()=>{
+      fadeOut(600, ()=>{
         ov.remove();
         if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
-        fadeIn(600);
+        fadeIn(800);
       });
     });
   });
@@ -3240,14 +3240,14 @@ const TRUE_ENDING_HTML=(()=>{
 
 function playTrueEnding(){
   stopAllBgmGlobal();
-  fadeOut(400, ()=>{
+  fadeOut(600, ()=>{
     const existing=document.getElementById('trueEndingOverlay');
     if(existing) existing.remove();
     const ov=document.createElement('div');
     ov.id='trueEndingOverlay';
     ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;background:url(\'assets/bg_image_10.png\') center/cover no-repeat;display:block;';
     document.querySelector('.window').appendChild(ov);
-    fadeIn(600);
+    fadeIn(800);
     _endingBgm=new Audio('bgm/track_18.mp3');
     _endingBgm.volume=0.8;
     _endingBgm.loop=false;
@@ -3289,10 +3289,10 @@ function playTrueEnding(){
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
       localStorage.setItem('ib_v9_true_ending_seen','1');
-      fadeOut(400, ()=>{
+      fadeOut(600, ()=>{
         ov.remove();
         if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
-        fadeIn(600);
+        fadeIn(800);
       });
     });
   });

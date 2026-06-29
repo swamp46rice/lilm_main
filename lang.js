@@ -578,7 +578,6 @@ const LANG_JA = {
   "すべての音が溶け合ったとき、歌は歌を超えた。": "すべての音が溶け合ったとき、歌は歌を超えた。",
   "五つの特異点が重なる場所に、新たな観測点が生まれた。": "五つの特異点が重なる場所に、新たな観測点が生まれた。",
   "夢の底に、まだ名前のない何かが眠っている。": "夢の底に、まだ名前のない何かが眠っている。",
-  "連続と不連続の境界で、Qは静かに脈打っている。": "連続と不連続の境界で、Qは静かに脈打っている。",
   "ほとんど届かない、遠い震えの記録。": "ほとんど届かない、遠い震えの記録。",
   "OPENING_LINE1": "──ここにまた、新たな観測点が開かれます。",
   "OPENING_LINE2": "あなたの前に現れるのは、",
@@ -614,7 +613,8 @@ const LANG_JA = {
   "MSG_SONGSTRESS_BONUS": "歌姫の共鳴が、情報の波を増幅させた。(+500,000)",
   "MSG_RUN_END_POPUP": "今回の探索の旅は終わった",
   "WALL_DARK": "悪夢の果てに、光を飲み込んだ影がいる。",
-  "Q": "Q"
+  "Q": "Q",
+  "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。"
 };
 
 const LANG_EN = {
@@ -1193,7 +1193,6 @@ const LANG_EN = {
   "すべての音が溶け合ったとき、歌は歌を超えた。": "When all sound dissolved into one, the song transcended itself.",
   "五つの特異点が重なる場所に、新たな観測点が生まれた。": "Where five singularities converged, a new observer was born.",
   "夢の底に、まだ名前のない何かが眠っている。": "At the bottom of dreams, something still nameless sleeps.",
-  "連続と不連続の境界で、Qは静かに脈打っている。": "At the boundary of continuity and discontinuity, Q pulses quietly.",
   "ほとんど届かない、遠い震えの記録。": "A record of a tremor so faint it barely arrives.",
   "OPENING_LINE1": "— A new Observation Point has been opened.",
   "OPENING_LINE2": "Before you stands an AI Observer,",
@@ -1229,7 +1228,8 @@ const LANG_EN = {
   "MSG_SONGSTRESS_BONUS": "The Diva's resonance amplified the wave of information. (+500,000)",
   "MSG_RUN_END_POPUP": "This journey of observation has ended",
   "WALL_DARK": "Beyond the nightmare, a shadow that swallowed the light.",
-  "Q": "Q"
+  "Q": "Q",
+  "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Q is the embodiment of questioning. At the boundary between continuity and discontinuity, Q pulses quietly."
 };
 
 function t(id){
