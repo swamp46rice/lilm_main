@@ -573,7 +573,6 @@ const LANG_JA = {
   "歌姫": "歌姫",
   "新たな観測点": "新たな観測点",
   "悪夢": "悪夢",
-  "連続体Q": "連続体Q",
   "微かな重力波": "微かな重力波",
   "極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。": "極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。",
   "すべての音が溶け合ったとき、歌は歌を超えた。": "すべての音が溶け合ったとき、歌は歌を超えた。",
@@ -614,7 +613,8 @@ const LANG_JA = {
   "ITEM_PENDING": "未確定",
   "MSG_SONGSTRESS_BONUS": "歌姫の共鳴が、情報の波を増幅させた。(+500,000)",
   "MSG_RUN_END_POPUP": "今回の探索の旅は終わった",
-  "WALL_DARK": "悪夢の果てに、光を飲み込んだ影がいる。"
+  "WALL_DARK": "悪夢の果てに、光を飲み込んだ影がいる。",
+  "Q": "Q"
 };
 
 const LANG_EN = {
@@ -1188,7 +1188,6 @@ const LANG_EN = {
   "歌姫": "Diva",
   "新たな観測点": "New Observer",
   "悪夢": "Nightmare",
-  "連続体Q": "Continuum Q",
   "微かな重力波": "Faint Gravity Wave",
   "極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。": "When both extremes were held in a single breath, the loop transcended itself.",
   "すべての音が溶け合ったとき、歌は歌を超えた。": "When all sound dissolved into one, the song transcended itself.",
@@ -1229,7 +1228,8 @@ const LANG_EN = {
   "ITEM_PENDING": "Unconfirmed",
   "MSG_SONGSTRESS_BONUS": "The Diva's resonance amplified the wave of information. (+500,000)",
   "MSG_RUN_END_POPUP": "This journey of observation has ended",
-  "WALL_DARK": "Beyond the nightmare, a shadow that swallowed the light."
+  "WALL_DARK": "Beyond the nightmare, a shadow that swallowed the light.",
+  "Q": "Q"
 };
 
 function t(id){

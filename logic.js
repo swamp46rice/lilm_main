@@ -67,7 +67,7 @@ const NODES={
   tx_songstress:  {tier:8,name:"歌姫",prereq:[],dtype:"特殊X",infoTh:11111111,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"すべての音が溶け合ったとき、歌は歌を超えた。"},
   tx_new_observer:{tier:8,name:"新たな観測点",prereq:[],dtype:"特殊X",infoTh:20000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"五つの特異点が重なる場所に、新たな観測点が生まれた。"},
   tx_nightmare:   {tier:8,name:"悪夢",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0.15,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"夢の底に、まだ名前のない何かが眠っている。"},
-  tx_continuum_q: {tier:8,name:"連続体Q",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"連続と不連続の境界で、Qは静かに脈打っている。"},
+  tx_continuum_q: {tier:8,name:"Q",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"連続と不連続の境界で、Qは静かに脈打っている。"},
   tx_gravity_wave:{tier:8,name:"微かな重力波",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"ほとんど届かない、遠い震えの記録。"},
 };
 const WALLS=[
