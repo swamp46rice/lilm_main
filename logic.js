@@ -149,6 +149,9 @@ const DROP_ITEMS=[
   {id:35, name:'極限の作用属性'},
   {id:36, name:'極限の洞察属性'},
   {id:37, name:'中道の振る舞い'},
+  {id:38, name:'多元思念体との接続'},
+  {id:39, name:'虚無性レジリエンス'},
+  {id:40, name:'超越性レジリエンス'},
 ];
 // 位相の壁ごとのドロップ可能アイテムID範囲 [min, max]
 const WALL_DROP_RANGE=[
@@ -347,8 +350,8 @@ if(!s.wallsThisRun) s.wallsThisRun=[];
 if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
 if(s.bestRunInfo===undefined) s.bestRunInfo=0;
 if(!s.metaUnlocks) s.metaUnlocks={mu:false,karma:false,infinity:false};
-if(!s.inventory) s.inventory=Array(38).fill(null);
-if(s.inventory.length<38){ while(s.inventory.length<38) s.inventory.push(null); }
+if(!s.inventory) s.inventory=Array(41).fill(null);
+if(s.inventory.length<41){ while(s.inventory.length<41) s.inventory.push(null); }
 s._resultSequenceActive=false; // ロード時は必ずfalseにリセット(保存値に関わらず)
 s._resultSkipRequested=false;
 if(!s.runDrops) s.runDrops=[];
@@ -1027,6 +1030,7 @@ function coreTick(silent){
   const obsResults=tickObstacles();
   const newly=tickDiscovery(_stats,_obs);
   checkTierXUnlock();
+  checkHighInfoDrop();
   tickGauge(_stats,_obs);
   const integrityCrit=tickIntegrity(_stats);
   const leveled=tickLevel();
@@ -1338,7 +1342,7 @@ function resetAll(){
     const base={
       level:1,totalInfo:0,depth:0,runInfo:0,gauge:50,integrity:0,
       committed:[],runStatus:'停止中',lastFailType:null,runTicks:0,
-      bestRunInfo:0,inventory:Array(38).fill(null),runDrops:[],
+      bestRunInfo:0,inventory:Array(41).fill(null),runDrops:[],
       found:['t0_see','t0_hear','t0_speak'],newlyUnlocked:[],
       wallsCrossedEver:[],wallsThisRun:[],wallActive:null,
       activeObstacles:[],lastEventText:null,lastExportFound:[],
@@ -1682,6 +1686,9 @@ const ITEM_BONUS_TABLE={
   35: {base:5.00, perRank:0}, // 極限の作用属性 +500%
   36: {base:5.00, perRank:0}, // 極限の洞察属性 +500%
   37: {base:30.00, perRank:0}, // 中道の振る舞い +3000%
+  38: {base:10.00, perRank:5.00}, // 多元思念体との接続 +1000%、ランクごとに+500%
+  39: {base:10.00, perRank:5.00}, // 虚無性レジリエンス +1000%、ランクごとに+500%
+  40: {base:10.00, perRank:5.00}, // 超越性レジリエンス +1000%、ランクごとに+500%
 };
 function itemGainBonus(){
   let bonus=0;
@@ -2267,6 +2274,21 @@ function _fallbackOpening(onComplete){
 }
 
 // ===== Tier X 解放条件チェック =====
+function checkHighInfoDrop(){
+  if(s.runInfo < 1000000) return;
+  // runInfo 10000000単位でランク上限が上がる（上限10）
+  const rankMax=Math.min(10, Math.floor(s.runInfo/10000000));
+  // 各アイテムのドロップ確率（1tick毎 0.1%）
+  [38, 39, 40].forEach(itemId=>{
+    if(Math.random()>0.001) return;
+    const cur=s.inventory[itemId];
+    const curRank=cur?cur.rank:-1;
+    if(curRank>=rankMax) return; // ランク上限到達済み
+    const rank=curRank+1;
+    grantDrop(itemId, rank);
+  });
+}
+
 function checkTierXUnlock(){
   const stats=computeStats();
 

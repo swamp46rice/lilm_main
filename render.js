@@ -84,11 +84,12 @@ function flowAwayStars(rejected, fixedAngle){
     const exDist=100;
     const ex=102+Math.cos(angle)*exDist;
     const ey=102+Math.sin(angle)*exDist;
-    const baseScale=(5+d.rank*1.5)/5;
+    const isHigh=(d.itemId>=38);
+    const baseScale=isHigh?(5+5*1.5)/5:(5+d.rank*1.5)/5;
     const g=document.createElementNS(NS,'g');
     const path=document.createElementNS(NS,'path');
     path.setAttribute('d',STAR_PATH_D);
-    path.setAttribute('fill','#e8d860');
+    path.setAttribute('fill',isHigh?'#b0d8ff':'#e8d860');
     g.appendChild(path);
     g.setAttribute('transform','translate('+sx.toFixed(1)+','+sy.toFixed(1)+') scale('+baseScale.toFixed(2)+')');
     g.setAttribute('opacity','0.9');
@@ -123,11 +124,12 @@ function absorbStars(absorbed, fixedAngle){
     const r=105+d.rank*3;
     const sx=102+Math.cos(angle)*r;
     const sy=102+Math.sin(angle)*r;
-    const baseScale=(5+d.rank*1.5)/5;
+    const isHigh2=(d.itemId>=38);
+    const baseScale=isHigh2?(5+5*1.5)/5:(5+d.rank*1.5)/5;
     const g=document.createElementNS(NS,'g');
     const path=document.createElementNS(NS,'path');
     path.setAttribute('d',STAR_PATH_D);
-    path.setAttribute('fill','#e8d860');
+    path.setAttribute('fill',isHigh2?'#b0d8ff':'#e8d860');
     g.appendChild(path);
     g.setAttribute('transform','translate('+sx.toFixed(1)+','+sy.toFixed(1)+') scale('+baseScale.toFixed(2)+')');
     g.setAttribute('opacity','1');
@@ -988,14 +990,15 @@ function render(){
       const angle = d.angle!==undefined ? d.angle : 0;
       const r=105+d.rank*3;
       const cx=102+Math.cos(angle)*r, cy=102+Math.sin(angle)*r;
-      const scale=(5+d.rank*1.5)/5;
+      const scale= d.itemId>=38 ? (5+5*1.5)/5 : (5+d.rank*1.5)/5;
       const rankSuffix=d.rank===0?'':' +'+d.rank;
       let entry=window._dropFxNodes[key];
       if(!entry){
         const g=document.createElementNS(NS,'g');
         const path=document.createElementNS(NS,'path');
+        const isHighItem=d.itemId>=38;
         path.setAttribute('d',STAR_PATH_D);
-        path.setAttribute('fill','#e8d860');
+        path.setAttribute('fill', isHighItem ? '#b0d8ff' : '#e8d860');
         path.setAttribute('opacity','0.9');
         g.appendChild(path);
         const title=document.createElementNS(NS,'title');
@@ -1058,7 +1061,7 @@ function render(){
     departBtn.disabled=false;
     departBtn.textContent=t('UI_DEPART');
     departBtn.classList.remove('result-pending-btn');
-    departBtn.onclick=function(){ sfxDepart2(); depart(); };
+    departBtn.onclick=function(){ depart(); };
     renormBtn.style.display='none';
   }else{
     departBtn.style.display='none';
