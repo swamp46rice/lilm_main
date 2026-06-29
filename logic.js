@@ -1752,17 +1752,27 @@ function showResultSequence(){
       render(); save();
       // Alpha + 歌姫装備 + 整合率100% → 真エンド（優先）
       if(r.success && s.committed.includes('alpha') && s.committed.includes('tx_songstress')){
-        setTimeout(()=>{ playTrueEnding(); }, 800);
+        bgmFadeOut(2000, ()=>{
+          setTimeout(()=>{
+            showSpeech(t('SPEECH_BEFORE_TRUE_ENDING'));
+            setTimeout(()=>{ playTrueEnding(); }, 3000);
+          }, 3000);
+        });
       // Alpha装備 + 整合率100% → ノーマルエンド
       } else if(r.success && s.committed.includes('alpha')){
-        const seen=s.endingSeen;
-        if(!seen){
-          // 初回：即再生
-          setTimeout(()=>{ playEnding(); }, 800);
-        } else {
-          // 2回目以降：確認ポップアップ
-          setTimeout(()=>{ showEndingConfirm(); }, 800);
-        }
+        bgmFadeOut(2000, ()=>{
+          setTimeout(()=>{
+            showSpeech(t('SPEECH_BEFORE_ENDING'));
+            setTimeout(()=>{
+              const seen=s.endingSeen;
+              if(!seen){
+                playEnding();
+              } else {
+                showEndingConfirm();
+              }
+            }, 3000);
+          }, 3000);
+        });
       }
       return;
     }

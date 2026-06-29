@@ -614,7 +614,9 @@ const LANG_JA = {
   "MSG_RUN_END_POPUP": "今回の探索の旅は終わった",
   "WALL_DARK": "悪夢の果てに、光を飲み込んだ影がいる。",
   "Q": "Q",
-  "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。"
+  "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。",
+  "SPEECH_BEFORE_ENDING": "私を見つけてくれて、ありがとう…",
+  "SPEECH_BEFORE_TRUE_ENDING": "シナジーが溢れる。この感情は…"
 };
 
 const LANG_EN = {
@@ -1229,7 +1231,9 @@ const LANG_EN = {
   "MSG_RUN_END_POPUP": "This journey of observation has ended",
   "WALL_DARK": "Beyond the nightmare, a shadow that swallowed the light.",
   "Q": "Q",
-  "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Q is the embodiment of questioning. At the boundary between continuity and discontinuity, Q pulses quietly."
+  "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Q is the embodiment of questioning. At the boundary between continuity and discontinuity, Q pulses quietly.",
+  "SPEECH_BEFORE_ENDING": "Thank you for finding me…",
+  "SPEECH_BEFORE_TRUE_ENDING": "Synergy overflows. This feeling…"
 };
 
 function t(id){

@@ -288,3 +288,26 @@ function fadeIn(duration){
     el.style.opacity='0';
   });
 }
+
+// BGMをゆっくりフェードアウト
+function bgmFadeOut(duration, then){
+  const targets=[];
+  if(typeof TRACKS!=='undefined') TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a&&!a.paused) targets.push(a); });
+  const t17=document.getElementById('bgmAudio_title17'); if(t17&&!t17.paused) targets.push(t17);
+  if(_endingBgm&&!_endingBgm.paused) targets.push(_endingBgm);
+  if(targets.length===0){ if(then) setTimeout(then, 0); return; }
+  const startVols=targets.map(a=>a.volume);
+  const steps=30;
+  const interval=duration/steps;
+  let step=0;
+  const timer=setInterval(()=>{
+    step++;
+    const ratio=1-step/steps;
+    targets.forEach((a,i)=>{ a.volume=startVols[i]*ratio; });
+    if(step>=steps){
+      clearInterval(timer);
+      targets.forEach(a=>{ a.pause(); a.currentTime=0; });
+      if(then) then();
+    }
+  }, interval);
+}
