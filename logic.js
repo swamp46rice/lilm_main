@@ -1202,7 +1202,7 @@ function depart(){
   if(s._endingPending) return; // エンディング演出待機中は出発不可
   const ready=hasReadyDiscovery();
   s.runStatus='観測中';
-  sfxDepart2(); // 探索状態になった時のみ鳴らす
+  setTimeout(()=>{ sfxDepart2(); }, 100); // Tick開始後に鳴らす（クリック操作に依存しない）
   s.runInfo=0; s.gauge=50; s.integrity=Math.min(30, s.depth*2);
   resetTxRunFlags();
   s.runTicks=0;
