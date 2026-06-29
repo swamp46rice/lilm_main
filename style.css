@@ -347,8 +347,8 @@ button[disabled]:hover{background:transparent;}
   background:rgba(2,6,18,0.0);pointer-events:none;
 }
 #titleScreen>*{position:relative;z-index:1;}
-#titleLogo{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:420px;filter:drop-shadow(0 0 18px #e0c8ffaa);z-index:2;}
-#titleChara{width:280px;animation:titleFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 14px #e0c8ff99);}
+#titleLogo{position:absolute;top:140px;left:50%;transform:translateX(-50%);width:420px;filter:drop-shadow(0 0 18px #e0c8ffaa);z-index:2;}
+#titleChara{width:280px;margin-top:100px;animation:titleFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 14px #e0c8ff99);}
 @keyframes titleFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
 #titlePressStart{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);width:200px;animation:titleBlink 1.4s ease-in-out infinite;z-index:2;}
 @keyframes titleBlink{0%,100%{opacity:1;}50%{opacity:0.12;}}
