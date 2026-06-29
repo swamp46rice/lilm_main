@@ -1199,6 +1199,7 @@ function depart(){
   if(skipResultSequenceIfActive()) return;
   if(s.runStatus!=='停止中') return;
   if(s.pendingResult) return; // 結果確認前は出発できない
+  if(s._endingPending) return; // エンディング演出待機中は出発不可
   sfxDepart2(); // 探索開始時のみ鳴らす
   const ready=hasReadyDiscovery();
   s.runStatus='観測中';
@@ -1755,26 +1756,26 @@ function showResultSequence(){
       s._resultSequenceActive=false;
       s._resultSkipRequested=false;
       render(); save();
+
       // Alpha + 歌姫装備 + 整合率100% → 真エンド（優先）
       if(r.success && s.committed.includes('alpha') && s.committed.includes('tx_songstress')){
+        s._endingPending=true;
         bgmFadeOut(2000, ()=>{
           setTimeout(()=>{
             showSpeech(t('SPEECH_BEFORE_TRUE_ENDING'));
-            setTimeout(()=>{ playTrueEnding(); }, 3000);
+            setTimeout(()=>{ s._endingPending=false; playTrueEnding(); }, 3000);
           }, 3000);
         });
       // Alpha装備 + Alpha最終形態 + 整合率100% → ノーマルエンド
       } else if(r.success && s.committed.includes('alpha') && s.tireIdxDisplay>=7){
+        s._endingPending=true;
         bgmFadeOut(2000, ()=>{
           setTimeout(()=>{
             showSpeech(t('SPEECH_BEFORE_ENDING'));
             setTimeout(()=>{
+              s._endingPending=false;
               const seen=s.endingSeen;
-              if(!seen){
-                playEnding();
-              } else {
-                showEndingConfirm();
-              }
+              if(!seen){ playEnding(); } else { showEndingConfirm(); }
             }, 3000);
           }, 3000);
         });
