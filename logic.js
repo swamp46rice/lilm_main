@@ -300,6 +300,7 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   runStatus:'停止中', lastFailType:null,
   runTicks:0,
   bestRunInfo:0,
+  endingSeen:false,
   inventory:Array(10).fill(null),  // 確定所持アイテム [{itemId, rank}] or null
   runDrops:[],                      // ラン中の一時ドロップ [{itemId, rank}]
   found:['t0_see','t0_hear','t0_speak'],
@@ -330,6 +331,7 @@ if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
 if(s.seVolume===undefined) s.seVolume=70;
 if(s.bgIndex===undefined) s.bgIndex=0;
+if(s.endingSeen===undefined) s.endingSeen=!!localStorage.getItem('ib_v9_ending_seen');
 if(!s.txFlags) s.txFlags={};
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 
@@ -1748,9 +1750,19 @@ function showResultSequence(){
       s._resultSequenceActive=false;
       s._resultSkipRequested=false;
       render(); save();
-      // Alpha + 歌姫装備 + 整合率100%でエンディング発火
+      // Alpha + 歌姫装備 + 整合率100% → 真エンド（優先）
       if(r.success && s.committed.includes('alpha') && s.committed.includes('tx_songstress')){
         setTimeout(()=>{ playTrueEnding(); }, 800);
+      // Alpha装備 + 整合率100% → ノーマルエンド
+      } else if(r.success && s.committed.includes('alpha')){
+        const seen=s.endingSeen;
+        if(!seen){
+          // 初回：即再生
+          setTimeout(()=>{ playEnding(); }, 800);
+        } else {
+          // 2回目以降：確認ポップアップ
+          setTimeout(()=>{ showEndingConfirm(); }, 800);
+        }
       }
       return;
     }
@@ -2324,7 +2336,7 @@ function showLangSelect(){
 
 function startTitleBgm(){
   stopAllBgmGlobal();
-  if(localStorage.getItem('ib_v9_ending_seen')){
+  if(s.endingSeen){
     // エンディング視聴済み → track_17
     const t17=document.getElementById('bgmAudio_title17');
     if(!t17){
@@ -2778,7 +2790,7 @@ function initSettings(){
       document.body.appendChild(blackout);
       localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
-      localStorage.removeItem('ib_v9_ending_seen');
+      // ib_v9_ending_seenはs.endingSeenに移行済み（完全初期化でsごと消去）
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
@@ -2880,6 +2892,24 @@ const ENDING_HTML=(()=>{
   return rows.join('');
 })();
 
+function showEndingConfirm(){
+  const popup=document.createElement('div');
+  popup.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(5,12,30,0.97);border:1px solid #2a4a7a;border-radius:10px;padding:28px 36px;font-family:var(--font-mono);color:#c0ddf0;text-align:center;z-index:350;';
+  popup.innerHTML=`
+    <div style="font-size:13px;letter-spacing:.08em;margin-bottom:20px;">♪Diva LiLM を聴きますか？</div>
+    <div style="display:flex;gap:16px;justify-content:center;">
+      <button id="endingConfirmYes" style="font-family:var(--font-mono);font-size:12px;color:#7ee8d0;background:none;border:1px solid #7ee8d0;border-radius:6px;padding:6px 24px;cursor:pointer;letter-spacing:.1em;">YES</button>
+      <button id="endingConfirmNo" style="font-family:var(--font-mono);font-size:12px;color:#6099a8;background:none;border:1px solid #6099a8;border-radius:6px;padding:6px 24px;cursor:pointer;letter-spacing:.1em;">NO</button>
+    </div>`;
+  document.querySelector('.window').appendChild(popup);
+  document.getElementById('endingConfirmYes').addEventListener('click',()=>{
+    sfxButton(); popup.remove(); playEnding();
+  });
+  document.getElementById('endingConfirmNo').addEventListener('click',()=>{
+    sfxButton(); popup.remove();
+  });
+}
+
 function playEnding(){
   stopAllBgmGlobal();
   fadeOut(1000, ()=>{
@@ -2931,7 +2961,7 @@ function playEnding(){
     });
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
-      localStorage.setItem('ib_v9_ending_seen','1');
+      s.endingSeen=true; save();
       fadeOut(1000, ()=>{
         ov.remove();
         _seGameStarted=false;
@@ -3120,7 +3150,7 @@ function initSettings(){
       document.body.appendChild(blackout);
       localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
-      localStorage.removeItem('ib_v9_ending_seen');
+      // ib_v9_ending_seenはs.endingSeenに移行済み（完全初期化でsごと消去）
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
