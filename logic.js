@@ -1334,6 +1334,7 @@ function resetAll(){
   const savedBgmVolume=s.bgmVolume!==undefined?s.bgmVolume:40;
   const savedSeVolume=s.seVolume!==undefined?s.seVolume:70;
   localStorage.removeItem('ib_v9');
+  localStorage.removeItem('ib_v9_ending_seen'); // 旧フラグも削除
   // ib_v9_opening_doneは保持（はじめからでオープニングは再生しない）
   // リセット後の新規sにcharaSeen・BGM情報を引き継ぐ
   const newS=JSON.parse(localStorage.getItem('ib_v9')||'null');
@@ -1342,7 +1343,7 @@ function resetAll(){
     const base={
       level:1,totalInfo:0,depth:0,runInfo:0,gauge:50,integrity:0,
       committed:[],runStatus:'停止中',lastFailType:null,runTicks:0,
-      bestRunInfo:0,inventory:Array(41).fill(null),runDrops:[],
+      bestRunInfo:0,endingSeen:false,inventory:Array(41).fill(null),runDrops:[],
       found:['t0_see','t0_hear','t0_speak'],newlyUnlocked:[],
       wallsCrossedEver:[],wallsThisRun:[],wallActive:null,
       activeObstacles:[],lastEventText:null,lastExportFound:[],

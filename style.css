@@ -347,10 +347,10 @@ button[disabled]:hover{background:transparent;}
   background:rgba(2,6,18,0.0);pointer-events:none;
 }
 #titleScreen>*{position:relative;z-index:1;}
-#titleLogo{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:420px;filter:drop-shadow(0 0 18px #e0c8ffaa);}
+#titleLogo{width:420px;margin-top:40px;margin-bottom:36px;filter:drop-shadow(0 0 18px #e0c8ffaa);}
 #titleChara{width:280px;animation:titleFloat 3.2s ease-in-out infinite;filter:drop-shadow(0 0 14px #e0c8ff99);}
 @keyframes titleFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
-#titlePressStart{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);width:200px;animation:titleBlink 1.4s ease-in-out infinite;}
+#titlePressStart{width:200px;margin-top:16px;animation:titleBlink 1.4s ease-in-out infinite;}
 @keyframes titleBlink{0%,100%{opacity:1;}50%{opacity:0.12;}}
 #titleCopyright{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:260px;opacity:0.65;}
 #titleVersion{position:absolute;bottom:20px;right:24px;font-family:var(--font-mono);font-size:11px;color:#111111;opacity:0.9;letter-spacing:.08em;}
