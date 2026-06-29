@@ -320,6 +320,7 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   bgmVolume:40,
   seVolume:70,
   bgIndex:0,
+  textSpeed:'normal',
   txFlags:{} // Tier X解放条件追跡用フラグ
 };
 // 旧セーブからの移行
@@ -331,6 +332,7 @@ if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
 if(s.seVolume===undefined) s.seVolume=70;
 if(s.bgIndex===undefined) s.bgIndex=0;
+if(!s.textSpeed) s.textSpeed='normal';
 if(s.endingSeen===undefined) s.endingSeen=!!localStorage.getItem('ib_v9_ending_seen');
 if(!s.txFlags) s.txFlags={};
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
@@ -426,7 +428,9 @@ function _logProcessQueue(){
     body.textContent=item.text.slice(0,i);
     if(i%3===1) sfxTypeChar(); // SE間引き(3文字に1回)
     el.scrollTop=el.scrollHeight;
-    setTimeout(step, 26);
+    const speed=typeof s!=='undefined'&&s.textSpeed==='fast'?10:typeof s!=='undefined'&&s.textSpeed==='instant'?0:26;
+    if(speed===0){ body.textContent=item.text; el.scrollTop=el.scrollHeight; _logProcessQueue(); return; }
+    setTimeout(step, speed);
   }
   step();
 }
@@ -1195,6 +1199,7 @@ function depart(){
   if(skipResultSequenceIfActive()) return;
   if(s.runStatus!=='停止中') return;
   if(s.pendingResult) return; // 結果確認前は出発できない
+  sfxDepart2(); // 探索開始時のみ鳴らす
   const ready=hasReadyDiscovery();
   s.runStatus='観測中';
   s.runInfo=0; s.gauge=50; s.integrity=Math.min(30, s.depth*2);
@@ -2742,6 +2747,11 @@ function hideCreditWindow(e){
 function initSettings(){
   const bgmSlider=document.getElementById('settingsBgmSlider');
   const bgmVal=document.getElementById('settingsBgmVal');
+  // テキストスピードのラジオボタン初期値と変更イベント
+  document.querySelectorAll('input[name="textSpeed"]').forEach(radio=>{
+    if(radio.value===s.textSpeed) radio.checked=true;
+    radio.addEventListener('change',()=>{ s.textSpeed=radio.value; save(); });
+  });
   // セーブからボリュームを復元
   if(bgmSlider){
     bgmSlider.value=s.bgmVolume!==undefined?s.bgmVolume:40;
