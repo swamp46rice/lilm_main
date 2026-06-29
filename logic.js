@@ -2448,8 +2448,6 @@ function initTitleScreen(){
   // ===== ボタン設定 =====
   const _settingsBtn=document.getElementById('titleSettingsBtn');
   if(_settingsBtn) _settingsBtn.addEventListener('click', e=>{ e.stopPropagation(); showSettings(); });
-  const _endingBtn=document.getElementById('titleEndingBtn');
-  if(_endingBtn) _endingBtn.addEventListener('click', e=>{ e.stopPropagation(); });
   ts.addEventListener('click', startGame);
   document.addEventListener('keydown', startGame);
 }
