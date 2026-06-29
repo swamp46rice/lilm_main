@@ -1399,10 +1399,11 @@ function grantPhaseAchievement(frontierIdx){
   grantInstantItem(10+frontierIdx);
   checkDataCompleteAchievement();
 }
-// 「データコンプリート」判定: 既存10アイテム(0-9)をランク問わずすべて所持 + 7つの位相データ(10-16)もすべて所持
+// 「データコンプリート」判定: 既存10アイテム(0-9)をランク問わずすべて所持 + 7つの位相データ(10-16) + 新3種(38-40)もすべて所持
 function checkDataCompleteAchievement(){
   if(s.inventory[17]) return; // 既に所持済み
   for(let i=0;i<=16;i++){ if(!s.inventory[i]) return; }
+  for(let i=38;i<=40;i++){ if(!s.inventory[i]) return; }
   grantInstantItem(17);
 }
 // BEST記録系の実績チェック(s.bestRunInfoがしきい値を超えたら付与)。deferLog=trueなら新規付与名の配列を返す(ログ・SEは呼び出し元任せ)
