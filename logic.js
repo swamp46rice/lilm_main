@@ -2834,7 +2834,7 @@ function initSettings(){
       document.body.appendChild(blackout);
       localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
-      // ib_v9_ending_seenはs.endingSeenに移行済み（完全初期化でsごと消去）
+      localStorage.removeItem('ib_v9_ending_seen'); // マイグレーション前の旧フラグも削除
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
@@ -3194,7 +3194,7 @@ function initSettings(){
       document.body.appendChild(blackout);
       localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
-      // ib_v9_ending_seenはs.endingSeenに移行済み（完全初期化でsごと消去）
+      localStorage.removeItem('ib_v9_ending_seen'); // マイグレーション前の旧フラグも削除
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
