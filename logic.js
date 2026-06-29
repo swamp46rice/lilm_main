@@ -2934,8 +2934,10 @@ function playEnding(){
       localStorage.setItem('ib_v9_ending_seen','1');
       fadeOut(1000, ()=>{
         ov.remove();
-        if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
+        _seGameStarted=false;
+        stopAllBgmGlobal();
         fadeIn(1200);
+        setTimeout(()=>{ location.reload(); }, 1200);
       });
     });
   });
@@ -3291,7 +3293,12 @@ function playTrueEnding(){
       localStorage.setItem('ib_v9_true_ending_seen','1');
       fadeOut(1000, ()=>{
         ov.remove();
-        if(_seGameStarted){ switchBgmTrack(s.currentTrackIdx||0); } else { startTitleBgm(); }
+        stopAllBgmGlobal();
+        if(_seGameStarted){
+          switchBgmTrack(s.currentTrackIdx||0);
+        } else {
+          startTitleBgm();
+        }
         fadeIn(1200);
       });
     });
