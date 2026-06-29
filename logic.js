@@ -2403,7 +2403,7 @@ function initTitleScreen(){
   setImg('titlePressStart', typeof PRESS_START_IMG !=='undefined'?PRESS_START_IMG:'');
   setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined'?COPYRIGHT_IMG:'');
   setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined'?SETTINGS_IMG:'');
-  setImg('titleChara',      TIRE_IMAGES[3]);
+  setImg('titleChara', s.endingSeen ? ALPHA_IMAGES[7] : TIRE_IMAGES[3]);
   setImg('makerLogoImg',    typeof SWAMP_LOGO_IMG  !=='undefined'?SWAMP_LOGO_IMG:'');
   setImg('iconData',        typeof ICON_DATA   !=='undefined'?ICON_DATA:'');
   setImg('iconAi',          typeof ICON_AI     !=='undefined'?ICON_AI:'');
