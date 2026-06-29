@@ -1,5 +1,6 @@
 // information_breather v7_3 - 画像アセット定数（Base64）
 const TITLE_IMG="assets/title_img.png";
+const TITLE_IMG2="assets/title_img2.png";
 const COPYRIGHT_IMG="assets/copyright_img.png";
 const PRESS_START_IMG="assets/press_start_img.png";
 const SETTINGS_IMG="assets/settings_img.png";

@@ -2399,7 +2399,7 @@ function initTitleScreen(){
 
   // ===== 画像セット =====
   const setImg=(id,src)=>{ const el=document.getElementById(id); if(el&&src) el.src=src; };
-  setImg('titleLogo',       typeof TITLE_IMG       !=='undefined'?TITLE_IMG:'');
+  setImg('titleLogo', s.endingSeen ? (typeof TITLE_IMG2!=='undefined'?TITLE_IMG2:'') : (typeof TITLE_IMG!=='undefined'?TITLE_IMG:''));
   setImg('titlePressStart', typeof PRESS_START_IMG !=='undefined'?PRESS_START_IMG:'');
   setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined'?COPYRIGHT_IMG:'');
   setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined'?SETTINGS_IMG:'');
