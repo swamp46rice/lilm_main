@@ -3302,7 +3302,7 @@ function playTrueEnding(){
     document.querySelector('.window').appendChild(ov);
     fadeIn(1200);
     _endingBgm=new Audio('bgm/track_18.mp3');
-    _endingBgm.volume=0.8;
+    _endingBgm.volume=0.7;
     _endingBgm.loop=false;
     setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
     setTimeout(()=>{
