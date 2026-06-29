@@ -1975,7 +1975,7 @@ function showInventory(){
   let totalBonus=0;
   DROP_ITEMS.forEach((item,i)=>{
     const held=s.inventory[i];
-    const hasRankSystem = i<=9; // 0-9のみランクシステムを持つ。10以降は所持/未所持のみ
+    const hasRankSystem = i<=9 || i>=38; // 0-9と38-40はランクシステムを持つ
     const div=document.createElement('div');
     div.className='inv-item';
     const nameEl=document.createElement('span');
@@ -1986,7 +1986,7 @@ function showInventory(){
         const rankSuffix=held.rank===0?'':'+'+held.rank;
         nameEl.className='inv-name';
         nameEl.textContent=t(item.name)+(rankSuffix?' '+rankSuffix:'');
-        nameEl.style.color=rankColors[held.rank];
+        nameEl.style.color= i>=38 ? '#b0d8ff' : rankColors[held.rank];
         // 未確定バッジ: runDropsに同アイテムがあり、かつランクアップする場合(まだリザルト確認前)
         // 同アイテムが複数ドロップしている場合は最高ランクのものを基準にする
         const pendingDrops=s.runDrops.filter(d=>d.itemId===i);
