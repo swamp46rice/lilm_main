@@ -281,7 +281,9 @@ function fadeOut(duration, then){
 }
 function fadeIn(duration){
   const el=_ensureFadeEl();
-  el.style.transition='opacity '+duration+'ms ease';
-  el.style.opacity='0';
   el.style.pointerEvents='none';
+  requestAnimationFrame(()=>{
+    el.style.transition='opacity '+duration+'ms ease';
+    el.style.opacity='0';
+  });
 }
