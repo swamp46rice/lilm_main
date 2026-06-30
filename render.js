@@ -846,7 +846,7 @@ const CHARA_COLLECTION_ATTRS=[
   {key:'insight', label:t('STAT_INSIGHT_S')},
   {key:'alpha', label:'Alpha'},
   {key:'lumina', label:'Lumina'},
-  {key:'dark', label:'Drak'},
+  {key:'dark', label:'Omega'},
 ];
 
 /* ===== メイン render ===== */

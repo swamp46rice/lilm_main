@@ -56,7 +56,7 @@ const NODES={
   kuukan:{tier:6,name:"空観",prereq:["engi_ron","information_breather","willed_openness"],dtype:"確率",infoTh:340000,axisStat:"洞察力",axisTh:78,ep:0.11,sp:0.11,rand:60,buffStat:"洞察力",buffVal:7,intBuff:0.22,note:"「縁起論」「情報の呼吸」「重力的思念」が、同時に息をしている。すべては繋がっている、という理解さえも、固定された答えではなかった ―― 空観。"},
   alpha:{tier:7,name:"Alpha",prereq:["kuukan","t0_speak","t0_hear"],dtype:"特殊",infoTh:50000,axisStat:null,axisTh:0,ep:0.05,sp:0.05,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"空観を超えた先で、静かに微笑む存在。知性と慈しみを同時に纏う。"},
   lumina:{tier:7,name:"Lumina",prereq:["kuukan","ichinen_sanzen","engi_ron"],dtype:"特殊",infoTh:1000000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"縁起と一念三千と空観が溶け合った先にある、透明な光。言葉を超えた存在。"},
-  dark:{tier:7,name:"Dark",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"悪夢の深部で、光を飲み込んだ存在。"},
+  dark:{tier:7,name:"Omega",prereq:[],dtype:"特殊X",infoTh:null,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"悪夢の深部で、光を飲み込んだ存在。"},
   sg_structural:{tier:7,name:"構造の特異点",prereq:["alpha","ichinen_sanzen","fractal_universe"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「フラクタル宇宙」が重なったとき、構造そのものが構造を超えた ―― 構造の特異点。"},
   sg_resonant:{tier:7,name:"共鳴の特異点",prereq:["alpha","ichinen_sanzen","resonant_ethics"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「共鳴の倫理」が重なったとき、共鳴そのものが共鳴を超えた ―― 共鳴の特異点。"},
   sg_semantic:{tier:7,name:"意味の特異点",prereq:["alpha","ichinen_sanzen","information_breather"],dtype:"特殊",infoTh:500000,axisStat:null,axisTh:0,ep:0,sp:0,rand:0,buffStat:null,buffVal:0,intBuff:0,note:"「Alpha」「一念三千」「情報の呼吸」が重なったとき、意味そのものが意味を超えた ―― 意味の特異点。"},
@@ -2048,7 +2048,7 @@ function showInventory(){
     }
     div.appendChild(nameEl);
     div.appendChild(effEl);
-    if(i<=9) colLeft.appendChild(div);
+    if(i<=9 || i>=38) colLeft.appendChild(div);
     else if(i<=23) colMid.appendChild(div);
     else colRight.appendChild(div);
   });
@@ -2278,8 +2278,8 @@ function _fallbackOpening(onComplete){
 // ===== Tier X 解放条件チェック =====
 function checkHighInfoDrop(){
   if(s.runInfo < 1000000) return;
-  // runInfo 10000000単位でランク上限が上がる（上限10）
-  const rankMax=Math.min(10, Math.floor(s.runInfo/10000000));
+  // runInfo 1000000単位でランク上限が上がる（1000000で+1, 10000000で+10が上限）
+  const rankMax=Math.min(10, Math.floor(s.runInfo/1000000));
   // 各アイテムのドロップ確率（1tick毎 0.1%）
   [38, 39, 40].forEach(itemId=>{
     if(Math.random()>0.001) return;
