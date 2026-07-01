@@ -751,29 +751,21 @@ function buildGraph(scrollToNew){
     txLabel.style.borderBottom='1px solid '+TIER_COLOR[8];
     txLabel.style.opacity='0.85';
     g.appendChild(txLabel);
-    txIds.forEach(id=>{
+    txFound.forEach(id=>{
       const n=NODES[id];
       const div=document.createElement('div');
-      if(s.found.includes(id)){
-        const committed=s.committed.includes(id);
-        const isNew=s.newlyUnlocked && s.newlyUnlocked.includes(id);
-        let cls='node-pill';
-        if(committed) cls+=' active';
-        if(isNew) cls+=' is-new';
-        div.innerHTML=t(n.name)+(isNew?'<span class="new-badge">NEW</span>':'');
-        div.title=t(n.note);
-        div.onclick=()=>toggleCommit(id);
-        div.className=cls;
-        div.style.borderLeftColor=TIER_COLOR[8];
-        if(committed) div.style.background='color-mix(in srgb, '+TIER_COLOR[8]+' 16%, transparent)';
-        if(isNew && !firstNewEl) firstNewEl=div;
-      }else{
-        // 未発見: ？？？表示（grayout）
-        div.className='node-pill node-unknown';
-        div.style.borderLeftColor='var(--line)';
-        div.onclick=()=>log(t('HINT_UNKNOWN')+t('UI_COND_UNSET'), 'dream');
-        div.innerHTML='？？？';
-      }
+      const committed=s.committed.includes(id);
+      const isNew=s.newlyUnlocked && s.newlyUnlocked.includes(id);
+      let cls='node-pill';
+      if(committed) cls+=' active';
+      if(isNew) cls+=' is-new';
+      div.innerHTML=t(n.name)+(isNew?'<span class="new-badge">NEW</span>':'');
+      div.title=t(n.note);
+      div.onclick=()=>toggleCommit(id);
+      div.className=cls;
+      div.style.borderLeftColor=TIER_COLOR[8];
+      if(committed) div.style.background='color-mix(in srgb, '+TIER_COLOR[8]+' 16%, transparent)';
+      if(isNew && !firstNewEl) firstNewEl=div;
       g.appendChild(div);
     });
   }
