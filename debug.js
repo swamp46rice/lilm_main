@@ -53,9 +53,9 @@ function debugForceReady(){
   log('DEBUG: 次のtickで壁を出現させます。');
 }
 function debugSetInfo(val){
-  s.runInfo=val;
+  s.runInfo+=val;
   render();
-  log('DEBUG: runInfoを'+val+'に設定しました。');
+  log('DEBUG: runInfoに'+val+'を加算しました。(合計: '+Math.floor(s.runInfo)+')');
 }
 function debugSetLevel(val){
   s.level=val;
@@ -81,9 +81,9 @@ function initDebugMode(){
     <button onclick="debugWallCharge()" style="${btnStyle()}">壁を出現させる</button>
     <button onclick="debugWallBreak()" style="${btnStyle()}">壁を突破する</button>
     <button onclick="debugForceReady()" style="${btnStyle()}">次tick壁出現</button>
-    <button onclick="debugSetInfo(100000)" style="${btnStyle()}">runInfo=10万</button>
-    <button onclick="debugSetInfo(500000)" style="${btnStyle()}">runInfo=50万</button>
-    <button onclick="debugSetInfo(9990000)" style="${btnStyle()}">runInfo=999万</button>
+    <button onclick="debugSetInfo(100000)" style="${btnStyle()}">runInfo+10万</button>
+    <button onclick="debugSetInfo(500000)" style="${btnStyle()}">runInfo+50万</button>
+    <button onclick="debugSetInfo(9990000)" style="${btnStyle()}">runInfo+999万</button>
     <button onclick="debugSetLevel(50)" style="${btnStyle()}">level=50</button>
     <button onclick="debugSetLevel(100)" style="${btnStyle()}">level=100</button>
     <button onclick="debugPlayOpening()" style="${btnStyle()}">オープニングを見る</button>
