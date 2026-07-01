@@ -2297,7 +2297,7 @@ function checkTierXUnlock(){
   // Drak: 悪夢装備 + runInfo≥50000000
   if(!s.found.includes('dark')){
     if(s.committed.includes('tx_nightmare') && s.runInfo>=50000000){
-      s.found.push('dark');
+      s.found.push('dark'); s.newlyUnlocked.push('dark');
       log(tf('MSG_DISCOVER_T',{name:t('Drak'),note:t('悪夢の深部で、光を飲み込んだ存在。')}), 'event');
       sfxDiscover();
     }
@@ -2307,7 +2307,7 @@ function checkTierXUnlock(){
   if(!s.found.includes('tx_zero_infinity')){
     const hasTier7=s.committed.some(id=>NODES[id]&&NODES[id].tier===7);
     if(hasTier7 && s.txFlags.hitEntropy && s.txFlags.hitSilence && s.integrity>=100){
-      s.found.push('tx_zero_infinity');
+      s.found.push('tx_zero_infinity'); s.newlyUnlocked.push('tx_zero_infinity');
       log(tf('MSG_DISCOVER_T',{name:t('零と無限の連環'),note:t('極限の二律を一つの呼吸で抱いたとき、連環は自らを超えた。')}), 'event');
       sfxDiscover();
     }
@@ -2317,7 +2317,7 @@ function checkTierXUnlock(){
   if(!s.found.includes('tx_songstress')){
     const lockableTracks=TRACKS.filter(t=>t.unlockKey).length;
     if(s.unlockedTracks.length>=lockableTracks && s.committed.includes('alpha') && s.runInfo>=11111111){
-      s.found.push('tx_songstress');
+      s.found.push('tx_songstress'); s.newlyUnlocked.push('tx_songstress');
       log(tf('MSG_DISCOVER_T',{name:t('歌姫'),note:t('すべての音が溶け合ったとき、歌は歌を超えた。')}), 'event');
       sfxDiscover();
     }
@@ -2326,7 +2326,7 @@ function checkTierXUnlock(){
   // 悪夢: alpha装備 + future装備 + karma装備 + runInfo≥30000000
   if(!s.found.includes('tx_nightmare')){
     if(s.committed.includes('alpha') && s.committed.includes('future') && s.committed.includes('karma') && s.runInfo>=30000000){
-      s.found.push('tx_nightmare');
+      s.found.push('tx_nightmare'); s.newlyUnlocked.push('tx_nightmare');
       log(tf('MSG_DISCOVER_T',{name:t('悪夢'),note:t('夢の底に、まだ名前のない何かが眠っている。')}), 'event');
       sfxDiscover();
       if(typeof showItemPopup==='function') showItemPopup('node', t('悪夢'));
@@ -2337,7 +2337,7 @@ function checkTierXUnlock(){
   if(!s.found.includes('tx_new_observer')){
     const allSingularities=SINGULARITY_IDS.every(id=>s.committed.includes(id));
     if(allSingularities && s.runInfo>=20000000){
-      s.found.push('tx_new_observer');
+      s.found.push('tx_new_observer'); s.newlyUnlocked.push('tx_new_observer');
       log(tf('MSG_DISCOVER_T',{name:t('新たな観測点'),note:t('五つの特異点が重なる場所に、新たな観測点が生まれた。')}), 'event');
       sfxDiscover();
     }
