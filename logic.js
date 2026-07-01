@@ -296,7 +296,7 @@ const _isFirstLaunch = !localStorage.getItem('ib_v9_opening_done');
     }
   }
 })();
-let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
+const DEFAULT_SAVE={
   level:1, totalInfo:0, depth:0,
   runInfo:0, gauge:50, integrity:0,
   committed:[],
@@ -304,10 +304,10 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   runTicks:0,
   bestRunInfo:0,
   endingSeen:false,
-  inventory:Array(10).fill(null),  // 確定所持アイテム [{itemId, rank}] or null
-  runDrops:[],                      // ラン中の一時ドロップ [{itemId, rank}]
+  inventory:Array(41).fill(null),
+  runDrops:[],
   found:['t0_see','t0_hear','t0_speak'],
-  newlyUnlocked:[],  // 今回新規解放されたノードID(NEWマーク表示用、render後クリア)
+  newlyUnlocked:[],
   wallsCrossedEver:[],
   wallsThisRun:[],
   wallActive:null,
@@ -324,8 +324,18 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || {
   seVolume:70,
   bgIndex:0,
   textSpeed:'normal',
-  txFlags:{} // Tier X解放条件追跡用フラグ
+  txFlags:{},
+  metaUnlocks:{mu:false,karma:false,infinity:false},
+  statGrowth:{'構造度':0,'意味容量':0,'共鳴度':0,'作用力':0,'洞察力':0},
+  tireIdxDisplay:0,
+  bestRunInfo:0,
+  _endingPending:false,
+  _resultSequenceActive:false,
+  _resultSkipRequested:false,
 };
+function makeDefaultSave(){ return JSON.parse(JSON.stringify(DEFAULT_SAVE)); }
+
+let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || makeDefaultSave();
 // 旧セーブからの移行
 if(!s.newlyUnlocked) s.newlyUnlocked=[];
 if(!s.charaSeen) s.charaSeen={};
@@ -1326,41 +1336,11 @@ function resetAll(){
     setTimeout(()=>{resetArmed=false;},5000);
     return;
   }
-  // charaSeen(AI形態コレクション)・BGM解放状態はリセット後も保持する
-  const savedCharaSeen=s.charaSeen ? Object.assign({},s.charaSeen) : {};
-  const savedUnlockedTracks=s.unlockedTracks ? s.unlockedTracks.slice() : [];
-  const savedTrackIdx=s.currentTrackIdx||0;
-  const savedLang=s.lang||'ja';
-  const savedBgmVolume=s.bgmVolume!==undefined?s.bgmVolume:40;
-  const savedSeVolume=s.seVolume!==undefined?s.seVolume:70;
   if(typeof _tickInterval!=='undefined'&&_tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-  localStorage.removeItem('ib_v9');
-  localStorage.removeItem('ib_v9_ending_seen'); // 旧フラグも削除
+  localStorage.removeItem('ib_v9_opening_done');
+  localStorage.removeItem('ib_v9_ending_seen');
   localStorage.removeItem('ib_v9_true_ending_seen');
-  // ib_v9_opening_doneは保持（はじめからでオープニングは再生しない）
-  // リセット後の新規sにcharaSeen・BGM情報を引き継ぐ
-  const newS=JSON.parse(localStorage.getItem('ib_v9')||'null');
-  if(!newS){
-    // 新規sをlocalStorageに作成してcharaSeenを埋め込む
-    const base={
-      level:1,totalInfo:0,depth:0,runInfo:0,gauge:50,integrity:0,
-      committed:[],runStatus:'停止中',lastFailType:null,runTicks:0,
-      bestRunInfo:0,endingSeen:false,inventory:Array(41).fill(null),runDrops:[],
-      found:['t0_see','t0_hear','t0_speak'],newlyUnlocked:[],
-      wallsCrossedEver:[],wallsThisRun:[],wallActive:null,
-      activeObstacles:[],lastEventText:null,lastExportFound:[],
-      causClock:0,causAcc:{},causGaugeStart:50,lastTs:null,
-      metaUnlocks:{mu:false,karma:false,infinity:false},
-      charaSeen:savedCharaSeen,
-      unlockedTracks:savedUnlockedTracks,
-      currentTrackIdx:savedTrackIdx,
-      lang:savedLang,
-      bgmVolume:savedBgmVolume,
-      seVolume:savedSeVolume,
-      txFlags:{}
-    };
-    localStorage.setItem('ib_v9',JSON.stringify(base));
-  }
+  localStorage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
   location.reload();
 }
 
@@ -2838,11 +2818,10 @@ function initSettings(){
       blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
       document.body.appendChild(blackout);
       if(typeof _tickInterval!=='undefined'&&_tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-      s.endingSeen=false;
-      localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
       localStorage.removeItem('ib_v9_ending_seen');
       localStorage.removeItem('ib_v9_true_ending_seen');
+      localStorage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
@@ -3201,11 +3180,10 @@ function initSettings(){
       blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
       document.body.appendChild(blackout);
       if(typeof _tickInterval!=='undefined'&&_tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-      s.endingSeen=false;
-      localStorage.removeItem('ib_v9');
       localStorage.removeItem('ib_v9_opening_done');
       localStorage.removeItem('ib_v9_ending_seen');
       localStorage.removeItem('ib_v9_true_ending_seen');
+      localStorage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
