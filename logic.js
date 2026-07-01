@@ -296,44 +296,41 @@ const _isFirstLaunch = !localStorage.getItem('ib_v9_opening_done');
     }
   }
 })();
-const DEFAULT_SAVE={
-  level:1, totalInfo:0, depth:0,
-  runInfo:0, gauge:50, integrity:0,
-  committed:[],
-  runStatus:'停止中', lastFailType:null,
-  runTicks:0,
-  bestRunInfo:0,
-  endingSeen:false,
-  inventory:Array(41).fill(null),
-  runDrops:[],
-  found:['t0_see','t0_hear','t0_speak'],
-  newlyUnlocked:[],
-  wallsCrossedEver:[],
-  wallsThisRun:[],
-  wallActive:null,
-  activeObstacles:[],
-  lastEventText:null,
-  lastExportFound:[],
-  causClock:0, causAcc:{}, causGaugeStart:50,
-  lastTs:null,
-  charaSeen:{},
-  unlockedTracks:[],
-  currentTrackIdx:0,
-  lang:'ja',
-  bgmVolume:40,
-  seVolume:70,
-  bgIndex:0,
-  textSpeed:'normal',
-  txFlags:{},
-  metaUnlocks:{mu:false,karma:false,infinity:false},
-  statGrowth:{'構造度':0,'意味容量':0,'共鳴度':0,'作用力':0,'洞察力':0},
-  tireIdxDisplay:0,
-  bestRunInfo:0,
-  _endingPending:false,
-  _resultSequenceActive:false,
-  _resultSkipRequested:false,
-};
-function makeDefaultSave(){ return JSON.parse(JSON.stringify(DEFAULT_SAVE)); }
+function makeDefaultSave(){
+  return {
+    level:1, totalInfo:0, depth:0,
+    runInfo:0, gauge:50, integrity:0,
+    committed:[],
+    runStatus:'停止中', lastFailType:null,
+    runTicks:0,
+    bestRunInfo:0,
+    endingSeen:false,
+    inventory:Array(41).fill(null),
+    runDrops:[],
+    found:['t0_see','t0_hear','t0_speak'],
+    newlyUnlocked:[],
+    wallsCrossedEver:[],
+    wallsThisRun:[],
+    wallActive:null,
+    activeObstacles:[],
+    lastEventText:null,
+    lastExportFound:[],
+    causClock:0, causAcc:{}, causGaugeStart:50,
+    lastTs:null,
+    charaSeen:{},
+    unlockedTracks:[],
+    currentTrackIdx:0,
+    lang:'ja',
+    bgmVolume:40,
+    seVolume:70,
+    bgIndex:0,
+    textSpeed:'normal',
+    txFlags:{},
+    metaUnlocks:{mu:false,karma:false,infinity:false},
+    statGrowth:{'構造度':0,'意味容量':0,'共鳴度':0,'作用力':0,'洞察力':0},
+    tireIdxDisplay:0,
+  };
+}
 
 let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || makeDefaultSave();
 // 旧セーブからの移行
@@ -2415,6 +2412,7 @@ function initTitleScreen(){
     switchBgmTrack(s.currentTrackIdx||0);
     startTick();
     applyUILang();
+    log(t('OPENING_1'));
     render();
   }
 
@@ -2434,7 +2432,6 @@ function initTitleScreen(){
       } else {
         applyBg(s.bgIndex||0);
         fadeIn(1200);
-        log(t('OPENING_1'));
         enterGameScene();
       }
     });
