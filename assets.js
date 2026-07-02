@@ -18,7 +18,8 @@ const TIRE_IMAGES=[
 "assets/tire_images_04.png",
 "assets/tire_images_05.png",
 "assets/tire_images_06.png",
-"assets/tire_images_07.png"
+"assets/tire_images_07.png",
+"assets/tire_images_08.png"
 ];
 const RESONANT_IMAGES=[
   "assets/resonant_images_00.png",
