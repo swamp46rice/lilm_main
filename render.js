@@ -654,11 +654,11 @@ function buildObstacles(){
   const wrap=document.getElementById('obstacleTitle');
   const g=document.getElementById('obstacles'); g.innerHTML='';
   wrap.style.display='block';
-  // Q壁バッジ（最初の1個のみ、赤色で表示）
-  if(s.committed.includes('tx_continuum_q') && s.activeObstacles.some(ao=>ao.key==='wall_q')){
+  // Q壁バッジ（赤色で表示）
+  if(s.committed.includes('tx_continuum_q') && s.qWallActive){
     const qBadge=document.createElement('div');
     qBadge.className='wall-mark';
-    qBadge.textContent=t('UI_Q_WALL_BADGE');
+    qBadge.textContent='Q';
     qBadge.style.color='#ff4466';
     qBadge.style.borderColor='#ff4466';
     g.appendChild(qBadge);

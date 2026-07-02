@@ -623,7 +623,9 @@ const LANG_JA = {
   "EFF_INFO_DOUBLE": "獲得情報量 ×2",
   "MSG_Q_WALL": "Qという存在が、新たな問いの重力場として立ちはだかる。",
   "UI_Q_WALL_BADGE": "◆ Q",
-  "Qという存在が、新たな問いの重力場として立ちはだかる。": "Qという存在が、新たな問いの重力場として立ちはだかる。"
+  "Qという存在が、新たな問いの重力場として立ちはだかる。": "Qという存在が、新たな問いの重力場として立ちはだかる。",
+  "MSG_Q_WALL_APPEAR_T": "Qという存在が、新たな問いの重力場として立ちはだかる。({n})",
+  "MSG_Q_WALL_BREAK": "Qの問いに、答えが届いた。重力場が、解けていく。"
 };
 
 const LANG_EN = {
@@ -1250,7 +1252,9 @@ const LANG_EN = {
   "EFF_INFO_DOUBLE": "Info Gain ×2",
   "MSG_Q_WALL": "A presence called Q stands as a new gravitational field of questioning.",
   "UI_Q_WALL_BADGE": "◆ Q",
-  "Qという存在が、新たな問いの重力場として立ちはだかる。": "A presence called Q stands as a new gravitational field of questioning."
+  "Qという存在が、新たな問いの重力場として立ちはだかる。": "A presence called Q stands as a new gravitational field of questioning.",
+  "MSG_Q_WALL_APPEAR_T": "A presence called Q stands as a new gravitational field of questioning. ({n})",
+  "MSG_Q_WALL_BREAK": "An answer reached the questioning of Q. The gravitational field dissolves."
 };
 
 function t(id){
