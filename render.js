@@ -1120,7 +1120,7 @@ function _renderItemPopup(type, name, onDone){
   if(!container){ if(onDone) onDone(); return; }
 
   const iconMap={ 'node':'assets/item_00.png', 'achv':'assets/item_01.png', 'track':'assets/item_02.png', 'end':null };
-  const labelMap={ 'node':'拡張データ', 'achv':'実績データ', 'track':'音源データ', 'end':null };
+  const labelMap={ 'node':t('拡張データ'), 'achv':t('実績データ'), 'track':t('音源データ'), 'end':null };
 
   const popup=document.createElement('div');
   popup.className='item-popup';
@@ -1160,5 +1160,25 @@ function showItemPopup(type, name){
     // 実績・音源・終了通知はキューで順番に表示
     _itemPopupQueue.push({type, name});
     _showNextItemPopup();
+  }
+}
+
+/* ===== 縮小モード ===== */
+let _compactMode=false;
+function toggleCompactMode(){
+  _compactMode=!_compactMode;
+  const win=document.querySelector('.window');
+  if(_compactMode){
+    win.classList.add('compact-mode');
+    document.getElementById('compactToggle').textContent='⊞';
+    document.getElementById('compactToggle').title='通常表示';
+  } else {
+    win.classList.remove('compact-mode');
+    document.getElementById('compactToggle').textContent='⊟';
+    document.getElementById('compactToggle').title='縮小表示';
+  }
+  // Electronアプリの場合はウィンドウサイズも切り替え
+  if(typeof window.electronAPI !== 'undefined'){
+    window.electronAPI.setCompactMode(_compactMode);
   }
 }

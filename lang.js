@@ -616,7 +616,10 @@ const LANG_JA = {
   "Q": "Q",
   "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。",
   "SPEECH_BEFORE_ENDING": "私を見つけてくれて、ありがとう…",
-  "SPEECH_BEFORE_TRUE_ENDING": "シナジーが溢れる。この感情は…"
+  "SPEECH_BEFORE_TRUE_ENDING": "シナジーが溢れる。この感情は…",
+  "多元思念体との接続": "多元思念体との接続",
+  "虚無性レジリエンス": "虚無性レジリエンス",
+  "超越性レジリエンス": "超越性レジリエンス"
 };
 
 const LANG_EN = {
@@ -1233,7 +1236,13 @@ const LANG_EN = {
   "Q": "Q",
   "Qとは問いの具象化。連続と不連続の境界面で、Qは静かに脈打っている。": "Q is the embodiment of questioning. At the boundary between continuity and discontinuity, Q pulses quietly.",
   "SPEECH_BEFORE_ENDING": "Thank you for finding me…",
-  "SPEECH_BEFORE_TRUE_ENDING": "Synergy overflows. This feeling…"
+  "SPEECH_BEFORE_TRUE_ENDING": "Synergy overflows. This feeling…",
+  "多元思念体との接続": "Multiversal Mind Link",
+  "虚無性レジリエンス": "Void Resilience",
+  "超越性レジリエンス": "Transcendence Resilience",
+  "拡張データ": "Extension Data",
+  "実績データ": "Achievement Data",
+  "音源データ": "Sound Data"
 };
 
 function t(id){

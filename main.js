@@ -1,8 +1,10 @@
 // LiLM - Electron main.js
-const { app, BrowserWindow, shell, session } = require('electron');
+const { app, BrowserWindow, shell, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
+const WINDOW_NORMAL  = { width:1080, height:720 };
+const WINDOW_COMPACT = { width:400,  height:120 };
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -18,34 +20,30 @@ function createWindow() {
       contextIsolation: true,
       webSecurity: true,
       allowRunningInsecureContent: false,
+      preload: path.join(__dirname, 'preload.js'),
     }
-  });
-
-  // Electron向けCSP（インラインイベントハンドラを許可）
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': [
-          "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; connect-src 'none';"
-        ]
-      }
-    });
   });
 
   mainWindow.loadFile('index.html');
 
-  // 外部リンクはデフォルトブラウザで開く
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
-    return { action: 'deny' }; // Electron内では開かない
+    return { action: 'deny' };
   });
 
-  // 開発時のみDevToolsを開く
   // mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', () => { mainWindow = null; });
 }
+
+// 縮小/通常モードのウィンドウサイズ切り替え
+ipcMain.on('set-compact-mode', (event, compact) => {
+  if(!mainWindow) return;
+  const { width, height } = compact ? WINDOW_COMPACT : WINDOW_NORMAL;
+  mainWindow.setMinimumSize(compact ? 100 : 900, compact ? 80 : 600);
+  mainWindow.setSize(width, height, true);
+  mainWindow.setResizable(!compact);
+});
 
 app.whenReady().then(() => {
   createWindow();

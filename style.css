@@ -471,3 +471,38 @@ button[disabled]:hover{background:transparent;}
   background:rgba(255,68,102,0.08);
   animation:nightmareBlink 1.6s ease-in-out infinite;
 }
+
+/* ===== 縮小モード ===== */
+.compact-mode .main-grid,
+.compact-mode .col-left .orb-wrap,
+.compact-mode .col-left .gauge-wrap,
+.compact-mode .col-left .obstacle-area,
+.compact-mode .col-left .total-info-display,
+.compact-mode .col-left .depart-area,
+.compact-mode .col-right,
+.compact-mode .col-right-graph,
+.compact-mode .col-right-footer,
+.compact-mode #log {
+  display:none !important;
+}
+.compact-mode .window {
+  min-height:unset;
+  height:auto;
+}
+.compact-mode .col-left {
+  display:block;
+}
+.compact-mode .col-left .section-title,
+.compact-mode .col-left .stat-grid,
+.compact-mode .col-left .stat-title-row {
+  display:none !important;
+}
+.compact-mode .info-display {
+  display:flex;
+}
+#compactToggle {
+  opacity:0.6;
+  transition:opacity .2s;
+}
+#compactToggle:hover { opacity:1; }
+.compact-mode #compactToggle { color:#7ee8d0; }
