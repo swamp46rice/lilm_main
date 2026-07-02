@@ -349,6 +349,12 @@ if(s.endingSeen===undefined) s.endingSeen=!!localStorage.getItem('ib_v9_ending_s
 if(!s.txFlags) s.txFlags={};
 if(s.integrityStreakCount===undefined) s.integrityStreakCount=0;
 if(s.integrityStreakActive===undefined) s.integrityStreakActive=false;
+if(s.qWallActive===undefined) s.qWallActive=null;
+if(s._qWallNextThreshold===undefined) s._qWallNextThreshold=500000;
+// 旧セーブの不正なqWallActive（OBSTACLESにwall_qが存在しない）をリセット
+if(s.qWallActive && s.qWallActive.key) s.qWallActive=null;
+// activeObstaclesに残ったwall_qを除去
+if(s.activeObstacles) s.activeObstacles=s.activeObstacles.filter(ao=>ao.key!=='wall_q');
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 
 // drak→darkスペル修正マイグレーション
