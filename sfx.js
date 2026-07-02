@@ -27,6 +27,11 @@ const TRACKS = [
 
 let currentTrackIdx = 0;
 
+/* ===== BGM音量ヘルパー(設定スライダーの値を反映) ===== */
+function currentBgmVolume(){
+  return (typeof s!=='undefined' && s && s.bgmVolume!==undefined) ? s.bgmVolume/100 : 0.4;
+}
+
 /* ===== BGMプルダウン初期化 ===== */
 function initBgmSelect(){
   const sel = document.getElementById('bgmTrackSelect');
@@ -77,7 +82,7 @@ function switchBgmTrack(idx){
   const track = TRACKS[currentTrackIdx];
   const audio = document.getElementById(track.audioId);
   if(audio && bgmAudioOn){
-    audio.volume = 0.4;
+    audio.volume = currentBgmVolume();
     audio.loop = true;
     audio.play().catch(err=>log('BGM再生に失敗した: '+(err&&err.name?err.name:err)));
   }
@@ -94,7 +99,7 @@ function toggleBGMAudio(){
   const audio = document.getElementById(track.audioId);
   if(bgmAudioOn){
     if(audio){
-      audio.volume=0.4;
+      audio.volume=currentBgmVolume();
       audio.loop=true;
       audio.play().catch(err=>log('BGM再生に失敗した: '+(err&&err.name?err.name:err)));
     }
@@ -241,7 +246,7 @@ function playBgmTemp(idx){
   if(!track) return;
   const audio=document.getElementById(track.audioId);
   if(audio && bgmAudioOn){
-    audio.volume=(typeof s!=='undefined'&&s.bgmVolume!==undefined)?s.bgmVolume/100:0.4;
+    audio.volume=currentBgmVolume();
     audio.loop=true;
     audio.play().catch(()=>{});
   }

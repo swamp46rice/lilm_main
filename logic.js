@@ -2354,7 +2354,7 @@ function checkTierXUnlock(){
   if(!s.found.includes('dark')){
     if(s.committed.includes('tx_nightmare') && s.runInfo>=50000000){
       s.found.push('dark'); s.newlyUnlocked.push('dark');
-      log(tf('MSG_DISCOVER_T',{name:t('Drak'),note:t('悪夢の深部で、光を飲み込んだ存在。')}), 'event');
+      log(tf('MSG_DISCOVER_T',{name:t(NODES['dark'].name),note:t(NODES['dark'].note)}), 'event');
       sfxDiscover();
     }
   }
@@ -2599,7 +2599,7 @@ function initImportButton(){
       try{
         const data=JSON.parse(ev.target.result);
         if(!data || typeof data!=='object' || !data.level){
-          alert('MSG_SAVE_INVALID');
+          alert(t('MSG_SAVE_INVALID'));
           input.value=''; return;
         }
         if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){
@@ -2610,9 +2610,9 @@ function initImportButton(){
         Object.assign(s, data);
         input.value='';
         render(); save();
-        alert('MSG_SAVE_LOADED');
+        alert(t('MSG_SAVE_LOADED'));
       }catch(err){
-        alert('ファイルの読み込みに失敗しました: '+err.message);
+        alert(t('MSG_SAVE_LOAD_ERROR')+': '+err.message);
       }
     };
     reader.readAsText(file);
@@ -2708,227 +2708,6 @@ This file can be used to transfer progress to another device or browser. Select 
 ひとつは、現在の観測状態をAIが文章で描写した<span class="key">観測記録テキスト</span>を表示します。<br>
 もうひとつは、現在のセーブデータを<span class="key">lilm_save_日付_時刻.json</span>という名前のファイルとしてダウンロードフォルダに保存します。<br>
 このファイルは別の端末や別のブラウザに引き継ぐ際に使用できます。タイトル画面の<span class="key">セーブデータを読み込む</span>ボタンからファイルを選択してください。</p>`;
-}
-
-function applyUILang(){
-  const set=(id,text)=>{ const el=document.getElementById(id); if(el) el.textContent=text; };
-  const setTitle=(id,text)=>{ const el=document.getElementById(id); if(el) el.title=text; };
-  // メインUIラベル
-  set('labelDepth',       t('LABEL_DEPTH'));
-  set('labelRunInfo',     t('LABEL_RUN_INFO'));
-  set('labelStability',   t('LABEL_STABILITY'));
-  set('labelIntegrity',   t('LABEL_INTEGRITY'));
-  set('labelTotalInfo',   t('LABEL_TOTAL_INFO'));
-  set('labelStatStr',     t('LABEL_STAT_STR'));
-  set('labelStatSem',     t('LABEL_STAT_SEM'));
-  set('labelStatRes',     t('LABEL_STAT_RES'));
-  set('labelStatAct',     t('LABEL_STAT_ACT'));
-  set('labelStatIns',     t('LABEL_STAT_INS'));
-  set('labelExplore',     t('LABEL_EXPLORE')+' ― ');
-  set('labelMaxSlots',    '('+t('LABEL_MAX_SLOTS').replace('(',''));
-  set('labelWall',        t('LABEL_WALL'));
-  set('obstacleTitle',    t('LABEL_OBSTACLE'));
-  set('labelGraph',       t('LABEL_GRAPH'));
-  // ボタン
-  set('btnExport',        t('BTN_EXPORT'));
-  set('btnReset',         t('BTN_RESET'));
-  set('settingsResetLabel', t('SETTINGS_RESET_BTN'));
-  set('settingsImportBtn',  t('SETTINGS_IMPORT'));
-  set('labelBgSelect', t('SETTINGS_BG_LABEL'));
-  const bgSel=document.getElementById('bgSelect');
-  if(bgSel){
-    bgSel.options[0].text=t('SETTINGS_BG_0');
-    bgSel.options[1].text=t('SETTINGS_BG_1');
-    bgSel.options[2].text=t('SETTINGS_BG_2');
-    bgSel.value=s.bgIndex||0;
-  }
-  set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
-  set('settingsOpeningBtn', t('SETTINGS_OPENING_BTN'));
-  // 設定セクションラベル
-  set('settingsLabelVolume',   t('SETTINGS_VOLUME'));
-  set('settingsLabelSpeed',    t('SETTINGS_TEXT_SPEED'));
-  set('settingsLabelTypechar', t('SETTINGS_TYPECHAR'));
-  set('settingsLabelLang',     t('SETTINGS_LANGUAGE'));
-  set('settingsLabelSave',     t('SETTINGS_SAVE'));
-  set('settingsLabelDanger',   t('SETTINGS_DANGER'));
-  // 速度ラジオラベル
-  set('labelSpeedFast', ' '+t('SETTINGS_SPEED_FAST'));
-  set('labelSpeedNorm', ' '+t('SETTINGS_SPEED_NORM'));
-  set('labelSpeedInst', ' '+t('SETTINGS_SPEED_INST'));
-  // タイプ音ボタン
-  const tcBtn=document.getElementById('typecharSeToggle');
-  if(tcBtn){ const on=tcBtn.classList.contains('on'); tcBtn.textContent=on?t('SETTINGS_TYPECHAR_ON'):t('SETTINGS_TYPECHAR_OFF'); }
-  // ウィンドウ見出し
-  set('invTitle',          t('INV_TITLE'));
-  set('charaTitle',        t('CHARA_TITLE'));
-  set('manualTitle',       t('MANUAL_TITLE'));
-  set('exportModalTitle',  t('EXPORT_TITLE'));
-  set('invColExpand',      t('INV_COL_EXPAND'));
-  set('invColAchieve',     t('INV_COL_ACHIEVE'));
-  // tooltip
-  setTitle('tooltipInventory', t('TOOLTIP_INVENTORY'));
-  setTitle('tooltipChara',     t('TOOLTIP_CHARA'));
-  setTitle('tooltipManual',    t('TOOLTIP_MANUAL'));
-  setTitle('tooltipSettings',  t('TOOLTIP_SETTINGS'));
-  // BGM・export
-  const bgmSel=document.getElementById('bgmTrackSelect');
-  if(bgmSel) bgmSel.title=t('UI_BGM_SELECT');
-  const exportTextEl=document.getElementById('exportText');
-  if(exportTextEl) exportTextEl.placeholder=t('UI_EXPORT_PH');
-  // 遊び方ガイド本文
-  const mc=document.getElementById('manualContent');
-  if(mc) mc.innerHTML=getManualHTML();
-  // 言語ボタン
-  const langBtn=document.getElementById('langToggleBtn');
-  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
-}
-
-const BG_IMAGES=['assets/bg_image_00.png','assets/bg_image_01.png','assets/bg_image_03.png'];
-
-function applyBg(idx){
-  const el=document.getElementById('gameBackground');
-  if(el) el.style.backgroundImage='url(\''+BG_IMAGES[idx]+'\')';
-}
-
-function applyBgSelect(val){
-  const idx=parseInt(val)||0;
-  s.bgIndex=idx;
-  applyBg(idx);
-  const sel=document.getElementById('bgSelect');
-  if(sel) sel.value=idx;
-  save();
-}
-
-function toggleLang(){
-  s.lang = s.lang==='ja' ? 'en' : 'ja';
-  const btn=document.getElementById('langToggleBtn');
-  if(btn) btn.textContent = s.lang==='ja' ? '🌐 日本語' : '🌐 English';
-  applyUILang();
-  if(typeof _prevFoundLen !== 'undefined') _prevFoundLen=-1;
-  if(typeof _prevCommittedSig !== 'undefined') _prevCommittedSig=null;
-  save();
-  render();
-}
-
-function showSettings(){
-  const ov=document.getElementById('settingsOverlay');
-  if(ov) ov.style.display='flex';
-}
-function hideSettings(){
-  const ov=document.getElementById('settingsOverlay');
-  if(ov) ov.style.display='none';
-}
-function showCreditWindow(){
-  const ov=document.getElementById('creditOverlay');
-  if(ov) ov.style.display='flex';
-}
-function hideCreditWindow(e){
-  if(e && e.target!==document.getElementById('creditOverlay')) return;
-  const ov=document.getElementById('creditOverlay');
-  if(ov) ov.style.display='none';
-}
-function initSettings(){
-  const bgmSlider=document.getElementById('settingsBgmSlider');
-  const bgmVal=document.getElementById('settingsBgmVal');
-  // テキストスピードのラジオボタン初期値と変更イベント
-  document.querySelectorAll('input[name="textSpeed"]').forEach(radio=>{
-    if(radio.value===s.textSpeed) radio.checked=true;
-    radio.addEventListener('change',()=>{ s.textSpeed=radio.value; save(); });
-  });
-  // セーブからボリュームを復元
-  if(bgmSlider){
-    bgmSlider.value=s.bgmVolume!==undefined?s.bgmVolume:40;
-    if(bgmVal) bgmVal.textContent=bgmSlider.value;
-    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a) a.volume=parseInt(bgmSlider.value)/100; });
-  }
-  if(bgmSlider) bgmSlider.addEventListener('input',()=>{
-    const v=parseInt(bgmSlider.value);
-    if(bgmVal) bgmVal.textContent=v;
-    const vol=v/100;
-    TRACKS.forEach(tr=>{ const a=document.getElementById(tr.audioId); if(a) a.volume=vol; });
-    s.bgmVolume=v; save();
-  });
-  const seSlider=document.getElementById('settingsSeSlider');
-  const seVal=document.getElementById('settingsSeVal');
-  if(seSlider){
-    seSlider.value=s.seVolume!==undefined?s.seVolume:70;
-    if(seVal) seVal.textContent=seSlider.value;
-    seVolume=parseInt(seSlider.value)/100;
-  }
-  if(seSlider) seSlider.addEventListener('input',()=>{
-    const v=parseInt(seSlider.value);
-    if(seVal) seVal.textContent=v;
-    seVolume=v/100;
-    s.seVolume=v; save();
-  });
-  // 言語ボタン初期状態
-  const langBtn=document.getElementById('langToggleBtn');
-  if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
-  // UI言語適用（initTitleScreenより後に呼ばれる場合の保険）
-  applyUILang();
-  const closeBtn=document.getElementById('settingsCloseBtn');
-  if(closeBtn) closeBtn.addEventListener('click',hideSettings);
-  const creditBtn=document.getElementById('settingsCreditBtn');
-  if(creditBtn) creditBtn.addEventListener('click',showCreditWindow);
-  const openingBtn=document.getElementById('settingsOpeningBtn');
-  if(openingBtn) openingBtn.addEventListener('click',()=>{ sfxButton(); hideSettings(); playOpening(()=>{
-    switchBgmTrack(s.currentTrackIdx||0);
-    applyUILang(); render();
-  }); });
-  const resetBtn=document.getElementById('settingsResetLabel');
-  if(resetBtn) resetBtn.addEventListener('click',()=>{
-    sfxButton();
-    // 既存ポップアップ除去
-    const ep=document.getElementById('resetConfirmPopup'); if(ep) ep.remove();
-    const popup=document.createElement('div');
-    popup.id='resetConfirmPopup';
-    popup.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(8,14,32,0.98);border:1px solid #884;border-radius:10px;padding:36px 44px;text-align:center;max-width:460px;z-index:500;font-family:var(--font-display);';
-    popup.innerHTML=`<div style="font-size:13px;letter-spacing:.2em;color:#e8c870;margin-bottom:20px;">${t('RESET_CONFIRM_TITLE')}</div><div style="font-family:var(--font-mono);font-size:12px;line-height:1.9;color:#c8d8e8;margin-bottom:28px;">${t('RESET_CONFIRM_MSG')}</div><div style="display:flex;gap:16px;justify-content:center;"><button id="resetPopupNO" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:transparent;border:1px solid var(--line);border-radius:6px;color:#c8d8e8;cursor:pointer;">NO</button><button id="resetPopupYES" style="font-family:var(--font-display);font-size:13px;letter-spacing:.1em;padding:9px 28px;background:rgba(180,40,40,0.3);border:1px solid #884;border-radius:6px;color:#e8c870;cursor:pointer;">YES</button></div>`;
-    document.querySelector('.window').appendChild(popup);
-    document.getElementById('resetPopupNO').addEventListener('click',()=>{ sfxButton(); popup.remove(); });
-    document.getElementById('resetPopupYES').addEventListener('click',()=>{
-      sfxButton(); popup.remove();
-      const blackout=document.createElement('div');
-      blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
-      document.body.appendChild(blackout);
-      if(typeof _tickInterval!=='undefined'&&_tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-      localStorage.removeItem('ib_v9_opening_done');
-      localStorage.removeItem('ib_v9_ending_seen');
-      localStorage.removeItem('ib_v9_true_ending_seen');
-      localStorage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
-      setTimeout(()=>{ location.reload(); }, 100);
-    });
-  });
-  const importBtn=document.getElementById('settingsImportBtn');
-  const importInput=document.getElementById('settingsImportInput');
-  const importHint=document.getElementById('settingsImportHint');
-  if(importBtn&&importInput){
-    importBtn.addEventListener('click',e=>{
-      e.stopPropagation();
-      if(importHint) importHint.style.display='block';
-      importInput.click();
-    });
-    importInput.addEventListener('change',e=>{
-      if(importHint) importHint.style.display='none';
-      const file=e.target.files[0];
-      if(!file) return;
-      const reader=new FileReader();
-      reader.onload=ev=>{
-        try{
-          const data=JSON.parse(ev.target.result);
-          if(!data||typeof data!=='object'||!data.level){ alert('MSG_SAVE_INVALID'); importInput.value=''; return; }
-          if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){ importInput.value=''; return; }
-          localStorage.setItem('ib_v9',JSON.stringify(data));
-          Object.assign(s,data);
-          importInput.value='';
-          render(); save();
-          hideSettings();
-          alert('MSG_SAVE_LOADED');
-        }catch(err){ alert('ファイルの読み込みに失敗しました: '+err.message); }
-      };
-      reader.readAsText(file);
-    });
-  }
 }
 
 /* ===== エンディング演出 ===== */
@@ -3152,6 +2931,8 @@ function applyUILang(){
 }
 
 
+const BG_IMAGES=['assets/bg_image_00.png','assets/bg_image_01.png','assets/bg_image_03.png'];
+
 function applyBg(idx){
   const el=document.getElementById('gameBackground');
   if(el) el.style.backgroundImage='url(\''+BG_IMAGES[idx]+'\')';
@@ -3223,6 +3004,11 @@ function initSettings(){
     seVolume=v/100;
     s.seVolume=v; save();
   });
+  // テキストスピードのラジオボタン初期値と変更イベント
+  document.querySelectorAll('input[name="textSpeed"]').forEach(radio=>{
+    if(radio.value===s.textSpeed) radio.checked=true;
+    radio.addEventListener('change',()=>{ s.textSpeed=radio.value; save(); });
+  });
   // 言語ボタン初期状態
   const langBtn=document.getElementById('langToggleBtn');
   if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';
@@ -3278,15 +3064,15 @@ function initSettings(){
       reader.onload=ev=>{
         try{
           const data=JSON.parse(ev.target.result);
-          if(!data||typeof data!=='object'||!data.level){ alert('MSG_SAVE_INVALID'); importInput.value=''; return; }
+          if(!data||typeof data!=='object'||!data.level){ alert(t('MSG_SAVE_INVALID')); importInput.value=''; return; }
           if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){ importInput.value=''; return; }
           localStorage.setItem('ib_v9',JSON.stringify(data));
           Object.assign(s,data);
           importInput.value='';
           render(); save();
           hideSettings();
-          alert('MSG_SAVE_LOADED');
-        }catch(err){ alert('ファイルの読み込みに失敗しました: '+err.message); }
+          alert(t('MSG_SAVE_LOADED'));
+        }catch(err){ alert(t('MSG_SAVE_LOAD_ERROR')+': '+err.message); }
       };
       reader.readAsText(file);
     });

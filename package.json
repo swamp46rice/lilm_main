@@ -29,6 +29,7 @@
       "sfx.js",
       "render.js",
       "main.js",
+      "preload.js",
       "assets/**/*",
       "bgm/**/*",
       "se/**/*",

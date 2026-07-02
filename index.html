@@ -345,12 +345,6 @@
 
   </div>
 
-  <div class="section-title" style="opacity:.5;display:none">デバッグ ― 演出確認用</div>
-  <div class="actions" style="padding-top:0;display:none">
-    <button class="debug" onclick="debugWallCharge()">壁を発光させる</button>
-    <button class="debug" onclick="debugWallBreak()">壁を破壊する</button>
-    <button class="debug" onclick="debugUnlockAll()">全ノード開放</button>
-  </div>
   </div>
   <!-- オープニング演出 -->
   <div id="itemPopupContainer"></div>
@@ -369,6 +363,15 @@
 <script src="logic.js"></script>
 <script src="sfx.js"></script>
 <script src="render.js"></script>
-<script src="debug.js"></script>
+<script>
+// debug.jsは開発時のみ存在する(package.jsonのfilesに含まれないため製品ビルドには同梱されない)。
+// 存在しない場合は静かに無視する。
+(function(){
+  var d=document.createElement('script');
+  d.src='debug.js';
+  d.onerror=function(){ d.remove(); };
+  document.body.appendChild(d);
+})();
+</script>
 </body>
 </html>
