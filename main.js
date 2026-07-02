@@ -3,15 +3,15 @@ const { app, BrowserWindow, shell, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
-const WINDOW_NORMAL  = { width:1080, height:720 };
+const WINDOW_NORMAL  = { width:860, height:660 };
 const WINDOW_COMPACT = { width:400,  height:120 };
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1080,
-    height: 720,
-    minWidth: 900,
-    minHeight: 600,
+    width: 860,
+    height: 660,
+    minWidth: 860,
+    minHeight: 660,
     title: 'LiLM',
     icon: path.join(__dirname, 'assets/icon.png'),
     backgroundColor: '#060810',
