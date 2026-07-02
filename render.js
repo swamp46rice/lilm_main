@@ -955,8 +955,10 @@ function render(){
   const tireImg=document.getElementById('tireImg');
   const prevSrc=tireImg.getAttribute('href');
   const nextSrc=s._streakCharaOverride ? TIRE_IMAGES[8] : (imgSet[tireIdx]||imgSet[0]);
-  if(prevSrc!==nextSrc){
-    tireImg.setAttribute('href', nextSrc);
+  // 停止中は姿を固定（s._frozenCharaSrcに前回の姿を保持）
+  const displaySrc = (s.runStatus!=='観測中' && s._frozenCharaSrc) ? s._frozenCharaSrc : nextSrc;
+  if(prevSrc!==displaySrc){
+    tireImg.setAttribute('href', displaySrc);
     if(prevSrc){
       const fg=document.getElementById('floatyGroup');
       fg.classList.remove('evolving');
