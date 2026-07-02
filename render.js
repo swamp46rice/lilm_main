@@ -654,6 +654,15 @@ function buildObstacles(){
   const wrap=document.getElementById('obstacleTitle');
   const g=document.getElementById('obstacles'); g.innerHTML='';
   wrap.style.display='block';
+  // Q壁バッジ（最初の1個のみ、赤色で表示）
+  if(s.committed.includes('tx_continuum_q') && s.activeObstacles.some(ao=>ao.key==='wall_q')){
+    const qBadge=document.createElement('div');
+    qBadge.className='wall-mark';
+    qBadge.textContent=t('UI_Q_WALL_BADGE');
+    qBadge.style.color='#ff4466';
+    qBadge.style.borderColor='#ff4466';
+    g.appendChild(qBadge);
+  }
   if(s.activeObstacles.length===0){
     const div=document.createElement('div');
     div.className='none';
@@ -788,6 +797,8 @@ function effText(n){
     parts.push((id?t(id):t(n.buffStat))+' +'+n.buffVal);
   }
   if(n.intBuff) parts.push(t('LABEL_INTEGRITY')+' +'+n.intBuff);
+  // 零と無限の連環: 獲得情報量×2表記
+  if(n===NODES['tx_zero_infinity']) parts.push(t('EFF_INFO_DOUBLE'));
   return parts.join(' / ');
 }
 function dirText(n){
