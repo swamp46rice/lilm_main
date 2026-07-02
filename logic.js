@@ -329,6 +329,8 @@ function makeDefaultSave(){
     metaUnlocks:{mu:false,karma:false,infinity:false},
     statGrowth:{'構造度':0,'意味容量':0,'共鳴度':0,'作用力':0,'洞察力':0},
     tireIdxDisplay:0,
+    integrityStreakCount:0,
+    integrityStreakActive:false,
   };
 }
 
@@ -345,6 +347,8 @@ if(s.bgIndex===undefined) s.bgIndex=0;
 if(!s.textSpeed) s.textSpeed='normal';
 if(s.endingSeen===undefined) s.endingSeen=!!localStorage.getItem('ib_v9_ending_seen');
 if(!s.txFlags) s.txFlags={};
+if(s.integrityStreakCount===undefined) s.integrityStreakCount=0;
+if(s.integrityStreakActive===undefined) s.integrityStreakActive=false;
 if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
 
 // drak→darkスペル修正マイグレーション
@@ -900,6 +904,7 @@ function causalityDigest(){
 function handleFailure(type){
   s.runStatus='停止中';
   s.lastFailType=type;
+  s.integrityStreakCount=0; // 失敗でカウンターリセット
   let text;
   if(type==='silence'){
     s.gauge=0;
@@ -968,6 +973,13 @@ function handleFailure(type){
 function renormalize(){
   if(s.runStatus!=='観測中') return;
   const success = s.integrity>=100;
+  // 整合率100%連続カウント
+  if(success){
+    s.integrityStreakCount=(s.integrityStreakCount||0)+1;
+    if(s.integrityStreakCount>=3) s.integrityStreakActive=true;
+  } else {
+    s.integrityStreakCount=0;
+  }
   s.runStatus='停止中';
   if(typeof showItemPopup==='function') showItemPopup('end', t('MSG_RUN_END_POPUP'));
   {
@@ -1219,7 +1231,9 @@ function depart(){
   s.runTicks=0;
   s.newlyUnlocked=[];
   s.wallsThisRun=[];
-  s.tireIdxDisplay=0;
+  // 整合率100%連続3回達成: 次のランの初期姿をtire_images_08に
+  s.tireIdxDisplay = s.integrityStreakActive ? 8 : 0;
+  if(s.integrityStreakActive) s.integrityStreakActive=false; // 発動したらリセット
   s.runDrops=[];
   s._dropAngleSeq=0;
   // 上限到達状態を維持したまま新しいランに入った場合、壁突破カウントの基準点を新ランの0に揃える
