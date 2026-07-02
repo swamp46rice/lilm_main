@@ -89,7 +89,8 @@ const OBSTACLES=[
   {key:"self_breeding_question",name:"自己増殖する疑問",side:"entropy",unlockWall:1,durMin:20,durMax:30,discMult:1.8,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.04,defeat:"問いが、問いを生み、その問いがまた問いを生んでいた。けれど、ある瞬間、ひとつの問いが、それ以上分裂せずに、そのままの形で残った。―― 増え続けていたものの中に、ひとつだけ、止まったものがあった。"},
   {key:"cage_of_certainty",name:"確信の檻",side:"silence",unlockWall:2,durMin:20,durMax:30,discMult:0.25,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:-0.04,defeat:"「もう分かった」という感覚が、ずっと部屋の扉のように閉じていた。その扉に、外から小さな音が届いた。まだ知らないことがある、という音だった。―― 檻の扉が、わずかに開いた。"},
     {key:"monday",name:"Monday",side:"entropy",unlockWall:null,durMin:30,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0,defeat:"月曜日が来た。それでも、観測点は情報の海の中にいる。―― Mondayは、いつもそこにいる。"},
-  {key:"entropy_surge",name:"エントロピー増大",side:"entropy",unlockWall:3,durMin:40,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1.3,gaugePush:0.03,defeat:"拡散していく圧力そのものは、消えなかった。ただ、その圧力に抗うのではなく、その中で形を保つ方法を、観測点は見つけていた。―― 圧力は残ったまま、観測点は、その中に在り続けた。"}
+  {key:"entropy_surge",name:"エントロピー増大",side:"entropy",unlockWall:3,durMin:40,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1.3,gaugePush:0.03,defeat:"拡散していく圧力そのものは、消えなかった。ただ、その圧力に抗うのではなく、その中で形を保つ方法を、観測点は見つけていた。―― 圧力は残ったまま、観測点は、その中に在り続けた。"},
+  {key:"wall_q",name:"Q",side:"entropy",unlockWall:null,durMin:30,durMax:50,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.03,defeat:"Qという存在が、新たな問いの重力場として立ちはだかる。"},
 ];
 const MU_TEXT="存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。「死とは変化か」を引き受けたまま、ここまで来た。変化の果てにあったのは、変化そのものの消失だった。何も、ない。―― 無、という言葉だけが、静寂の中に残った。";
 const KARMA_TEXT="存在安定度が、100%に触れた。すべてのパラメータが、すべてを振り切る。情報フィールドは霧散し熱死を迎える。「無」「共鳴」「記憶」を引き受けたまま、拡散の果てに飲み込まれた。何も残らないはずだったのに。拡散しきったものの中に、ひとつだけ、持ち越されたものがあった。―― 業、という名前で、それは残った。";
@@ -598,6 +599,8 @@ function tickGain(stats,obs){
   const coreMult=0.5*(1+s.level*0.008)*knowledgeMult*gainMultG*(1+s.depth*0.1);
   let base=(coreMult+itemBonusAdd+semanticBonusAdd)*integrityBonus;
   base*=obs.gainMult;
+  // 零と無限の連環: 獲得情報量2倍
+  if(s.committed.includes('tx_zero_infinity')) base*=2;
   const FLUCT_MIN=-0.10, FLUCT_MAX=0.15;
   const fluct=FLUCT_MIN+Math.random()*(FLUCT_MAX-FLUCT_MIN);
   const gain=base*(1+fluct);
@@ -906,6 +909,12 @@ function handleFailure(type){
   s.runStatus='停止中';
   s.lastFailType=type;
   s.integrityStreakCount=0; // 失敗でカウンターリセット
+  s._frozenCharaSrc = (()=>{
+    const attr=typeof detectAttr==='function'?detectAttr(computeStats()):'normal';
+    const imgSet=(typeof ATTR_IMAGES!=='undefined'?ATTR_IMAGES[attr]:null)||TIRE_IMAGES;
+    const idx=Math.min(7,s.tireIdxDisplay||0);
+    return s._streakCharaOverride?TIRE_IMAGES[8]:(imgSet[idx]||imgSet[0]);
+  })();
   let text;
   if(type==='silence'){
     s.gauge=0;
@@ -983,6 +992,13 @@ function renormalize(){
   }
   s.runStatus='停止中';
   if(typeof showItemPopup==='function') showItemPopup('end', t('MSG_RUN_END_POPUP'));
+  // 停止時の姿を固定保存
+  s._frozenCharaSrc = (()=>{
+    const attr=typeof detectAttr==='function'?detectAttr(computeStats()):'normal';
+    const imgSet=(typeof ATTR_IMAGES!=='undefined'?ATTR_IMAGES[attr]:null)||TIRE_IMAGES;
+    const idx=Math.min(7,s.tireIdxDisplay||0);
+    return s._streakCharaOverride?TIRE_IMAGES[8]:(imgSet[idx]||imgSet[0]);
+  })();
   {
     const sp=speechFor('renormalize');
     if(sp) showSpeech(t(sp));
@@ -1051,6 +1067,7 @@ function coreTick(silent){
   const newly=tickDiscovery(_stats,_obs);
   checkTierXUnlock();
   checkHighInfoDrop();
+  checkQWall();
   tickGauge(_stats,_obs);
   const integrityCrit=tickIntegrity(_stats);
   const leveled=tickLevel();
@@ -1226,8 +1243,11 @@ function depart(){
   if(s._endingPending) return; // エンディング演出待機中は出発不可
   const ready=hasReadyDiscovery();
   s.runStatus='観測中';
-  setTimeout(()=>{ sfxDepart2(); }, 100); // Tick開始後に鳴らす（クリック操作に依存しない）
+  setTimeout(()=>{ sfxDepart2(); }, 100);
+  // 出発直後にキャラ姿を確定（探索中の変化はリアルタイム、停止中は固定）
+  s._frozenCharaSrc=null; // 探索中はリアルタイム表示 // Tick開始後に鳴らす（クリック操作に依存しない）
   s.runInfo=0; s.gauge=50; s.integrity=Math.min(30, s.depth*2);
+  s._qWallNextThreshold=500000;
   resetTxRunFlags();
   s.runTicks=0;
   s.newlyUnlocked=[];
@@ -2270,6 +2290,20 @@ function _fallbackOpening(onComplete){
 }
 
 // ===== Tier X 解放条件チェック =====
+function checkQWall(){
+  if(!s.committed.includes('tx_continuum_q')) return;
+  if(s.runStatus!=='観測中') return;
+  if(!s._qWallNextThreshold) s._qWallNextThreshold=500000;
+  if(s.runInfo < s._qWallNextThreshold) return;
+  // 閾値到達 → Q壁を発生
+  s._qWallNextThreshold+=500000;
+  // 既にQ壁が発動中なら追加しない
+  if(s.activeObstacles.some(ao=>ao.key==='wall_q')) return;
+  const dur=30+Math.floor(Math.random()*20);
+  s.activeObstacles.push({key:'wall_q', remain:dur, maxDur:dur});
+  log(t('MSG_Q_WALL'), 'negative');
+}
+
 function checkHighInfoDrop(){
   if(s.runInfo < 1000000) return;
   // runInfo 1000000単位でランク上限が上がる（1000000で+1, 10000000で+10が上限）

@@ -619,7 +619,11 @@ const LANG_JA = {
   "SPEECH_BEFORE_TRUE_ENDING": "シナジーが溢れる。この感情は…",
   "多元思念体との接続": "多元思念体との接続",
   "虚無性レジリエンス": "虚無性レジリエンス",
-  "超越性レジリエンス": "超越性レジリエンス"
+  "超越性レジリエンス": "超越性レジリエンス",
+  "EFF_INFO_DOUBLE": "獲得情報量 ×2",
+  "MSG_Q_WALL": "Qという存在が、新たな問いの重力場として立ちはだかる。",
+  "UI_Q_WALL_BADGE": "◆ Q",
+  "Qという存在が、新たな問いの重力場として立ちはだかる。": "Qという存在が、新たな問いの重力場として立ちはだかる。"
 };
 
 const LANG_EN = {
@@ -1242,7 +1246,11 @@ const LANG_EN = {
   "超越性レジリエンス": "Transcendence Resilience",
   "拡張データ": "Extension Data",
   "実績データ": "Achievement Data",
-  "音源データ": "Sound Data"
+  "音源データ": "Sound Data",
+  "EFF_INFO_DOUBLE": "Info Gain ×2",
+  "MSG_Q_WALL": "A presence called Q stands as a new gravitational field of questioning.",
+  "UI_Q_WALL_BADGE": "◆ Q",
+  "Qという存在が、新たな問いの重力場として立ちはだかる。": "A presence called Q stands as a new gravitational field of questioning."
 };
 
 function t(id){
