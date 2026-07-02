@@ -501,6 +501,7 @@ function activeObstacleEffect(){
   const st=strengthenFactor();
   s.activeObstacles.forEach(ao=>{
     const o=OBSTACLES.find(x=>x.key===ao.key);
+    if(!o) return; // 存在しないキー（旧セーブの残骸）はスキップ
     discMult*=1+(o.discMult-1)*st;
     buffMult*=1+(o.buffMult-1)*st;
     gainMult*=1+(o.gainMult-1)*st;
@@ -725,6 +726,7 @@ function tickObstacles(){
     ao.remain--;
     if(ao.remain<=0){
       const o=OBSTACLES.find(x=>x.key===ao.key);
+      if(!o){ s.activeObstacles.splice(i,1); continue; }
       texts.push({type:'defeat', text:t(o.defeat), obstacle:o});
       const spd=speechFor('obstacle_defeat'); if(spd) showSpeech(t(spd));
       s.activeObstacles.splice(i,1);
@@ -900,7 +902,7 @@ function causalityDigest(){
       text=tf('MSG_OBSTACLE_EFFECT_T',{name:t(NODES[top[0]].name),dir,word,sign,delta:netDelta.toFixed(1)});
     }
   }else if(obstacleMag>=0.3 && s.activeObstacles.length>0){
-    const name=t(OBSTACLES.find(o=>o.key===s.activeObstacles[0].key).name);
+    const _o904=OBSTACLES.find(o=>o.key===s.activeObstacles[0].key); const name=t(_o904?_o904.name:'?');
     text=tf('OBS_IMPACT_T',{name,sign,delta:netDelta.toFixed(1)});
   }else{
     text=tf('OBS_EFFECT_T',{dir,sign,delta:netDelta.toFixed(1)});
