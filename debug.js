@@ -86,6 +86,7 @@ function initDebugMode(){
     <button onclick="debugSetInfo(9990000)" style="${btnStyle()}">runInfo+999万</button>
     <button onclick="debugSetLevel(50)" style="${btnStyle()}">level=50</button>
     <button onclick="debugSetLevel(100)" style="${btnStyle()}">level=100</button>
+    <button onclick="debugStreakChara()" style="${btnStyle()}">tire_08表示</button>
     <button onclick="debugPlayOpening()" style="${btnStyle()}">オープニングを見る</button>
     <button onclick="debugPlayEnding()" style="${btnStyle()}">エンディングを見る</button>
     <button onclick="playTrueEnding()" style="${btnStyle()}">真エンディングを見る</button>
@@ -118,4 +119,10 @@ initDebugMode();
 function debugPlayEnding(){
   if(typeof playEnding==='function') playEnding();
   else log('DEBUG: playEnding が見つかりません。');
+}
+
+function debugStreakChara(){
+  s._streakCharaOverride=true;
+  render();
+  log('DEBUG: tire_images_08を表示します。');
 }
