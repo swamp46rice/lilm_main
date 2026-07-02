@@ -73,7 +73,7 @@ function initDebugMode(){
 
   const panel=document.createElement('div');
   panel.id='debugPanel';
-  panel.style.cssText='display:none;position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.85);border:1px solid #f55;border-radius:6px;padding:10px 14px;z-index:500;font-family:monospace;font-size:11px;color:#f99;min-width:200px;max-height:580px;overflow-y:auto;';
+  panel.style.cssText='display:none;position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.85);border:1px solid #f55;border-radius:6px;padding:10px 14px;z-index:500;font-family:monospace;font-size:11px;color:#f99;min-width:200px;max-height:620px;overflow-y:auto;';
   panel.innerHTML=`
     <div style="color:#f55;font-weight:bold;margin-bottom:8px;">⚠ DEBUG MODE</div>
     <button onclick="debugUnlockAll()" style="${btnStyle()}">全ノード開放</button>
