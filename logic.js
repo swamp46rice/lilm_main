@@ -668,6 +668,7 @@ function tickWalls(){
   const prob=wallBreakProb(w, stats, frontier);
   if(Math.random()<prob){
     s.wallsThisRun.push(w.name);
+    s._streakCharaOverride=false; // 壁突破で通常の姿に戻る
     s.tireIdxDisplay=Math.min(7, s.tireIdxDisplay+1);
     sfxCharaChange();
     s.lastEventText=t(w.text);
@@ -1231,9 +1232,9 @@ function depart(){
   s.runTicks=0;
   s.newlyUnlocked=[];
   s.wallsThisRun=[];
-  // 整合率100%連続3回達成: 次のランの初期姿をtire_images_08に
-  s.tireIdxDisplay = s.integrityStreakActive ? 8 : 0;
-  if(s.integrityStreakActive) s.integrityStreakActive=false; // 発動したらリセット
+  s.tireIdxDisplay = 0;
+  s._streakCharaOverride = !!s.integrityStreakActive; // 初期姿だけtire_08を使う
+  if(s.integrityStreakActive) s.integrityStreakActive=false;
   s.runDrops=[];
   s._dropAngleSeq=0;
   // 上限到達状態を維持したまま新しいランに入った場合、壁突破カウントの基準点を新ランの0に揃える

@@ -905,7 +905,7 @@ function render(){
   document.getElementById('maxSlotsLabel').textContent=maxSlots();
 
   // 属性条件を満たすパラメータを黄色で強調(キャラ判定と完全同期)
-  const tireIdx=s.tireIdxDisplay!==undefined ? (s.tireIdxDisplay===8 ? 8 : Math.min(7,s.tireIdxDisplay)) : Math.min(7, s.wallsThisRun.length);
+  const tireIdx=s.tireIdxDisplay!==undefined ? Math.min(7,s.tireIdxDisplay) : Math.min(7, s.wallsThisRun.length);
   const attr=detectAttr(stats);
   // 視認済みキャラ形態(属性×Tier)を記録(コレクション画面用)
   const charaSeenKey=attr+'_'+tireIdx;
@@ -954,7 +954,7 @@ function render(){
   const imgSet=ATTR_IMAGES[attr]||TIRE_IMAGES;
   const tireImg=document.getElementById('tireImg');
   const prevSrc=tireImg.getAttribute('href');
-  const nextSrc=imgSet[tireIdx];
+  const nextSrc=s._streakCharaOverride ? TIRE_IMAGES[8] : (imgSet[tireIdx]||imgSet[0]);
   if(prevSrc!==nextSrc){
     tireImg.setAttribute('href', nextSrc);
     if(prevSrc){
