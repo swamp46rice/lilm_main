@@ -2344,11 +2344,16 @@ function tickQWall(){
 function checkQWall(){
   if(!s.committed.includes('tx_continuum_q')) return;
   if(s.runStatus!=='観測中') return;
-  if(!s._qWallNextThreshold) s._qWallNextThreshold=500000;
-  if(s.runInfo < s._qWallNextThreshold) return;
   if(s.qWallActive) return; // 既にQ壁が出現中
-  s._qWallNextThreshold+=500000;
-  // Q壁出現（通常の位相の壁と同じ仕組み）
+  if(s.wallsThisRun.length<7){
+    // Q壁は全位相の壁(7枚)を突破した後にのみ出現する。
+    // 突破前は閾値を「現在値+50万」に追従させておき、突破直後にまとめて出現するのを防ぐ
+    s._qWallNextThreshold=s.runInfo+500000;
+    return;
+  }
+  if(s.runInfo < s._qWallNextThreshold) return;
+  s._qWallNextThreshold=s.runInfo+500000;
+  // Q壁出現（制限時間は通常の位相の壁と同じ式）
   const deadline=Math.round(10+10*(s.integrity/100));
   s.qWallActive={remain:deadline, deadline};
   log(tf('MSG_Q_WALL_APPEAR_T',{n:deadline}), 'negative');

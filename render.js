@@ -385,7 +385,7 @@ function buildWalls(){
   if(s.committed.includes('tx_continuum_q') && s.qWallActive){
     const qBadge=document.createElement('div');
     qBadge.className='wall-mark';
-    qBadge.textContent=tf('UI_Q_WALL_BADGE_T',{n:s.qWallActive.remain});
+    qBadge.textContent='Q';
     qBadge.style.color='#ff4466';
     qBadge.style.borderColor='#ff4466';
     g.appendChild(qBadge);
@@ -395,7 +395,16 @@ function buildWallCountdown(){
   const el=document.getElementById('wallCountdown');
   if(s.runStatus!=='観測中'){ el.style.visibility='hidden'; return; }
   const frontier=s.wallsThisRun.length;
-  if(frontier>=7){ el.style.visibility='hidden'; return; }
+  if(frontier>=7){
+    // 全壁突破後: この欄は空くので、Q壁出現中はその残り時間を表示する
+    if(s.committed.includes('tx_continuum_q') && s.qWallActive){
+      el.style.visibility='visible';
+      el.innerHTML=tf('MSG_WALL_ACTIVE_T',{name:'Q',n:s.qWallActive.remain});
+    }else{
+      el.style.visibility='hidden';
+    }
+    return;
+  }
   const w=WALLS[frontier];
   el.style.visibility='visible';
   if(s.wallActive){
