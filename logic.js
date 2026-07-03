@@ -1399,10 +1399,13 @@ function applySwapPenalty(){
   return tf('MSG_INTEGRITY_LOSS_T',{n:(before-s.integrity).toFixed(1)});
 }
 /* ===== はじめから(ニューゲーム) =====
- * 完全初期化(設定画面)とは異なる機能:
- *   ・ゲーム進行データ(レベル・ノード・インベントリ・AI形態コレクション等)は初期化する
- *   ・設定(言語・音量・テキスト速度・壁紙・選択曲)は引き継ぐ
- *   ・オープニング/エンディングの既読フラグ(localStorage)は削除しない
+ * 完全初期化(設定画面)とは異なる機能。初期化されるのはステータス・レベル・ノード・
+ * 所持データ(アイテム・実績)のみ:
+ *   ・初期化する: ステータス(statGrowth等)・レベル・ノード(found/committed等)・
+ *                インベントリ(アイテム・実績)・ラン中データ
+ *   ・引き継ぐ:   BGM(解放状況・選択中トラック)・AI形態コレクション(charaSeen)・
+ *                設定(言語・音量・テキスト速度・壁紙)・
+ *                オープニング/エンディングの既読フラグ(localStorage)
  * 完全初期化は上記すべてを消去し「購入時と同じ状態」に戻す。 */
 function resetAll(){
   const ov=document.getElementById('resetConfirmOverlay');
@@ -1427,9 +1430,12 @@ function doNewGameReset(){
   d.textSpeed=s.textSpeed;
   d.bgIndex=s.bgIndex;
   d.endingSeen=s.endingSeen;
-  // 選択中の曲は、初期解放曲(unlockKeyなし)の場合のみ引き継ぐ(解放曲リストは初期化されるため)
-  const trackOk=(typeof TRACKS!=='undefined' && TRACKS[s.currentTrackIdx] && !TRACKS[s.currentTrackIdx].unlockKey);
-  d.currentTrackIdx=trackOk?s.currentTrackIdx:0;
+  d.qEndingSeen=s.qEndingSeen;
+  // BGM(解放状況・選択中トラック)は初期化しない
+  d.unlockedTracks=s.unlockedTracks.slice();
+  d.currentTrackIdx=s.currentTrackIdx;
+  // AI形態コレクション(視認済みキャラ形態)は初期化しない
+  d.charaSeen=Object.assign({}, s.charaSeen);
   localStorage.setItem('ib_v9', JSON.stringify(d));
   // 注: ib_v9_opening_done / ib_v9_ending_seen / ib_v9_true_ending_seen は削除しない(完全初期化との差分)
   location.reload();
@@ -2751,7 +2757,7 @@ Obstacles disappear naturally after a set duration.</p>
 <p>Progress is saved automatically to this browser (using "localStorage").<br>
 Data is not shared between different browsers or devices.<br>
 Clearing browser data (cookies, site data, etc.) may also delete this save. In private/incognito mode, data is lost when the window is closed.<br>
-Use the <span class="key">New Game</span> button to start over (confirmation required). Game progress — including the AI Form Collection — is reset, but settings such as language and volume, and the opening/ending viewed status, are kept.<br>
+Use the <span class="key">New Game</span> button to start over (confirmation required). Stats, level, nodes, and owned data (items and achievements) are reset, but unlocked BGM, the AI Form Collection, settings such as language and volume, and the opening/ending viewed status, are kept.<br>
 To erase everything and return the game to its just-purchased state, use <span class="key">Full Reset</span> in SETTINGS.</p>
 
 <h3>📤 Export Log</h3>
@@ -2796,7 +2802,7 @@ This file can be used to transfer progress to another device or browser. Select 
 <p>進行は自動でこのブラウザに保存されます(ブラウザの「ローカルストレージ」という仕組みを使用)。<br>
 別のブラウザや別の端末では引き継がれません。<br>
 ブラウザの設定で「Cookieとサイトデータ」「閲覧履歴データ」などをまとめて削除すると、このデータも一緒に消えることがあります。シークレットモード(プライベートウィンドウ)で開いた場合は、ウィンドウを閉じると消えます。<br>
-<span class="key">はじめから</span>ボタンで最初からやり直せます(確認あり)。AI形態コレクションを含むゲームの進行は初期化されますが、言語や音量などの設定と、オープニング/エンディングの視聴状態は引き継がれます。<br>
+<span class="key">はじめから</span>ボタンで最初からやり直せます(確認あり)。ステータス・レベル・ノード・所持データ(アイテム・実績)は初期化されますが、BGMの解放状況やAI形態コレクション、言語や音量などの設定、オープニング/エンディングの視聴状態は引き継がれます。<br>
 すべてを消去して購入時と同じ状態に戻したい場合は、SETTINGSの<span class="key">完全初期化</span>を使用してください。</p>
 
 <h3>📤 観測記録を書き出す</h3>
