@@ -1766,7 +1766,7 @@ const ITEM_BONUS_TABLE={
   34: {base:5.00, perRank:0}, // 極限の共鳴属性 +500%
   35: {base:5.00, perRank:0}, // 極限の作用属性 +500%
   36: {base:5.00, perRank:0}, // 極限の洞察属性 +500%
-  37: {base:30.00, perRank:0}, // 中道の振る舞い +3000%
+  37: {base:100.00, perRank:0}, // 中道の振る舞い +10000%
   38: {base:10.00, perRank:10.00}, // 多元思念体との接続 +1000%、ランクごとに+1000%(MAX+10で11000%)
   39: {base:10.00, perRank:10.00}, // 虚無性レジリエンス +1000%、ランクごとに+1000%(MAX+10で11000%)
   40: {base:10.00, perRank:10.00}, // 超越性レジリエンス +1000%、ランクごとに+1000%(MAX+10で11000%)
@@ -2093,7 +2093,7 @@ function showInventory(){
         // ランクなしアイテム(位相データ・実績系): 所持していれば名称表示のみ、NEWバッジのみ判定
         nameEl.className='inv-name';
         const bestTh = (typeof BEST_RECORD_THRESHOLD!=='undefined') ? BEST_RECORD_THRESHOLD[i] : undefined;
-        nameEl.textContent = bestTh!==undefined ? (t(item.name)+'：BEST '+bestTh+t('UI_ACHIEVE')) : t(item.name);
+        nameEl.textContent = bestTh!==undefined ? (t(item.name)+'：'+bestTh+t('UI_ACHIEVE')) : t(item.name);
         nameEl.style.color=rankColors[0];
         if(held.isNew){
           const badge=document.createElement('span');
