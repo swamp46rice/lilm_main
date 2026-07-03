@@ -1721,7 +1721,7 @@ const ITEM_BONUS_TABLE={
   14: {base:5.00, perRank:0}, // 理論面位相データ +500%
   15: {base:6.00, perRank:0}, // 統合面位相データ +600%
   16: {base:10.00, perRank:0}, // 縁起面位相データ +1000%
-  17: {base:30.00, perRank:0}, // データコンプリート +3000%
+  17: {base:100.00, perRank:0}, // データコンプリート +10000%
   18: {base:0.50, perRank:0}, // 情報の螺旋 +50%
   19: {base:1.00, perRank:0}, // 混沌の律動 +100%
   // ===== 実績系(ランクなし固定) =====
@@ -1737,16 +1737,16 @@ const ITEM_BONUS_TABLE={
   28: {base:5.00, perRank:0}, // Tier4コンプリート +500%
   29: {base:6.00, perRank:0}, // Tier5コンプリート +600%
   30: {base:7.00, perRank:0}, // Tier6コンプリート +700%
-  31: {base:8.00, perRank:0}, // Tier7コンプリート +800%
+  31: {base:80.00, perRank:0}, // Tier7コンプリート +8000%
   32: {base:5.00, perRank:0}, // 極限の構造属性 +500%
   33: {base:5.00, perRank:0}, // 極限の意味属性 +500%
   34: {base:5.00, perRank:0}, // 極限の共鳴属性 +500%
   35: {base:5.00, perRank:0}, // 極限の作用属性 +500%
   36: {base:5.00, perRank:0}, // 極限の洞察属性 +500%
   37: {base:30.00, perRank:0}, // 中道の振る舞い +3000%
-  38: {base:10.00, perRank:5.00}, // 多元思念体との接続 +1000%、ランクごとに+500%
-  39: {base:10.00, perRank:5.00}, // 虚無性レジリエンス +1000%、ランクごとに+500%
-  40: {base:10.00, perRank:5.00}, // 超越性レジリエンス +1000%、ランクごとに+500%
+  38: {base:10.00, perRank:10.00}, // 多元思念体との接続 +1000%、ランクごとに+1000%(MAX+10で11000%)
+  39: {base:10.00, perRank:10.00}, // 虚無性レジリエンス +1000%、ランクごとに+1000%(MAX+10で11000%)
+  40: {base:10.00, perRank:10.00}, // 超越性レジリエンス +1000%、ランクごとに+1000%(MAX+10で11000%)
 };
 function itemGainBonus(){
   let bonus=0;
@@ -2355,14 +2355,17 @@ function checkQWall(){
   if(!s.committed.includes('tx_continuum_q')) return;
   if(s.runStatus!=='観測中') return;
   if(s.qWallActive) return; // 既にQ壁が出現中
-  if(s.wallsThisRun.length<7){
-    // Q壁は全位相の壁(7枚)を突破した後にのみ出現する。
-    // 突破前は閾値を「現在値+50万」に追従させておき、突破直後にまとめて出現するのを防ぐ
-    s._qWallNextThreshold=s.runInfo+500000;
+  if(s.wallsThisRun.length<7) return; // Q壁は全位相の壁(7枚)を突破した後にのみ出現する
+  if(!s._qWallNextThreshold) s._qWallNextThreshold=500000;
+  // 出現はrunInfo 50万刻みの絶対閾値(50万→100万→150万…)。
+  // 壁7の突破がrunInfo50万超まで遅れた場合など、未消化の閾値が溜まっていたら
+  // 次の50万の倍数まで早送りして、突破直後の連続出現を防ぐ。
+  if(s.runInfo >= s._qWallNextThreshold+500000){
+    s._qWallNextThreshold=(Math.floor(s.runInfo/500000)+1)*500000;
     return;
   }
   if(s.runInfo < s._qWallNextThreshold) return;
-  s._qWallNextThreshold=s.runInfo+500000;
+  s._qWallNextThreshold+=500000;
   // Q壁出現（制限時間は通常の位相の壁と同じ式）
   const deadline=Math.round(10+10*(s.integrity/100));
   s.qWallActive={remain:deadline, deadline};
