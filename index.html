@@ -192,7 +192,7 @@
     <div id="creditBox">
       <div class="settings-title">CREDIT</div>
       <div class="credit-content">
-        <p><span class="credit-label">Game Design &amp; Programming</span><br>Θ（Theta）</p>
+        <p><span class="credit-label">Game Design &amp; Programming</span><br><span id="creditThetaSign" onclick="onThetaSignClick(event)">Θ</span>（Theta）</p>
         <p><span class="credit-label">AI Assistance</span><br>Claude (Anthropic) / ChatGPT / Gemini</p>
         <p><span class="credit-label">BGM</span><br>SUNO</p>
         <p><span class="credit-label">Font</span><br>JetBrains Mono / Noto Serif JP / Zen Kaku Gothic New (Google Fonts)</p>
@@ -309,7 +309,7 @@
 
   <div class="log" id="log"></div>
 
-  <div class="total-info-display"><span id="labelTotalInfo">総情報量</span> <span id="totalInfo" style="color:var(--positive)">0</span> &nbsp; BEST <span id="bestRunInfo" style="color:#e8d860">0</span></div>
+  <div class="total-info-display"><span id="labelTotalInfo">総情報量</span> <span id="totalInfo" style="color:var(--positive)">0</span> &nbsp; BEST <span id="bestRunInfo" style="color:#e8d860">0</span><span class="q-signs" id="qSignsDisplay"></span></div>
   </div>
 
   <div class="col-right">

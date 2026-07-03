@@ -372,6 +372,24 @@ function spawnShootingStar(){
   requestAnimationFrame(step);
 }
 
+/* ===== 隠し要素: 6つのサイン(π ρ ω θ α ψ)をBEST欄の右端に表示 ===== */
+function buildQSigns(){
+  const el=document.getElementById('qSignsDisplay');
+  if(!el || !s.qSigns) return;
+  const any=Q_SIGN_ORDER.some(k=>s.qSigns[k]);
+  if(!any){ el.style.display='none'; el.innerHTML=''; return; }
+  el.style.display='inline';
+  el.innerHTML='';
+  Q_SIGN_ORDER.forEach((k,i)=>{
+    const span=document.createElement('span');
+    const on=!!s.qSigns[k];
+    span.className='q-sign-char '+(on?'on':'off');
+    span.textContent=Q_SIGN_CHAR[k];
+    if(on) span.style.animationDelay=(i*0.15)+'s';
+    el.appendChild(span);
+  });
+}
+
 function buildWalls(){
   const g=document.getElementById('walls'); g.innerHTML='';
   s.wallsThisRun.forEach((name,i)=>{
@@ -910,6 +928,7 @@ function render(){
   document.getElementById('lv').textContent=s.level;
   document.getElementById('totalInfo').textContent= s.metaUnlocks.infinity?'∞':Math.floor(s.totalInfo);
   document.getElementById('bestRunInfo').textContent= Math.floor(s.bestRunInfo);
+  buildQSigns();
   document.getElementById('depth').textContent=s.depth;
   const _rsMap={'観測中':'STATUS_OBSERVING','停止中':'STATUS_STOPPED','停止中(エントロピー拡散による終了)':'STATUS_ENTROPY','停止中(沈黙による終了)':'STATUS_SILENCE','停止中(時間切れによる終了)':'STATUS_TIMEOUT','停止中(再正規化)':'STATUS_RENORM','停止中(準備中)':'STATUS_READY'};
   const _rsLabel=document.getElementById('runStatusBadge');
@@ -1141,11 +1160,11 @@ function _renderItemPopup(type, name, onDone){
   const container=document.getElementById('itemPopupContainer');
   if(!container){ if(onDone) onDone(); return; }
 
-  const iconMap={ 'node':'assets/item_00.png', 'achv':'assets/item_01.png', 'track':'assets/item_02.png', 'end':null };
-  const labelMap={ 'node':t('拡張データ'), 'achv':t('実績データ'), 'track':t('音源データ'), 'end':null };
+  const iconMap={ 'node':'assets/item_00.png', 'achv':'assets/item_01.png', 'track':'assets/item_02.png', 'end':null, 'sign':null };
+  const labelMap={ 'node':t('拡張データ'), 'achv':t('実績データ'), 'track':t('音源データ'), 'end':null, 'sign':null };
 
   const popup=document.createElement('div');
-  popup.className='item-popup';
+  popup.className='item-popup'+(type==='sign'?' item-popup-sign':'');
 
   if(iconMap[type]){
     const img=document.createElement('img');

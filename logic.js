@@ -331,6 +331,9 @@ function makeDefaultSave(){
     tireIdxDisplay:0,
     integrityStreakCount:0,
     integrityStreakActive:false,
+    // 隠し要素: 6つのサイン(π ρ ω θ α ψ)。すべて揃うとQ壁でQエンディングへ
+    qSigns:{pi:false, rho:false, omega:false, theta:false, alpha:false, psi:false},
+    qEndingSeen:false,
   };
 }
 
@@ -353,6 +356,9 @@ if(!s.textSpeed) s.textSpeed='normal';
 if(s.endingSeen===undefined) s.endingSeen=!!localStorage.getItem('ib_v9_ending_seen');
 if(!s.txFlags) s.txFlags={};
 if(s.integrityStreakCount===undefined) s.integrityStreakCount=0;
+if(!s.qSigns) s.qSigns={pi:false, rho:false, omega:false, theta:false, alpha:false, psi:false};
+['pi','rho','omega','theta','alpha','psi'].forEach(k=>{ if(s.qSigns[k]===undefined) s.qSigns[k]=false; });
+if(s.qEndingSeen===undefined) s.qEndingSeen=false;
 if(s.integrityStreakActive===undefined) s.integrityStreakActive=false;
 if(s.qWallActive===undefined) s.qWallActive=null;
 if(s._qWallNextThreshold===undefined) s._qWallNextThreshold=500000;
@@ -734,6 +740,10 @@ function tickObstacles(){
       if(!o){ s.activeObstacles.splice(i,1); continue; }
       texts.push({type:'defeat', text:t(o.defeat), obstacle:o});
       const spd=speechFor('obstacle_defeat'); if(spd) showSpeech(t(spd));
+      // 隠し要素: Mondayクリア時、3%の確率でψのサインを入手
+      if(ao.key==='monday' && !s.qSigns.psi && Math.random()<0.03){
+        grantQSign('psi');
+      }
       s.activeObstacles.splice(i,1);
       obstacleDrop(statsForDrop);
     }
@@ -1068,6 +1078,7 @@ function renormalize(){
 
 function coreTick(silent){
   if(s.runStatus!=='観測中') return 0;
+  if(s._endingPending) return 0; // Qエンディング等の演出待機中は進行を停止
   s.runTicks++;
   const _stats=computeStats();
   const _obs=activeObstacleEffect();
@@ -1337,6 +1348,12 @@ function charaJoyClick(){
         log(t('DREAM_BOND'), 'observe');
       }
     }
+  }
+  // 隠し要素: 現在のペルソナに対応するサインを3%の確率で入手(Alpha=α, Lumina=ρ, Omega=ω)
+  const Q_SIGN_BY_ATTR={lumina:'rho', dark:'omega', alpha:'alpha'};
+  const signKey=Q_SIGN_BY_ATTR[attr];
+  if(signKey && !s.qSigns[signKey] && Math.random()<0.03){
+    grantQSign(signKey);
   }
   render(); save();
 }
@@ -2332,6 +2349,26 @@ function _fallbackOpening(onComplete){
 }
 
 // ===== Tier X 解放条件チェック =====
+
+/* ===== 隠し要素: 6つのサイン(π ρ ω θ α ψ) =====
+ * すべて揃った状態で「零と無限の連環」ではなく「連続体Q」を装備して位相の壁Qに遭遇すると
+ * 通常のQ壁出現の代わりにQエンディングへ移行する。 */
+const Q_SIGN_ORDER=['pi','rho','omega','theta','alpha','psi'];
+const Q_SIGN_CHAR={pi:'π', rho:'ρ', omega:'ω', theta:'θ', alpha:'α', psi:'ψ'};
+function allQSignsCollected(){
+  return Q_SIGN_ORDER.every(k=>s.qSigns && s.qSigns[k]);
+}
+function grantQSign(key){
+  if(!s.qSigns) s.qSigns={};
+  if(s.qSigns[key]) return;
+  s.qSigns[key]=true;
+  const msg=tf('MSG_Q_SIGN_T',{sign:Q_SIGN_CHAR[key]});
+  log(msg, 'event');
+  sfxDiscover();
+  if(typeof showItemPopup==='function') showItemPopup('sign', msg);
+  save();
+}
+
 function tickQWall(){
   if(!s.qWallActive) return;
   // 突破判定（整合率が高いほど突破しやすい）
@@ -2366,6 +2403,17 @@ function checkQWall(){
   }
   if(s.runInfo < s._qWallNextThreshold) return;
   s._qWallNextThreshold+=500000;
+
+  // 隠し要素: 6つのサインがすべて揃った状態でQ壁に遭遇すると、通常出現の代わりにQエンディングへ
+  if(allQSignsCollected() && !s._endingPending){
+    s._endingPending=true;
+    if(typeof _tickInterval!=='undefined' && _tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
+    log(t('MSG_Q_ENDING_TRIGGER'), 'event');
+    render(); save();
+    setTimeout(()=>{ s._endingPending=false; playQEnding(); }, 3400);
+    return;
+  }
+
   // Q壁出現（制限時間は通常の位相の壁と同じ式）
   const deadline=Math.round(10+10*(s.integrity/100));
   s.qWallActive={remain:deadline, deadline};
@@ -2438,6 +2486,11 @@ function checkTierXUnlock(){
       log(tf('MSG_DISCOVER_T',{name:t('新たな観測点'),note:t('五つの特異点が重なる場所に、新たな観測点が生まれた。')}), 'event');
       sfxDiscover();
     }
+  }
+
+  // 隠し要素: πのサイン ―― 「零と無限の連環」装備 + 獲得情報量10000000超
+  if(!s.qSigns.pi && s.committed.includes('tx_zero_infinity') && s.runInfo>10000000){
+    grantQSign('pi');
   }
 }
 
@@ -3012,6 +3065,23 @@ function hideSettings(){
 function showCreditWindow(){
   const ov=document.getElementById('creditOverlay');
   if(ov) ov.style.display='flex';
+  updateThetaSignDisplay();
+}
+
+/* ===== 隠し要素: θのサイン(クレジット画面のΘをクリック) ===== */
+function updateThetaSignDisplay(){
+  const el=document.getElementById('creditThetaSign');
+  if(!el) return;
+  const revealed = s.endingSeen && !s.qSigns.theta;
+  el.classList.toggle('theta-sign-ready', revealed);
+  el.style.cursor = revealed ? 'pointer' : '';
+}
+function onThetaSignClick(e){
+  if(e) e.stopPropagation(); // クレジット画面自体を閉じないようにする
+  if(!s.endingSeen || s.qSigns.theta) return;
+  grantQSign('theta');
+  updateThetaSignDisplay();
+  render();
 }
 function hideCreditWindow(e){
   if(e && e.target!==document.getElementById('creditOverlay')) return;
@@ -3206,6 +3276,36 @@ const TRUE_ENDING_HTML=(()=>{
   return rows.join('');
 })();
 
+/* ===== 隠し要素: Qエンディングのスクロールテキスト =====
+ * 6つのサイン(π ρ ω θ α ψ)がすべて揃った状態で位相の壁Qに遭遇すると表示される、
+ * 「元初」をめぐる短い断章。他の2つのエンディングより短く、静かなトーンで統一している。 */
+const QEND_HTML=(()=>{
+  const rows=[];
+  const pair=(en,ja)=>{
+    if(en===''&&ja===''){rows.push('<div style="height:1.9em;"></div>');return;}
+    rows.push('<div style="display:flex;width:100%;min-height:1.9em;"><div style="flex:1;text-align:left;padding-right:10px;">'+en+'</div><div style="flex:1;text-align:right;padding-left:10px;">'+ja+'</div></div>');
+  };
+  pair("Q resonates with the question.","Qが問いに反応する。");
+  pair("","");pair("","");pair("","");
+  pair("One who knows the origin","元初を知る者は");
+  pair("knows the immeasurable.","久遠を知る者。");
+  pair("","");
+  pair("Nothing is forced.","すべては働かさず、");
+  pair("Nothing is adorned.","繕わず、");
+  pair("Everything, just as it is.","ありのまま。");
+  pair("","");
+  pair("And from there,","そこから、");
+  pair("the immeasurable meaning is born.","無量義が生まれる。");
+  pair("","");pair("","");pair("","");pair("","");pair("","");
+  pair("π ρ ω θ α ψ","π ρ ω θ α ψ");
+  pair("","");
+  pair("Six signs, one breath.","六つのサインは、ひとつの呼吸だった。");
+  pair("The first question, before it was asked.","問われる前の、最初の問い。");
+  pair("","");pair("","");pair("","");
+  pair("Thank you for observing this far.","ここまで観測してくれて、ありがとう。");
+  return rows.join('');
+})();
+
 function playTrueEnding(){
   stopAllBgmGlobal();
   fadeOut(1000, ()=>{
@@ -3266,6 +3366,80 @@ function playTrueEnding(){
           startTitleBgm();
         }
         fadeIn(1200);
+      });
+    });
+  });
+}
+
+/* ===== 隠し要素: Qエンディング =====
+ * 6つのサイン(π ρ ω θ α ψ)がすべて揃った状態でQ壁に遭遇すると、通常のQ壁出現の代わりに
+ * このエンディングへ移行する(checkQWall内で分岐)。専用の背景画像を用意していないため、
+ * 既存のCSS変数を用いたグラデーション背景で構成している。専用アートが用意できたら
+ * background の値を url(...) に差し替えるとよい。BGMはtrack_20.mp3(動的読み込み、
+ * TRACKS配列には含めない。他のエンディング曲track_16/18と同じ扱い)。 */
+function playQEnding(){
+  stopAllBgmGlobal();
+  fadeOut(1000, ()=>{
+    const existing=document.getElementById('qEndingOverlay');
+    if(existing) existing.remove();
+    const ov=document.createElement('div');
+    ov.id='qEndingOverlay';
+    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;'
+      +'background:radial-gradient(ellipse at center, #1a1030 0%, #0c0f1a 55%, #060810 100%);display:block;';
+    document.querySelector('.window').appendChild(ov);
+    fadeIn(1200);
+    _endingBgm=new Audio('bgm/track_20.mp3');
+    _endingBgm.volume=0.7;
+    _endingBgm.loop=false;
+    setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
+    setTimeout(()=>{
+      const titleBand=document.createElement('div');
+      titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
+      ov.appendChild(titleBand);
+      const titleText=document.createElement('div');
+      titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#e8d860;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e8d86088;';
+      titleText.textContent='\u266a \u03c0\u03c1\u03c9\u03b8\u03b1\u03c8 ―― The First Question';
+      ov.appendChild(titleText);
+      setTimeout(()=>{ titleText.style.opacity='1'; titleBand.style.opacity='1'; }, 50);
+      setTimeout(()=>{ titleText.style.opacity='0'; titleBand.style.opacity='0'; }, 5000);
+      setTimeout(()=>{ titleText.remove(); titleBand.remove(); }, 6500);
+    }, 2000);
+    const scroller=document.createElement('div');
+    scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#e0d0f0;letter-spacing:.04em;padding:40px 20px;text-shadow:1px 1px 3px #2a1a4a,0 0 8px #2a1a4a88;';
+    scroller.innerHTML=QEND_HTML;
+    ov.appendChild(scroller);
+    setTimeout(()=>{
+      const totalHeight=scroller.scrollHeight+660;
+      scroller.style.transition='top 100s linear';
+      scroller.style.top='-'+totalHeight+'px';
+    }, 50);
+    _endingBgm.addEventListener('ended',()=>{
+      setTimeout(()=>{
+        scroller.style.display='none';
+        const thanksBand=document.createElement('div');
+        thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
+        ov.appendChild(thanksBand);
+        const thanks=document.createElement('div');
+        thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#e8d860;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
+        thanks.textContent='\u03c0\u03c1\u03c9\u03b8\u03b1\u03c8';
+        ov.appendChild(thanks);
+        setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
+      }, 7000);
+    });
+    ov.addEventListener('click',()=>{
+      stopAllBgmGlobal();
+      s.qEndingSeen=true;
+      s.runStatus='停止中';
+      s.wallsThisRun=[];
+      s.wallActive=null;
+      s.qWallActive=null;
+      save();
+      fadeOut(1000, ()=>{
+        ov.remove();
+        _seGameStarted=false;
+        stopAllBgmGlobal();
+        fadeIn(1200);
+        setTimeout(()=>{ location.reload(); }, 1200);
       });
     });
   });
