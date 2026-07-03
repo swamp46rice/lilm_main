@@ -2376,10 +2376,12 @@ function grantQSign(key){
   if(!s.qSigns) s.qSigns={};
   if(s.qSigns[key]) return;
   s.qSigns[key]=true;
-  const msg=tf('MSG_Q_SIGN_T',{sign:Q_SIGN_CHAR[key]});
-  log(msg, 'event');
+  const popupMsg=tf('MSG_Q_SIGN_T',{sign:Q_SIGN_CHAR[key]});
+  // πのみ、ログには専用の詳細テキストを表示する(ポップアップは他サインと同じ共通文言のまま)
+  const logMsg = (key==='pi') ? t('MSG_Q_SIGN_PI_T') : popupMsg;
+  log(logMsg, 'event');
   if(typeof sfxRenormSuccess==='function') sfxRenormSuccess(); // sfx_04.wav
-  if(typeof showItemPopup==='function') showItemPopup('sign', msg);
+  if(typeof showItemPopup==='function') showItemPopup('sign', popupMsg);
   save();
 }
 
