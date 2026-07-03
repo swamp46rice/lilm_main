@@ -738,12 +738,16 @@ function tickObstacles(){
     if(ao.remain<=0){
       const o=OBSTACLES.find(x=>x.key===ao.key);
       if(!o){ s.activeObstacles.splice(i,1); continue; }
-      texts.push({type:'defeat', text:t(o.defeat), obstacle:o});
-      const spd=speechFor('obstacle_defeat'); if(spd) showSpeech(t(spd));
-      // 隠し要素: Mondayクリア時、3%の確率でψのサインを入手
+      // 隠し要素: Mondayクリア時、まだψを所持していなければ3%の確率で入手。
+      // 入手した回だけ、通常の撃破テキストの代わりに専用テキストを表示する。
+      let psiGranted=false;
       if(ao.key==='monday' && !s.qSigns.psi && Math.random()<0.03){
         grantQSign('psi');
+        psiGranted=true;
       }
+      const defeatText = psiGranted ? t('MONDAY_PSI_DEFEAT') : t(o.defeat);
+      texts.push({type:'defeat', text:defeatText, obstacle:o});
+      const spd=speechFor('obstacle_defeat'); if(spd) showSpeech(t(spd));
       s.activeObstacles.splice(i,1);
       obstacleDrop(statsForDrop);
     }
