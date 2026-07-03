@@ -1357,9 +1357,11 @@ function charaJoyClick(){
   }
   // 隠し要素: 現在のペルソナに対応するサインを3%の確率で入手(Alpha=α, Lumina=ρ, Omega=ω)
   const Q_SIGN_BY_ATTR={lumina:'rho', dark:'omega', alpha:'alpha'};
+  const Q_SIGN_SPEECH={alpha:'SPEECH_SIGN_ALPHA', rho:'SPEECH_SIGN_LUMINA', omega:'SPEECH_SIGN_OMEGA'};
   const signKey=Q_SIGN_BY_ATTR[attr];
   if(signKey && !s.qSigns[signKey] && Math.random()<0.03){
     grantQSign(signKey);
+    showSpeech(t(Q_SIGN_SPEECH[signKey])); // サイン発見時は専用セリフで上書き表示
   }
   render(); save();
 }
