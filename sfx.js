@@ -231,6 +231,9 @@ function sfxWallAppear(){
   _wallLoopAudio = audio;
 }
 function sfxWallStop(){
+  // 通常壁・Q壁のどちらかがまだ出現中なら、ループSEは止めない
+  // (両壁が同じループ音源を共有しているため。各呼び出し元は状態をクリアしてから本関数を呼ぶ)
+  if(typeof s!=='undefined' && s && (s.wallActive || s.qWallActive)) return;
   if(!_wallLoopAudio) return;
   _wallLoopAudio.pause();
   _wallLoopAudio.currentTime = 0;

@@ -12,8 +12,8 @@
   <!-- 完全初期化確認ポップアップ -->
   <div id="resetConfirmOverlay" style="display:none;position:absolute;top:0;left:0;width:860px;height:660px;background:rgba(2,6,18,0.82);z-index:230;border-radius:10px;align-items:center;justify-content:center;">
     <div style="background:rgba(8,14,32,0.97);border:1px solid #553;border-radius:10px;padding:40px 48px;text-align:center;max-width:480px;">
-      <div id="resetConfirmTitle" style="font-family:var(--font-display);font-size:13px;letter-spacing:.25em;color:#e8c870;margin-bottom:24px;">完全初期化</div>
-      <div id="resetConfirmMsg" style="font-family:var(--font-mono);font-size:12px;line-height:1.9;color:#c8d8e8;margin-bottom:32px;">すべてのデータが完全に削除され、購入時と同じ状態になります。よろしいですか？</div>
+      <div id="resetConfirmTitle" style="font-family:var(--font-display);font-size:13px;letter-spacing:.25em;color:#e8c870;margin-bottom:24px;">はじめから</div>
+      <div id="resetConfirmMsg" style="font-family:var(--font-mono);font-size:12px;line-height:1.9;color:#c8d8e8;margin-bottom:32px;">観測点を初期化して、はじめからやり直します。AI形態コレクションを含むゲームデータは初期化されますが、言語や音量などの設定は引き継がれます。よろしいですか？</div>
       <div style="display:flex;gap:20px;justify-content:center;">
         <button id="resetConfirmNO" style="font-family:var(--font-display);font-size:13px;letter-spacing:.12em;padding:10px 32px;background:transparent;border:1px solid var(--line);border-radius:6px;color:#c8d8e8;cursor:pointer;transition:.2s;min-width:90px;">NO</button>
         <button id="resetConfirmYES" style="font-family:var(--font-display);font-size:13px;letter-spacing:.12em;padding:10px 32px;background:rgba(180,40,40,0.3);border:1px solid #884;border-radius:6px;color:#e8c870;cursor:pointer;transition:.2s;min-width:90px;">YES</button>
@@ -86,7 +86,7 @@
     <img id="titlePressStart" src="" alt="PRESS START">
     <img id="titleSettingsBtn" src="" alt="SETTINGS">
     <img id="titleCopyright" src="" alt="copyright">
-    <div id="titleVersion">Ver.β 0.6</div>
+    <div id="titleVersion">Ver.β 0.7</div>
   </div>
 
   <!-- セッティング画面オーバーレイ -->
@@ -196,7 +196,7 @@
         <p><span class="credit-label">AI Assistance</span><br>Claude (Anthropic) / ChatGPT / Gemini</p>
         <p><span class="credit-label">BGM</span><br>SUNO</p>
         <p><span class="credit-label">Font</span><br>JetBrains Mono / Noto Serif JP / Zen Kaku Gothic New (Google Fonts)</p>
-        <p class="credit-note">LiLM / information_breather β 0.6<br>© 2026 KOMMEPY / SWAMP. All rights reserved.</p>
+        <p class="credit-note">LiLM / information_breather β 0.7<br>© 2026 KOMMEPY / SWAMP. All rights reserved.</p>
       </div>
       <button class="settings-close-btn" onclick="sfxButton();hideCreditWindow()">CLOSE</button>
     </div>

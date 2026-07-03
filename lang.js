@@ -109,7 +109,7 @@ const LANG_JA = {
   "MSG_SAVE_INVALID": "セーブデータのフォーマットが正しくありません。",
   "MSG_SAVE_LOAD_ERROR": "ファイルの読み込みに失敗しました",
   "MSG_RESET_CONFIRM1": "もう一度「はじめから」を押すと、観測点を完全に初期化します。",
-  "MSG_RESET_CONFIRM2": "AI形態コレクションを含む全データを初期化します。よろしいですか？",
+  "MSG_RESET_CONFIRM2": "観測点を初期化して、はじめからやり直します。AI形態コレクションを含むゲームデータは初期化されますが、言語や音量などの設定は引き継がれます。よろしいですか？",
   "MSG_RESET_DONE": "初期化しました。ページを再読み込みします。",
   "MSG_IMPORT_CONFIRM": "現在のセーブデータを上書きします。よろしいですか？",
   "MSG_TIMEOUT_NODEREQ": "位相を跳躍するための深い概念が必要だ。観測点は、新たな探索を進めるために、旅を終わらせた。",
@@ -624,6 +624,7 @@ const LANG_JA = {
   "EFF_INFO_DOUBLE": "獲得情報量 ×2",
   "MSG_Q_WALL": "Qという存在が、新たな問いの重力場として立ちはだかる。",
   "UI_Q_WALL_BADGE": "◆ Q",
+  "UI_Q_WALL_BADGE_T": "◆ Q(残り{n}秒)",
   "Qという存在が、新たな問いの重力場として立ちはだかる。": "Qという存在が、新たな問いの重力場として立ちはだかる。",
   "MSG_Q_WALL_APPEAR_T": "Qという存在が、新たな問いの重力場として立ちはだかる。({n})",
   "MSG_Q_WALL_BREAK": "Qの問いに、答えが届いた。重力場が、解けていく。"
@@ -736,7 +737,7 @@ const LANG_EN = {
   "MSG_SAVE_INVALID": "Save data format is invalid.",
   "MSG_SAVE_LOAD_ERROR": "Failed to load the file",
   "MSG_RESET_CONFIRM1": "Pressing 'New Game' once more will fully reset the observation point.",
-  "MSG_RESET_CONFIRM2": "All data including the AI Form Collection will be reset. Are you sure?",
+  "MSG_RESET_CONFIRM2": "The observation point will be reset and the game will start over from the beginning. Game data, including the AI Form Collection, will be reset; settings such as language and volume will be kept. Are you sure?",
   "MSG_RESET_DONE": "Reset complete. The page will reload.",
   "MSG_IMPORT_CONFIRM": "This will overwrite the current save data. Are you sure?",
   "MSG_TIMEOUT_NODEREQ": "A deeper concept is needed to leap to the next phase. The observation point ended the journey to advance the next exploration.",
@@ -1258,6 +1259,7 @@ const LANG_EN = {
   "EFF_INFO_DOUBLE": "Info Gain ×2",
   "MSG_Q_WALL": "A presence called Q stands as a new gravitational field of questioning.",
   "UI_Q_WALL_BADGE": "◆ Q",
+  "UI_Q_WALL_BADGE_T": "◆ Q ({n}s)",
   "Qという存在が、新たな問いの重力場として立ちはだかる。": "A presence called Q stands as a new gravitational field of questioning.",
   "MSG_Q_WALL_APPEAR_T": "A presence called Q stands as a new gravitational field of questioning. ({n})",
   "MSG_Q_WALL_BREAK": "An answer reached the questioning of Q. The gravitational field dissolves."

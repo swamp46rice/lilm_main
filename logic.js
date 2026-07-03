@@ -966,6 +966,7 @@ function handleFailure(type){
   checkAllTierCompleteAchievements();
   s.wallsThisRun=[];
   s.wallActive=null;
+  s.qWallActive=null;
   sfxWallStop();
   const runInfoThisRun=s.runInfo;
   const resultLogs=[];
@@ -1014,6 +1015,7 @@ function renormalize(){
   checkAllTierCompleteAchievements();
   s.wallsThisRun=[];
   s.wallActive=null;
+  s.qWallActive=null;
   sfxWallStop();
 
   const resultLogs=[];
@@ -1074,8 +1076,8 @@ function coreTick(silent){
   const newly=tickDiscovery(_stats,_obs);
   checkTierXUnlock();
   checkHighInfoDrop();
+  tickQWall();  // 先に判定してから出現チェック(出現したtickでは判定しない=通常壁と同じ挙動)
   checkQWall();
-  tickQWall();
   tickGauge(_stats,_obs);
   const integrityCrit=tickIntegrity(_stats);
   const leveled=tickLevel();
@@ -1369,19 +1371,40 @@ function applySwapPenalty(){
   s.integrity=clamp01(s.integrity-penalty);
   return tf('MSG_INTEGRITY_LOSS_T',{n:(before-s.integrity).toFixed(1)});
 }
-let resetArmed=false;
+/* ===== はじめから(ニューゲーム) =====
+ * 完全初期化(設定画面)とは異なる機能:
+ *   ・ゲーム進行データ(レベル・ノード・インベントリ・AI形態コレクション等)は初期化する
+ *   ・設定(言語・音量・テキスト速度・壁紙・選択曲)は引き継ぐ
+ *   ・オープニング/エンディングの既読フラグ(localStorage)は削除しない
+ * 完全初期化は上記すべてを消去し「購入時と同じ状態」に戻す。 */
 function resetAll(){
-  if(!resetArmed){
-    resetArmed=true;
-    log(t('MSG_RESET_CONFIRM1'));
-    setTimeout(()=>{resetArmed=false;},5000);
-    return;
-  }
+  const ov=document.getElementById('resetConfirmOverlay');
+  if(!ov){ doNewGameReset(); return; }
+  const title=document.getElementById('resetConfirmTitle');
+  const msg=document.getElementById('resetConfirmMsg');
+  if(title) title.textContent=t('BTN_RESET');
+  if(msg) msg.textContent=t('MSG_RESET_CONFIRM2');
+  ov.style.display='flex';
+  const yes=document.getElementById('resetConfirmYES');
+  const no=document.getElementById('resetConfirmNO');
+  if(no) no.onclick=()=>{ if(typeof sfxButton==='function') sfxButton(); ov.style.display='none'; };
+  if(yes) yes.onclick=()=>{ if(typeof sfxButton==='function') sfxButton(); ov.style.display='none'; doNewGameReset(); };
+}
+function doNewGameReset(){
   if(typeof _tickInterval!=='undefined'&&_tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-  localStorage.removeItem('ib_v9_opening_done');
-  localStorage.removeItem('ib_v9_ending_seen');
-  localStorage.removeItem('ib_v9_true_ending_seen');
-  localStorage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
+  const d=makeDefaultSave();
+  // 設定項目を引き継ぐ
+  d.lang=s.lang;
+  d.bgmVolume=s.bgmVolume;
+  d.seVolume=s.seVolume;
+  d.textSpeed=s.textSpeed;
+  d.bgIndex=s.bgIndex;
+  d.endingSeen=s.endingSeen;
+  // 選択中の曲は、初期解放曲(unlockKeyなし)の場合のみ引き継ぐ(解放曲リストは初期化されるため)
+  const trackOk=(typeof TRACKS!=='undefined' && TRACKS[s.currentTrackIdx] && !TRACKS[s.currentTrackIdx].unlockKey);
+  d.currentTrackIdx=trackOk?s.currentTrackIdx:0;
+  localStorage.setItem('ib_v9', JSON.stringify(d));
+  // 注: ib_v9_opening_done / ib_v9_ending_seen / ib_v9_true_ending_seen は削除しない(完全初期化との差分)
   location.reload();
 }
 
@@ -2657,7 +2680,8 @@ Obstacles disappear naturally after a set duration.</p>
 <p>Progress is saved automatically to this browser (using "localStorage").<br>
 Data is not shared between different browsers or devices.<br>
 Clearing browser data (cookies, site data, etc.) may also delete this save. In private/incognito mode, data is lost when the window is closed.<br>
-Use the <span class="key">New Game</span> button to reset (confirmation required).</p>
+Use the <span class="key">New Game</span> button to start over (confirmation required). Game progress — including the AI Form Collection — is reset, but settings such as language and volume, and the opening/ending viewed status, are kept.<br>
+To erase everything and return the game to its just-purchased state, use <span class="key">Full Reset</span> in SETTINGS.</p>
 
 <h3>📤 Export Log</h3>
 <p>Pressing <span class="key">Export Log</span> performs two actions simultaneously.<br>
@@ -2701,7 +2725,8 @@ This file can be used to transfer progress to another device or browser. Select 
 <p>進行は自動でこのブラウザに保存されます(ブラウザの「ローカルストレージ」という仕組みを使用)。<br>
 別のブラウザや別の端末では引き継がれません。<br>
 ブラウザの設定で「Cookieとサイトデータ」「閲覧履歴データ」などをまとめて削除すると、このデータも一緒に消えることがあります。シークレットモード(プライベートウィンドウ)で開いた場合は、ウィンドウを閉じると消えます。<br>
-<span class="key">はじめから</span>ボタンで初期化できます(確認あり)。</p>
+<span class="key">はじめから</span>ボタンで最初からやり直せます(確認あり)。AI形態コレクションを含むゲームの進行は初期化されますが、言語や音量などの設定と、オープニング/エンディングの視聴状態は引き継がれます。<br>
+すべてを消去して購入時と同じ状態に戻したい場合は、SETTINGSの<span class="key">完全初期化</span>を使用してください。</p>
 
 <h3>📤 観測記録を書き出す</h3>
 <p>画面下の<span class="key">観測記録を書き出す</span>ボタンを押すと、2つの処理が同時に行われます。<br>
