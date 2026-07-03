@@ -753,12 +753,14 @@ function tickObstacles(){
     }
   }
   const hasAlphaOrLumina=s.committed.includes('alpha')||s.committed.includes('lumina');
+  const hasOmega=s.committed.includes('dark'); // Omega: Monday発生率を3倍にする
   OBSTACLES.forEach(o=>{
     if(s.activeObstacles.some(a=>a.key===o.key)) return;
-    // Monday障害: alpha/lumina設定時のみ、低確率でスポーン
+    // Monday障害: alpha/lumina/Omega設定時のみ、低確率でスポーン(Omega装備時は発生率3倍)
     if(o.key==='monday'){
-      if(!hasAlphaOrLumina) return;
-      if(Math.random()<0.006){
+      if(!hasAlphaOrLumina && !hasOmega) return;
+      const mondayRate=0.006*(hasOmega?3:1);
+      if(Math.random()<mondayRate){
         const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
         s.activeObstacles.push({key:o.key, remain:dur});
         const msg=MONDAY_MESSAGES[Math.floor(Math.random()*MONDAY_MESSAGES.length)];

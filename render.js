@@ -826,6 +826,8 @@ function effText(n){
   if(n.intBuff) parts.push(t('LABEL_INTEGRITY')+' +'+n.intBuff);
   // 零と無限の連環: 獲得情報量×2表記
   if(n===NODES['tx_zero_infinity']) parts.push(t('EFF_INFO_DOUBLE'));
+  // Omega: Monday発生率×3表記
+  if(n===NODES['dark']) parts.push(t('EFF_MONDAY_TRIPLE'));
   return parts.join(' / ');
 }
 function dirText(n){
