@@ -2376,7 +2376,7 @@ function grantQSign(key){
   s.qSigns[key]=true;
   const msg=tf('MSG_Q_SIGN_T',{sign:Q_SIGN_CHAR[key]});
   log(msg, 'event');
-  sfxDiscover();
+  if(typeof sfxRenormSuccess==='function') sfxRenormSuccess(); // sfx_04.wav
   if(typeof showItemPopup==='function') showItemPopup('sign', msg);
   save();
 }
@@ -2568,6 +2568,7 @@ function initTitleScreen(){
   setImg('titleCopyright',  typeof COPYRIGHT_IMG   !=='undefined'?COPYRIGHT_IMG:'');
   setImg('titleSettingsBtn',typeof SETTINGS_IMG    !=='undefined'?SETTINGS_IMG:'');
   setImg('titleChara', s.endingSeen ? ALPHA_IMAGES[7] : TIRE_IMAGES[4]);
+  if(typeof buildQSigns==='function') buildQSigns();
   setImg('makerLogoImg',    typeof SWAMP_LOGO_IMG  !=='undefined'?SWAMP_LOGO_IMG:'');
   setImg('iconData',        typeof ICON_DATA   !=='undefined'?ICON_DATA:'');
   setImg('iconAi',          typeof ICON_AI     !=='undefined'?ICON_AI:'');
