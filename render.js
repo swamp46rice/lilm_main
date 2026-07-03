@@ -1193,7 +1193,9 @@ function _renderItemPopup(type, name, onDone){
 }
 
 function showItemPopup(type, name){
-  if(!_seGameStarted) return;
+  // 隠しサイン(sign)は、ゲーム未開始状態(タイトル直後のクレジット画面など)でも
+  // ユーザーの明示的なクリックで取得しうるため、_seGameStartedのガードを適用しない
+  if(!_seGameStarted && type!=='sign') return;
   if(type==='node'){
     // 拡張データは即時表示（キューなし）
     _renderItemPopup(type, name, null);
