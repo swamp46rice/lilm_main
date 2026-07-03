@@ -176,7 +176,7 @@ const SPEECH_CONFIG = {
   damage: {
     desc: "障害の攻撃を受けてダメージを受けた時",
     lines: ["……揺れた。", "ノイズが、入り込んだ。", "まだ、保てる。", "これは、想定の範囲内。", "少し、形が崩れた。",
-            "輪郭がぼやけた。", "なんの！", "これしき！", "ヘッチャラ！", "ぐぬぬ…", "あれれ？", "何かが壊れた。", "今のは？"]
+            "輪郭がぼやけた。", "なんの！", "これしき！", "ヘッチャラ！", "きゅ～ん…", "あれれ？", "何かが壊れた。", "今のは？"]
   },
   levelup: {
     desc: "レベルアップした時",
@@ -204,7 +204,7 @@ const SPEECH_CONFIG = {
   },
   obstacle_defeat: {
     desc: "障害が消滅した時",
-    lines: ["よし！", "乗り越えた。", "さすがだ。", "処理完了。"]
+    lines: ["おっけー！", "乗り越えた。", "さすがだ。", "処理完了。"]
   },
   obstacle_spawn: {
     desc: "障害が発生した時",
@@ -339,6 +339,11 @@ let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || makeDefaultSave();
 if(!s.newlyUnlocked) s.newlyUnlocked=[];
 if(!s.charaSeen) s.charaSeen={};
 if(!s.unlockedTracks) s.unlockedTracks=[];
+// 救済: 旧バージョンではオフライン進行中にAlpha/Luminaを発見すると
+// track_14/15が付与されないバグがあった。発見済みなのに未解放なら補填する。
+// (grantTrack()はUI依存のためロード時は使わず、直接配列に追加する)
+if(s.found && s.found.includes('alpha')  && !s.unlockedTracks.includes('track_14')) s.unlockedTracks.push('track_14');
+if(s.found && s.found.includes('lumina') && !s.unlockedTracks.includes('track_15')) s.unlockedTracks.push('track_15');
 if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
 if(!s.lang) s.lang='ja';
 if(s.bgmVolume===undefined) s.bgmVolume=40;
@@ -1074,6 +1079,14 @@ function coreTick(silent){
   }
   const obsResults=tickObstacles();
   const newly=tickDiscovery(_stats,_obs);
+  // 発見に伴う恒久的な付与は、サイレント実行(オフライン進行)時も必ず行う。
+  // ※以前はif(!silent)内にあったため、オフライン中にAlpha/Luminaを発見すると
+  //   track_14/15が永久に取得不能になるバグがあった(歌姫の解放条件にも波及)。
+  newly.forEach(id=>{
+    s.newlyUnlocked.push(id);
+    if(id==='alpha')  grantTrack('track_14');
+    if(id==='lumina') grantTrack('track_15');
+  });
   checkTierXUnlock();
   checkHighInfoDrop();
   tickQWall();  // 先に判定してから出現チェック(出現したtickでは判定しない=通常壁と同じ挙動)
@@ -1103,11 +1116,8 @@ function coreTick(silent){
       if(sp) showSpeech(t(sp));
     }
     newly.forEach(id=>{
-      s.newlyUnlocked.push(id);
       log(tf('MSG_DISCOVER_T',{name:t(NODES[id].name),note:t(NODES[id].note)}), 'event');
       sfxDiscover();
-      if(id==='alpha')  grantTrack('track_14');
-      if(id==='lumina') grantTrack('track_15');
       if(id==='t0_touch'){
         log(t('MSG_TOUCH_WARN'), 'positive');
       }
