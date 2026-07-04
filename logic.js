@@ -2390,8 +2390,9 @@ function tickQWall(silent){
   const prob=Math.min(0.5, 0.05 + s.integrity/200);
   if(Math.random()<prob){
     // 隠し要素: 6つのサインがすべて揃った状態でQ壁を突破すると、
-    // 通常の突破処理の代わりにQエンディングへ(遭遇ではなく突破がトリガー)
-    if(allQSignsCollected() && !s._endingPending){
+    // 通常の突破処理の代わりにQエンディングへ(遭遇ではなく突破がトリガー)。
+    // ただし一度見た後は再発生しない(以降は通常の突破処理になる)。
+    if(allQSignsCollected() && !s._endingPending && !s.qEndingSeen){
       s.qWallActive=null;
       sfxWallStop();
       s._endingPending=true;
@@ -3019,6 +3020,7 @@ function applyUILang(){
   }
   set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
   set('settingsOpeningBtn', t('SETTINGS_OPENING_BTN'));
+  set('settingsQEndingBtn', t('SETTINGS_QEND_BTN'));
   // 設定セクションラベル
   set('settingsLabelVolume',   t('SETTINGS_VOLUME'));
   set('settingsLabelSpeed',    t('SETTINGS_TEXT_SPEED'));
@@ -3095,6 +3097,8 @@ function toggleLang(){
 function showSettings(){
   const ov=document.getElementById('settingsOverlay');
   if(ov) ov.style.display='flex';
+  const qRow=document.getElementById('settingsQEndingRow');
+  if(qRow) qRow.style.display=s.qEndingSeen?'block':'none';
 }
 function hideSettings(){
   const ov=document.getElementById('settingsOverlay');
@@ -3174,6 +3178,12 @@ function initSettings(){
     switchBgmTrack(s.currentTrackIdx||0);
     applyUILang(); render();
   }); });
+  const qEndingBtn=document.getElementById('settingsQEndingBtn');
+  if(qEndingBtn) qEndingBtn.addEventListener('click',()=>{
+    sfxButton();
+    hideSettings();
+    playQEnding();
+  });
   const resetBtn=document.getElementById('settingsResetLabel');
   if(resetBtn) resetBtn.addEventListener('click',()=>{
     sfxButton();
