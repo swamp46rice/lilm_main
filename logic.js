@@ -3509,7 +3509,7 @@ function playQEnding(){
     waitAll.then(()=>{
       requestAnimationFrame(()=>{
         const totalHeight=scroller.scrollHeight+660;
-        scroller.style.transition='top 200s linear';
+        scroller.style.transition='top 400s linear';
         scroller.style.top='-'+totalHeight+'px';
       });
     });
