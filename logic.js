@@ -3489,7 +3489,7 @@ function playQEnding(){
     ov.appendChild(scroller);
     setTimeout(()=>{
       const totalHeight=scroller.scrollHeight+660;
-      scroller.style.transition='top 100s linear';
+      scroller.style.transition='top 200s linear';
       scroller.style.top='-'+totalHeight+'px';
     }, 50);
     // 全キャラクターがスクロールして画面外に消えた(=スクロール完了)ら、中央に最終メッセージを表示してスクロールを止める
@@ -3501,7 +3501,7 @@ function playQEnding(){
       ov.appendChild(finalBand);
       const finalText=document.createElement('div');
       finalText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:17px;letter-spacing:.1em;color:#f0a840;text-align:center;opacity:0;transition:opacity 2s ease;white-space:nowrap;text-shadow:0 0 20px #f0a84088;';
-      finalText.textContent='YOU\u3000\u3000OBSERVER\u3000LEVEL∞\u3000観測者\u3000LEVEL∞\u3000\u3000\u3000';
+      finalText.textContent='YOU\u3000\u3000OBSERVER LEVEL ∞\u3000\u3000観測者\u3000LEVEL ∞';
       ov.appendChild(finalText);
       setTimeout(()=>{ finalText.style.opacity='1'; finalBand.style.opacity='1'; }, 50);
     });
