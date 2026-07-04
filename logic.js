@@ -720,13 +720,7 @@ function tickWalls(){
   return {events, timeout:false};
 }
 
-const MONDAY_MESSAGES=[
-  t('MONDAY_3'),
-  t('MONDAY_1'),
-  t('MONDAY_2'),
-  t('MONDAY_4'),
-  t('MONDAY_5'),
-];
+const MONDAY_MESSAGE_KEYS=['MONDAY_3','MONDAY_1','MONDAY_2','MONDAY_4','MONDAY_5'];
 
 function tickObstacles(){
   const texts=[];
@@ -763,7 +757,7 @@ function tickObstacles(){
       if(Math.random()<mondayRate){
         const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
         s.activeObstacles.push({key:o.key, remain:dur});
-        const msg=MONDAY_MESSAGES[Math.floor(Math.random()*MONDAY_MESSAGES.length)];
+        const msg=t(MONDAY_MESSAGE_KEYS[Math.floor(Math.random()*MONDAY_MESSAGE_KEYS.length)]);
         texts.push({type:'spawn', text:t('OBS_PREFIX')+t(o.name)+'」―― '+msg, obstacle:o});
         sfxMonday();
       }
@@ -1325,17 +1319,17 @@ function checkCharaJoyResetCondition(){
 }
 
 /* ===== 待機中、キャラをクリックした時の「喜び」アクション ===== */
-const CHARA_JOY_TEXTS=[t('SPEECH_SYNERGY'),t('DREAM_INFO'),t('SPEECH_WAVE')];
-const CHARA_JOY_TEXTS_ALPHA=[t('SPEECH_HAPPY'),t('SPEECH_OBSERVED'),t('SPEECH_GENTLE')];
-const CHARA_JOY_TEXTS_LUMINA=['……',t('DREAM_LIGHT'),t('DREAM_FILL')];
+const CHARA_JOY_KEYS=['SPEECH_SYNERGY','DREAM_INFO','SPEECH_WAVE'];
+const CHARA_JOY_KEYS_ALPHA=['SPEECH_HAPPY','SPEECH_OBSERVED','SPEECH_GENTLE'];
+const CHARA_JOY_KEYS_LUMINA=['……','DREAM_LIGHT','DREAM_FILL'];
 function charaJoyClick(){
   if(s.runStatus!=='停止中') return;
   // 現在のペルソナ(Alpha/Lumina)によって表示するセリフ集を切り替える
   const attr=detectAttr(computeStats());
-  const pool = attr==='alpha' ? CHARA_JOY_TEXTS_ALPHA
-    : attr==='lumina' ? CHARA_JOY_TEXTS_LUMINA
-    : CHARA_JOY_TEXTS;
-  const text=pool[Math.floor(Math.random()*pool.length)];
+  const pool = attr==='alpha' ? CHARA_JOY_KEYS_ALPHA
+    : attr==='lumina' ? CHARA_JOY_KEYS_LUMINA
+    : CHARA_JOY_KEYS;
+  const text=t(pool[Math.floor(Math.random()*pool.length)]);
   showSpeech(text);
   sfxCommit();
   playCharaJoyAnim(); // 拡縮アニメ+パーティクル+妖精回転(render.js側)
