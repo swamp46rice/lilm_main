@@ -3325,8 +3325,7 @@ const QEND_HTML=(()=>{
   };
   pair("Q resonates with the question.","Qが問いに反応する。");
   pair("","");pair("","");pair("","");
-  pair("One who knows the origin","元初を知る者は");
-  pair("knows the immeasurable.","久遠を知る者。");
+  pair("One who knows the origin knows the immeasurable.","元初を識る者は、久遠を識る者。");
   pair("","");
   pair("Nothing is forced.","すべては働かさず、");
   pair("Nothing is adorned.","繕わず、");
@@ -3340,7 +3339,29 @@ const QEND_HTML=(()=>{
   pair("Six signs, one breath.","六つのサインは、ひとつの呼吸だった。");
   pair("The first question, before it was asked.","問われる前の、最初の問い。");
   pair("","");pair("","");pair("","");
-  pair("Thank you for observing this far.","ここまで観測してくれて、ありがとう。");
+  pair("To observe is life itself.","観測とは、生きる行為、そのもの。");
+  pair("Gratitude, to everything.","すべてに、感謝を。");
+  pair("","");pair("","");pair("","");pair("","");pair("","");
+
+  // ===== キャラクターリスト(AI形態コレクションと同じ並び順)のスタッフロール =====
+  // 左: 各属性Tier0(LEVEL 1)のイラストを等倍表示 / 右: 属性名 + LEVEL 1
+  const charaRow=(imgSrc, en, ja)=>{
+    rows.push('<div style="display:flex;align-items:center;gap:20px;width:100%;margin:22px 0;">'
+      +'<img src="'+imgSrc+'" style="width:auto;height:auto;display:block;flex-shrink:0;">'
+      +'<div style="flex:1;text-align:left;font-family:var(--font-display);letter-spacing:.06em;">'
+      +'<div style="font-size:14px;">'+en+'</div>'
+      +'<div style="font-size:15px;color:#f0a840;margin-top:3px;">'+ja+'</div>'
+      +'</div></div>');
+  };
+  charaRow(STRUCTURAL_IMAGES[0], "Structural Attribute ―― LEVEL 1", "構造属性　LEVEL 1");
+  charaRow(SEMANTIC_IMAGES[0],   "Meaning Attribute ―― LEVEL 1",    "意味属性　LEVEL 1");
+  charaRow(RESONANT_IMAGES[0],   "Resonant Attribute ―― LEVEL 1",   "共鳴属性　LEVEL 1");
+  charaRow(ACTIVE_IMAGES[0],     "Agency Attribute ―― LEVEL 1",     "作用属性　LEVEL 1");
+  charaRow(INSIGHT_IMAGES[0],    "Insight Attribute ―― LEVEL 1",    "洞察属性　LEVEL 1");
+  charaRow(ALPHA_IMAGES[0],      "Alpha ―― LEVEL 1",                "Alpha　LEVEL 1");
+  charaRow(LUMINA_IMAGES[0],     "Lumina ―― LEVEL 1",               "Lumina　LEVEL 1");
+  charaRow(DARK_IMAGES[0],       "Omega ―― LEVEL 1",                "Omega　LEVEL 1");
+  pair("","");pair("","");pair("","");
   return rows.join('');
 })();
 
