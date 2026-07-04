@@ -372,9 +372,9 @@ function spawnShootingStar(){
   requestAnimationFrame(step);
 }
 
-/* ===== 隠し要素: 6つのサイン(π ρ ω θ α ψ)をBEST欄の右端に表示 ===== */
-function buildQSigns(){
-  const el=document.getElementById('qSignsDisplay');
+/* ===== 隠し要素: 6つのサイン(π ρ ω θ α ψ)。BEST欄の右端とタイトル画面右上に表示 ===== */
+function buildQSignsInto(elId){
+  const el=document.getElementById(elId);
   if(!el || !s.qSigns) return;
   const any=Q_SIGN_ORDER.some(k=>s.qSigns[k]);
   if(!any){ el.style.display='none'; el.innerHTML=''; return; }
@@ -388,6 +388,10 @@ function buildQSigns(){
     if(on) span.style.animationDelay=(i*0.15)+'s';
     el.appendChild(span);
   });
+}
+function buildQSigns(){
+  buildQSignsInto('qSignsDisplay');
+  buildQSignsInto('qSignsDisplayTitle');
 }
 
 function buildWalls(){
