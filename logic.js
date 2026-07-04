@@ -3471,6 +3471,14 @@ function playQEnding(){
     _endingBgm.volume=0.7;
     _endingBgm.loop=false;
     setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
+    // track_20が終わったら、そのままtrack_16へ引き継いでループ再生する
+    _endingBgm.addEventListener('ended', function onQBgmEnded(){
+      _endingBgm.removeEventListener('ended', onQBgmEnded);
+      _endingBgm=new Audio('bgm/track_16.mp3');
+      _endingBgm.volume=0.7;
+      _endingBgm.loop=true;
+      _endingBgm.play().catch(()=>{});
+    });
     setTimeout(()=>{
       const titleBand=document.createElement('div');
       titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
@@ -3487,11 +3495,24 @@ function playQEnding(){
     scroller.style.cssText='position:absolute;left:0;right:0;top:660px;font-family:var(--font-mono);font-size:14px;font-weight:bold;line-height:1.9;color:#e0d0f0;letter-spacing:.04em;padding:40px 20px;text-shadow:1px 1px 3px #2a1a4a,0 0 8px #2a1a4a88;';
     scroller.innerHTML=QEND_HTML;
     ov.appendChild(scroller);
-    setTimeout(()=>{
-      const totalHeight=scroller.scrollHeight+660;
-      scroller.style.transition='top 200s linear';
-      scroller.style.top='-'+totalHeight+'px';
-    }, 50);
+    // 大量の画像(73枚)を含むため、すべての読み込み(成功/失敗問わず)が完了してから
+    // scrollHeightを測ってスクロール距離を確定する。読み込み中に測ると実際より短い
+    // 距離になり、スクロールが途中で止まって見える(止まる位置が毎回バラつく原因)。
+    const imgs=Array.from(scroller.querySelectorAll('img'));
+    const waitAll=Promise.all(imgs.map(img=>{
+      if(img.complete) return Promise.resolve();
+      return new Promise(resolve=>{
+        img.addEventListener('load', resolve, {once:true});
+        img.addEventListener('error', resolve, {once:true});
+      });
+    }));
+    waitAll.then(()=>{
+      requestAnimationFrame(()=>{
+        const totalHeight=scroller.scrollHeight+660;
+        scroller.style.transition='top 200s linear';
+        scroller.style.top='-'+totalHeight+'px';
+      });
+    });
     // 全キャラクターがスクロールして画面外に消えた(=スクロール完了)ら、中央に最終メッセージを表示してスクロールを止める
     scroller.addEventListener('transitionend', function onScrollEnd(e){
       if(e.propertyName!=='top') return;
