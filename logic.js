@@ -3473,12 +3473,12 @@ function playQEnding(){
     _endingBgm.volume=0.7;
     _endingBgm.loop=false;
     setTimeout(()=>{ _endingBgm.play().catch(()=>{}); }, 6000);
-    // track_20が終わったら、そのままtrack_16へ引き継いでループ再生する
+    // track_20が終わったら、そのままtrack_16へ引き継いで再生する(ループしない)
     _endingBgm.addEventListener('ended', function onQBgmEnded(){
       _endingBgm.removeEventListener('ended', onQBgmEnded);
       _endingBgm=new Audio('bgm/track_16.mp3');
       _endingBgm.volume=0.7;
-      _endingBgm.loop=true;
+      _endingBgm.loop=false;
       _endingBgm.play().catch(()=>{});
     });
     setTimeout(()=>{
