@@ -359,6 +359,10 @@ if(s.integrityStreakCount===undefined) s.integrityStreakCount=0;
 if(!s.qSigns) s.qSigns={pi:false, rho:false, omega:false, theta:false, alpha:false, psi:false};
 ['pi','rho','omega','theta','alpha','psi'].forEach(k=>{ if(s.qSigns[k]===undefined) s.qSigns[k]=false; });
 if(s.qEndingSeen===undefined) s.qEndingSeen=false;
+// 救済: _endingPending はエンディング演出中だけ有効な一時フラグであり、本来セーブに残るべきではない。
+// キャラクリック等の別経路でsave()が呼ばれた際にtrueのまま保存され、
+// 「出発できない」状態で固まってしまう事故があったため、起動時に必ずfalseへ戻す。
+s._endingPending=false;
 if(s.integrityStreakActive===undefined) s.integrityStreakActive=false;
 if(s.qWallActive===undefined) s.qWallActive=null;
 if(s._qWallNextThreshold===undefined) s._qWallNextThreshold=500000;
@@ -1324,6 +1328,7 @@ const CHARA_JOY_KEYS_ALPHA=['SPEECH_HAPPY','SPEECH_OBSERVED','SPEECH_GENTLE'];
 const CHARA_JOY_KEYS_LUMINA=['……','DREAM_LIGHT','DREAM_FILL'];
 function charaJoyClick(){
   if(s.runStatus!=='停止中') return;
+  if(s._endingPending) return; // エンディング演出待機中はキャラクリックを受け付けない
   // 現在のペルソナ(Alpha/Lumina)によって表示するセリフ集を切り替える
   const attr=detectAttr(computeStats());
   const pool = attr==='alpha' ? CHARA_JOY_KEYS_ALPHA
