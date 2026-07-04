@@ -1100,7 +1100,7 @@ function coreTick(silent){
   });
   checkTierXUnlock();
   checkHighInfoDrop();
-  tickQWall();  // 先に判定してから出現チェック(出現したtickでは判定しない=通常壁と同じ挙動)
+  tickQWall(silent);  // 先に判定してから出現チェック(出現したtickでは判定しない=通常壁と同じ挙動)
   checkQWall();
   tickGauge(_stats,_obs);
   const integrityCrit=tickIntegrity(_stats);
@@ -1847,8 +1847,8 @@ function showResultSequence(){
       s._resultSkipRequested=false;
       render(); save();
 
-      // Alpha + 歌姫装備 + 整合率100% → 真エンド（優先）
-      if(r.success && s.committed.includes('alpha') && s.committed.includes('tx_songstress')){
+      // Alpha + 歌姫装備 + 整合率100% → 真エンド（優先。属性がAlphaの時のみ発生）
+      if(r.success && s.committed.includes('alpha') && s.committed.includes('tx_songstress') && detectAttr(computeStats())==='alpha'){
         s._endingPending=true;
         bgmFadeOut(2000, ()=>{
           setTimeout(()=>{
@@ -1856,8 +1856,8 @@ function showResultSequence(){
             setTimeout(()=>{ s._endingPending=false; playTrueEnding(); }, 3000);
           }, 3000);
         });
-      // Alpha装備 + Alpha最終形態 + 整合率100% → ノーマルエンド
-      } else if(r.success && s.committed.includes('alpha') && s.tireIdxDisplay>=7){
+      // Alpha装備 + Alpha最終形態 + 整合率100% → ノーマルエンド(属性がAlphaの時のみ発生)
+      } else if(r.success && s.committed.includes('alpha') && s.tireIdxDisplay>=7 && detectAttr(computeStats())==='alpha'){
         s._endingPending=true;
         bgmFadeOut(2000, ()=>{
           setTimeout(()=>{
@@ -2379,13 +2379,36 @@ function grantQSign(key){
   save();
 }
 
-function tickQWall(){
+function tickQWall(silent){
   if(!s.qWallActive) return;
   // 突破判定（整合率が高いほど突破しやすい）
   const prob=Math.min(0.5, 0.05 + s.integrity/200);
   if(Math.random()<prob){
-    log(t('MSG_Q_WALL_BREAK'), 'positive');
+    // 隠し要素: 6つのサインがすべて揃った状態でQ壁を突破すると、
+    // 通常の突破処理の代わりにQエンディングへ(遭遇ではなく突破がトリガー)
+    if(allQSignsCollected() && !s._endingPending){
+      s.qWallActive=null;
+      sfxWallStop();
+      s._endingPending=true;
+      if(typeof _tickInterval!=='undefined' && _tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
+      log(t('MSG_Q_ENDING_TRIGGER'), 'event');
+      render(); save();
+      setTimeout(()=>{ s._endingPending=false; playQEnding(); }, 3400);
+      return;
+    }
+    // 通常の突破処理(他の位相の壁と同じ演出: ログ・SE・セリフ・歌姫ボーナス)
+    s.lastEventText=t('MSG_Q_WALL_BREAK');
     s.qWallActive=null;
+    if(s.committed.includes('tx_songstress')){
+      s.runInfo+=500000;
+      s.totalInfo=Math.min(Number.MAX_SAFE_INTEGER, s.totalInfo+500000);
+    }
+    if(!silent){
+      log(t('MSG_Q_WALL_BREAK'), 'positive');
+      sfxWallBreak();
+      const sp=speechFor('wall_break'); if(sp) showSpeech(t(sp));
+      if(s.committed.includes('tx_songstress')) log(t('MSG_SONGSTRESS_BONUS'), 'positive');
+    }
     sfxWallStop();
     return;
   }
@@ -2413,16 +2436,6 @@ function checkQWall(){
   }
   if(s.runInfo < s._qWallNextThreshold) return;
   s._qWallNextThreshold+=500000;
-
-  // 隠し要素: 6つのサインがすべて揃った状態でQ壁に遭遇すると、通常出現の代わりにQエンディングへ
-  if(allQSignsCollected() && !s._endingPending){
-    s._endingPending=true;
-    if(typeof _tickInterval!=='undefined' && _tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-    log(t('MSG_Q_ENDING_TRIGGER'), 'event');
-    render(); save();
-    setTimeout(()=>{ s._endingPending=false; playQEnding(); }, 3400);
-    return;
-  }
 
   // Q壁出現（制限時間は通常の位相の壁と同じ式）
   const deadline=Math.round(10+10*(s.integrity/100));
