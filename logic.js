@@ -2601,6 +2601,8 @@ function initTitleScreen(){
     startTick();
     applyUILang();
     log(t('OPENING_1'));
+    log(t('OPENING_2'));
+    log(t('OPENING_3'));
     render();
   }
 
