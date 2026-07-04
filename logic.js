@@ -2996,6 +2996,7 @@ function applyUILang(){
   set('btnReset',         t('BTN_RESET'));
   set('settingsResetLabel', t('SETTINGS_RESET_BTN'));
   set('settingsImportBtn',  t('SETTINGS_IMPORT'));
+  set('settingsImportHint', t('UI_IMPORT_HINT'));
   set('labelBgSelect', t('SETTINGS_BG_LABEL'));
   const bgSel=document.getElementById('bgSelect');
   if(bgSel){
@@ -3040,6 +3041,12 @@ function applyUILang(){
   // 遊び方ガイド本文
   const mc=document.getElementById('manualContent');
   if(mc) mc.innerHTML=getManualHTML();
+  // 縮小モードボタンのtitle(現在の状態に応じて)
+  const compactBtn=document.getElementById('compactToggle');
+  if(compactBtn){
+    const isCompact=document.querySelector('.window').classList.contains('compact-mode');
+    compactBtn.title=isCompact?t('UI_COMPACT_OFF'):t('UI_COMPACT_ON');
+  }
   // 言語ボタン
   const langBtn=document.getElementById('langToggleBtn');
   if(langBtn) langBtn.textContent=(s.lang==='en')?'🌐 English':'🌐 日本語';

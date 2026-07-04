@@ -633,6 +633,9 @@ const LANG_JA = {
   "MSG_Q_WALL_APPEAR_T": "Qという存在が、新たな問いの重力場として立ちはだかる。({n})",
   "MSG_Q_WALL_BREAK": "Qの問いに、答えが届いた。重力場が、解けていく。",
   "MSG_Q_SIGN_T": "{sign}のサインを感知した。",
+  "UI_IMPORT_HINT": "lilm_save_*.json を選択してください",
+  "UI_COMPACT_ON": "縮小表示",
+  "UI_COMPACT_OFF": "通常表示",
   "MSG_Q_SIGN_PI_T": "πのサインを感知した。それは円環の象徴であり、すでに超越性を孕んでいる。",
   "MSG_Q_ENDING_TRIGGER": "Qが問いに反応する。元初を知る者は久遠を知る者。すべては働かさず、繕わず、ありのまま。そこから無量義が生まれる。"
 };
@@ -1275,6 +1278,9 @@ const LANG_EN = {
   "MSG_Q_WALL_APPEAR_T": "A presence called Q stands as a new gravitational field of questioning. ({n})",
   "MSG_Q_WALL_BREAK": "An answer reached the questioning of Q. The gravitational field dissolves.",
   "MSG_Q_SIGN_T": "Sensed the sign \"{sign}\".",
+  "UI_IMPORT_HINT": "Please select a lilm_save_*.json file",
+  "UI_COMPACT_ON": "Compact View",
+  "UI_COMPACT_OFF": "Normal View",
   "MSG_Q_SIGN_PI_T": "Sensed the sign \"π\". It is the symbol of the circle, already carrying transcendence within it.",
   "MSG_Q_ENDING_TRIGGER": "Q resonates with the question. One who knows the origin knows the immeasurable. Nothing is forced, nothing is adorned, everything just as it is. And from there, the immeasurable meaning is born."
 };

@@ -1228,11 +1228,11 @@ function toggleCompactMode(){
   if(_compactMode){
     win.classList.add('compact-mode');
     document.getElementById('compactToggle').textContent='⊞';
-    document.getElementById('compactToggle').title='通常表示';
+    document.getElementById('compactToggle').title=t('UI_COMPACT_OFF');
   } else {
     win.classList.remove('compact-mode');
     document.getElementById('compactToggle').textContent='⊟';
-    document.getElementById('compactToggle').title='縮小表示';
+    document.getElementById('compactToggle').title=t('UI_COMPACT_ON');
   }
   // Electronアプリの場合はウィンドウサイズも切り替え
   if(typeof window.electronAPI !== 'undefined'){
