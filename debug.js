@@ -90,6 +90,7 @@ function initDebugMode(){
     <button onclick="debugPlayOpening()" style="${btnStyle()}">オープニングを見る</button>
     <button onclick="debugPlayEnding()" style="${btnStyle()}">エンディングを見る</button>
     <button onclick="playTrueEnding()" style="${btnStyle()}">真エンディングを見る</button>
+    <button onclick="playQEnding()" style="${btnStyle()}">Qエンディングを見る</button>
   `;
   document.querySelector('.window').appendChild(panel);
 
