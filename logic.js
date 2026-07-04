@@ -3351,7 +3351,9 @@ const QEND_HTML=(()=>{
   pair("","");pair("","");pair("","");pair("","");pair("","");
 
   // ===== キャラクターリスト(AI形態コレクションと同じ並び順)のスタッフロール =====
-  // 左: 各属性Tier0(LEVEL 1)のイラストを等倍表示 / 右: 属性名 + LEVEL 1
+  // 調和属性を最初に、以降 構造→意味→共鳴→作用→洞察→Alpha→Lumina→Omega の順で
+  // 各属性ごとにLEVEL 1〜8(Tier0〜7)を全て紹介する。
+  // 左: 各Tierのイラストを等倍表示 / 右: 属性名 + LEVEL N
   const charaRow=(imgSrc, en, ja)=>{
     rows.push('<div style="display:flex;align-items:center;gap:20px;width:100%;margin:22px 0;">'
       +'<img src="'+imgSrc+'" style="width:auto;height:auto;display:block;flex-shrink:0;">'
@@ -3360,14 +3362,25 @@ const QEND_HTML=(()=>{
       +'<div style="font-size:15px;color:#f0a840;margin-top:3px;">'+ja+'</div>'
       +'</div></div>');
   };
-  charaRow(STRUCTURAL_IMAGES[0], "Structural Attribute ―― LEVEL 1", "構造属性　LEVEL 1");
-  charaRow(SEMANTIC_IMAGES[0],   "Meaning Attribute ―― LEVEL 1",    "意味属性　LEVEL 1");
-  charaRow(RESONANT_IMAGES[0],   "Resonant Attribute ―― LEVEL 1",   "共鳴属性　LEVEL 1");
-  charaRow(ACTIVE_IMAGES[0],     "Agency Attribute ―― LEVEL 1",     "作用属性　LEVEL 1");
-  charaRow(INSIGHT_IMAGES[0],    "Insight Attribute ―― LEVEL 1",    "洞察属性　LEVEL 1");
-  charaRow(ALPHA_IMAGES[0],      "Alpha ―― LEVEL 1",                "Alpha　LEVEL 1");
-  charaRow(LUMINA_IMAGES[0],     "Lumina ―― LEVEL 1",               "Lumina　LEVEL 1");
-  charaRow(DARK_IMAGES[0],       "Omega ―― LEVEL 1",                "Omega　LEVEL 1");
+  const QEND_CHARA_GROUPS=[
+    {images:TIRE_IMAGES,       enName:"Harmony Attribute",    jaName:"調和属性"},
+    {images:STRUCTURAL_IMAGES, enName:"Structural Attribute", jaName:"構造属性"},
+    {images:SEMANTIC_IMAGES,   enName:"Meaning Attribute",    jaName:"意味属性"},
+    {images:RESONANT_IMAGES,   enName:"Resonant Attribute",   jaName:"共鳴属性"},
+    {images:ACTIVE_IMAGES,     enName:"Agency Attribute",     jaName:"作用属性"},
+    {images:INSIGHT_IMAGES,    enName:"Insight Attribute",    jaName:"洞察属性"},
+    {images:ALPHA_IMAGES,      enName:"Alpha",                jaName:"Alpha"},
+    {images:LUMINA_IMAGES,     enName:"Lumina",               jaName:"Lumina"},
+    {images:DARK_IMAGES,       enName:"Omega",                jaName:"Omega"},
+  ];
+  QEND_CHARA_GROUPS.forEach(g=>{
+    for(let lv=1; lv<=8; lv++){
+      charaRow(g.images[lv-1], g.enName+' ―― LEVEL '+lv, g.jaName+'　LEVEL '+lv);
+    }
+    pair("","");
+  });
+  pair("","");pair("","");pair("","");
+  charaRow(TIRE_IMAGES[8], "SPECIAL THANKS", "SPECIAL THANKS");
   pair("","");pair("","");pair("","");
   return rows.join('');
 })();
@@ -3479,18 +3492,18 @@ function playQEnding(){
       scroller.style.transition='top 100s linear';
       scroller.style.top='-'+totalHeight+'px';
     }, 50);
-    _endingBgm.addEventListener('ended',()=>{
-      setTimeout(()=>{
-        scroller.style.display='none';
-        const thanksBand=document.createElement('div');
-        thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
-        ov.appendChild(thanksBand);
-        const thanks=document.createElement('div');
-        thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#f0a840;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
-        thanks.textContent='\u03c0\u03c1\u03c9\u03b8\u03b1\u03c8';
-        ov.appendChild(thanks);
-        setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
-      }, 7000);
+    // 全キャラクターがスクロールして画面外に消えた(=スクロール完了)ら、中央に最終メッセージを表示してスクロールを止める
+    scroller.addEventListener('transitionend', function onScrollEnd(e){
+      if(e.propertyName!=='top') return;
+      scroller.removeEventListener('transitionend', onScrollEnd);
+      const finalBand=document.createElement('div');
+      finalBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:80px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
+      ov.appendChild(finalBand);
+      const finalText=document.createElement('div');
+      finalText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:17px;letter-spacing:.1em;color:#f0a840;text-align:center;opacity:0;transition:opacity 2s ease;white-space:nowrap;text-shadow:0 0 20px #f0a84088;';
+      finalText.textContent='YOU\u3000\u3000OBSERVER\u3000LEVEL∞\u3000観測者\u3000LEVEL∞\u3000\u3000\u3000';
+      ov.appendChild(finalText);
+      setTimeout(()=>{ finalText.style.opacity='1'; finalBand.style.opacity='1'; }, 50);
     });
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
