@@ -223,6 +223,12 @@ body{display:flex;justify-content:center;background:#000;padding:16px;font-famil
   font-family:var(--font-mono);letter-spacing:.05em;animation:newpulse 1.6s ease-in-out infinite;}
 @keyframes newpulse{0%,100%{opacity:1;}50%{opacity:.55;}}
 @keyframes qSignWave{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+@keyframes qEndBreathe{0%,100%{filter:brightness(1) saturate(1);}50%{filter:brightness(1.35) saturate(1.15);}}
+.q-end-bg{
+  position:absolute;inset:0;border-radius:10px;
+  background:radial-gradient(ellipse at center, #3a2470 0%, #1c1438 55%, #0e0a1c 100%);
+  animation:qEndBreathe 6s ease-in-out infinite;
+}
 .q-signs{display:none;float:right;margin-left:8px;font-family:var(--font-display);letter-spacing:.1em;}
 .q-sign-char{display:inline-block;width:0.9em;text-align:center;}
 .q-sign-char.on{color:#f0a840;text-shadow:0 0 6px #f0a84099;animation:qSignWave 2.4s ease-in-out infinite;}

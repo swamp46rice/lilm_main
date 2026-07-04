@@ -3463,8 +3463,10 @@ function playQEnding(){
     if(existing) existing.remove();
     const ov=document.createElement('div');
     ov.id='qEndingOverlay';
-    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;'
-      +'background:radial-gradient(ellipse at center, #1a1030 0%, #0c0f1a 55%, #060810 100%);display:block;';
+    ov.style.cssText='position:absolute;top:0;left:0;width:860px;height:660px;z-index:260;border-radius:10px;overflow:hidden;display:block;';
+    const bgLayer=document.createElement('div');
+    bgLayer.className='q-end-bg';
+    ov.appendChild(bgLayer);
     document.querySelector('.window').appendChild(ov);
     fadeIn(1200);
     _endingBgm=new Audio('bgm/track_20.mp3');
