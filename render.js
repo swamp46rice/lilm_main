@@ -377,7 +377,15 @@ function buildQSignsInto(elId){
   const el=document.getElementById(elId);
   if(!el || !s.qSigns) return;
   const any=Q_SIGN_ORDER.some(k=>s.qSigns[k]);
-  if(!any){ el.style.display='none'; el.innerHTML=''; return; }
+  if(!any){
+    if(el.style.display!=='none'){ el.style.display='none'; el.innerHTML=''; el.dataset.sig=''; }
+    return;
+  }
+  // 収集状況が前回と同じなら再構築しない(毎tickのrender()でDOMを作り直すと
+  // CSSアニメーション(サイン波)がその都度リスタートし、滑らかに波打たなくなるため)
+  const sig=Q_SIGN_ORDER.map(k=>s.qSigns[k]?'1':'0').join('');
+  if(el.dataset.sig===sig) return;
+  el.dataset.sig=sig;
   el.style.display='inline';
   el.innerHTML='';
   Q_SIGN_ORDER.forEach((k,i)=>{

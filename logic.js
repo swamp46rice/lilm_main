@@ -3414,7 +3414,7 @@ function playQEnding(){
       titleBand.style.cssText='position:absolute;top:50%;left:0;right:0;transform:translateY(-50%);height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 1.5s ease;';
       ov.appendChild(titleBand);
       const titleText=document.createElement('div');
-      titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#e8d860;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #e8d86088;';
+      titleText.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-display);font-size:21px;letter-spacing:.18em;color:#f0a840;text-align:center;opacity:0;transition:opacity 1.5s ease;white-space:nowrap;text-shadow:0 0 20px #f0a84088;';
       titleText.textContent='\u266a \u03c0\u03c1\u03c9\u03b8\u03b1\u03c8 ―― The First Question';
       ov.appendChild(titleText);
       setTimeout(()=>{ titleText.style.opacity='1'; titleBand.style.opacity='1'; }, 50);
@@ -3437,7 +3437,7 @@ function playQEnding(){
         thanksBand.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;background:rgba(0,0,0,0.55);opacity:0;transition:opacity 2s ease;';
         ov.appendChild(thanksBand);
         const thanks=document.createElement('div');
-        thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#e8d860;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
+        thanks.style.cssText='position:absolute;bottom:80px;left:0;right:0;height:70px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:bold;color:#f0a840;letter-spacing:.15em;opacity:0;transition:opacity 2s ease;text-align:center;';
         thanks.textContent='\u03c0\u03c1\u03c9\u03b8\u03b1\u03c8';
         ov.appendChild(thanks);
         setTimeout(()=>{ thanks.style.opacity='1'; thanksBand.style.opacity='1'; }, 50);
