@@ -2389,6 +2389,7 @@ function tickQWall(silent){
   // 突破判定（整合率が高いほど突破しやすい）
   const prob=Math.min(0.5, 0.05 + s.integrity/200);
   if(Math.random()<prob){
+    _lastWallAttack='hit';
     // 隠し要素: 6つのサインがすべて揃った状態でQ壁を突破すると、
     // 通常の突破処理の代わりにQエンディングへ(遭遇ではなく突破がトリガー)。
     // ただし一度見た後は再発生しない(以降は通常の突破処理になる)。
@@ -2402,23 +2403,19 @@ function tickQWall(silent){
       setTimeout(()=>{ s._endingPending=false; playQEnding(); }, 3400);
       return;
     }
-    // 通常の突破処理(他の位相の壁と同じ演出: ログ・SE・セリフ・歌姫ボーナス)
+    // 通常の突破処理(他の位相の壁と同じ演出: ログ・SE・セリフ。歌姫の獲得情報量ボーナスはQ壁には適用しない)
     s.lastEventText=t('MSG_Q_WALL_BREAK');
     s.qWallActive=null;
-    if(s.committed.includes('tx_songstress')){
-      s.runInfo+=500000;
-      s.totalInfo=Math.min(Number.MAX_SAFE_INTEGER, s.totalInfo+500000);
-    }
     if(!silent){
       log(t('MSG_Q_WALL_BREAK'), 'positive');
       sfxWallBreak();
       const sp=speechFor('wall_break'); if(sp) showSpeech(t(sp));
-      if(s.committed.includes('tx_songstress')) log(t('MSG_SONGSTRESS_BONUS'), 'positive');
     }
     sfxWallStop();
     return;
   }
   s.qWallActive.remain--;
+  _lastWallAttack='miss'; // 他の位相の壁と同じ「突破を試みて失敗した」演出(SE・セリフ)をcoreTick側で発生させる
   if(s.qWallActive.remain<=0){
     // タイムアウト → 探索終了
     s.qWallActive=null;
