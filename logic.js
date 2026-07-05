@@ -2611,8 +2611,10 @@ function initTitleScreen(){
     startTick();
     applyUILang();
     log(t('OPENING_1'));
-    log(t('OPENING_2'));
-    log(t('OPENING_3'));
+    if(_isFirstLaunch){
+      log(t('OPENING_2'), 'positive');
+      log(t('OPENING_3'), 'positive');
+    }
     render();
   }
 
