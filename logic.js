@@ -2514,6 +2514,20 @@ function checkTierXUnlock(){
     }
   }
 
+  // 微かな重力波: Alpha + 話す + 触れる + 与える + 待つを同時装備 + 獲得情報量1000000達成
+  if(!s.found.includes('tx_gravity_wave')){
+    const hasWaveReq = s.committed.includes('alpha')
+      && s.committed.includes('t0_speak')
+      && s.committed.includes('t0_touch')
+      && s.committed.includes('t0_give')
+      && s.committed.includes('t0_wait');
+    if(hasWaveReq && s.runInfo>=1000000){
+      s.found.push('tx_gravity_wave'); s.newlyUnlocked.push('tx_gravity_wave');
+      log(tf('MSG_DISCOVER_T',{name:t(NODES['tx_gravity_wave'].name),note:t(NODES['tx_gravity_wave'].note)}), 'event');
+      sfxDiscover();
+    }
+  }
+
   // Q: Lumina + 多元宇宙論 + 重力的思念 + 意識論を同時装備 + 獲得情報量600000超
   if(!s.found.includes('tx_continuum_q')){
     const hasQReq = s.committed.includes('lumina')
