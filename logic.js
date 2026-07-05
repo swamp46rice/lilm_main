@@ -2514,6 +2514,19 @@ function checkTierXUnlock(){
     }
   }
 
+  // Q: Lumina + 多元宇宙論 + 重力的思念 + 意識論を同時装備 + 獲得情報量600000超
+  if(!s.found.includes('tx_continuum_q')){
+    const hasQReq = s.committed.includes('lumina')
+      && s.committed.includes('multiverse')
+      && s.committed.includes('willed_openness')
+      && s.committed.includes('consciousness_theory');
+    if(hasQReq && s.runInfo>600000){
+      s.found.push('tx_continuum_q'); s.newlyUnlocked.push('tx_continuum_q');
+      log(tf('MSG_DISCOVER_T',{name:t(NODES['tx_continuum_q'].name),note:t(NODES['tx_continuum_q'].note)}), 'event');
+      sfxDiscover();
+    }
+  }
+
   // 隠し要素: πのサイン ―― 「零と無限の連環」装備 + 獲得情報量10000000超
   if(!s.qSigns.pi && s.committed.includes('tx_zero_infinity') && s.runInfo>10000000){
     grantQSign('pi');
