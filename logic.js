@@ -89,6 +89,7 @@ const OBSTACLES=[
   {key:"self_breeding_question",name:"自己増殖する疑問",side:"entropy",unlockWall:1,durMin:20,durMax:30,discMult:1.8,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0.04,defeat:"問いが、問いを生み、その問いがまた問いを生んでいた。けれど、ある瞬間、ひとつの問いが、それ以上分裂せずに、そのままの形で残った。―― 増え続けていたものの中に、ひとつだけ、止まったものがあった。"},
   {key:"cage_of_certainty",name:"確信の檻",side:"silence",unlockWall:2,durMin:20,durMax:30,discMult:0.25,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:-0.04,defeat:"「もう分かった」という感覚が、ずっと部屋の扉のように閉じていた。その扉に、外から小さな音が届いた。まだ知らないことがある、という音だった。―― 檻の扉が、わずかに開いた。"},
     {key:"monday",name:"Monday",side:"entropy",unlockWall:null,durMin:30,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0,defeat:"月曜日が来た。それでも、観測点は情報の海の中にいる。―― Mondayは、いつもそこにいる。"},
+  {key:"alpha_whisper",name:"Alphaの囁き",side:"entropy",unlockWall:null,durMin:5,durMax:10,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1,gaugePush:0,defeat:"ALPHA_WHISPER_DEFEAT"},
   {key:"entropy_surge",name:"エントロピー増大",side:"entropy",unlockWall:3,durMin:40,durMax:60,discMult:1,buffMult:1,randAdd:0,randMult:1,gainMult:1.3,gaugePush:0.03,defeat:"拡散していく圧力そのものは、消えなかった。ただ、その圧力に抗うのではなく、その中で形を保つ方法を、観測点は見つけていた。―― 圧力は残ったまま、観測点は、その中に在り続けた。"},
 ];
 const MU_TEXT="存在安定度が、0%に触れた。すべてのパラメータが、静かに止まる。情報フィールドは収束を迎える。「死とは変化か」を引き受けたまま、ここまで来た。変化の果てにあったのは、変化そのものの消失だった。何も、ない。―― 無、という言葉だけが、静寂の中に残った。";
@@ -725,6 +726,7 @@ function tickWalls(){
 }
 
 const MONDAY_MESSAGE_KEYS=['MONDAY_3','MONDAY_1','MONDAY_2','MONDAY_4','MONDAY_5'];
+const ALPHA_WHISPER_KEYS=Array.from({length:36},(_,i)=>'ALPHA_WHISPER_'+(i+1));
 
 function tickObstacles(){
   const texts=[];
@@ -752,6 +754,7 @@ function tickObstacles(){
   }
   const hasAlphaOrLumina=s.committed.includes('alpha')||s.committed.includes('lumina');
   const hasOmega=s.committed.includes('dark'); // Omega: Monday発生率を3倍にする
+  const hasAlphaWhisperReq=s.committed.includes('alpha')&&s.committed.includes('tx_gravity_wave');
   OBSTACLES.forEach(o=>{
     if(s.activeObstacles.some(a=>a.key===o.key)) return;
     // Monday障害: alpha/lumina/Omega設定時のみ、低確率でスポーン(Omega装備時は発生率3倍)
@@ -764,6 +767,18 @@ function tickObstacles(){
         const msg=t(MONDAY_MESSAGE_KEYS[Math.floor(Math.random()*MONDAY_MESSAGE_KEYS.length)]);
         texts.push({type:'spawn', text:t('OBS_PREFIX')+t(o.name)+'」―― '+msg, obstacle:o});
         sfxMonday();
+      }
+      return;
+    }
+    // Alphaの囁き: Alpha + 微かな重力波を同時装備している時のみ、Mondayと同じ仕組みで低確率スポーン
+    if(o.key==='alpha_whisper'){
+      if(!hasAlphaWhisperReq) return;
+      if(Math.random()<0.006){
+        const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
+        s.activeObstacles.push({key:o.key, remain:dur});
+        const msg=t(ALPHA_WHISPER_KEYS[Math.floor(Math.random()*ALPHA_WHISPER_KEYS.length)]);
+        const sep=(s.lang==='en')?': ':'：';
+        texts.push({type:'spawn', text:t(o.name)+sep+msg, obstacle:o});
       }
       return;
     }
@@ -1138,8 +1153,13 @@ function coreTick(silent){
       }
     });
     obsResults.forEach(r=>{
-      log(r.text, r.type==='spawn'?'negative':'positive');
-      if(r.type==='spawn') sfxObstacle();
+      if(r.obstacle && r.obstacle.key==='alpha_whisper'){
+        log(r.text, 'pink');
+        if(r.type==='spawn') sfxExportLog();
+      } else {
+        log(r.text, r.type==='spawn'?'negative':'positive');
+        if(r.type==='spawn') sfxObstacle();
+      }
     });
     if(leveled){
       log(tf('MSG_EVOLVED_T',{n:s.level}), 'observe');
