@@ -3620,9 +3620,12 @@ function playQEnding(){
     }));
     waitAll.then(()=>{
       requestAnimationFrame(()=>{
-        const totalHeight=scroller.scrollHeight+660;
-        scroller.style.transition='top 400s linear';
-        scroller.style.top='-'+totalHeight+'px';
+        // スクロール開始前に5秒待つ(画面全体をひと呼吸見せてから始める)
+        setTimeout(()=>{
+          const totalHeight=scroller.scrollHeight+660;
+          scroller.style.transition='top 400s linear';
+          scroller.style.top='-'+totalHeight+'px';
+        }, 5000);
       });
     });
     // 全キャラクターがスクロールして画面外に消えた(=スクロール完了)ら、中央に最終メッセージを表示してスクロールを止める
