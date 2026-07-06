@@ -840,6 +840,8 @@ function effText(n){
   if(n===NODES['tx_zero_infinity']) parts.push(t('EFF_INFO_DOUBLE'));
   // Omega: Monday発生率×3表記
   if(n===NODES['dark']) parts.push(t('EFF_MONDAY_TRIPLE'));
+  // 新たな観測点: 全属性値+15表記
+  if(n===NODES['tx_new_observer']) parts.push(t('EFF_ALL_STATS_15'));
   return parts.join(' / ');
 }
 function dirText(n){
