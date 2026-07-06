@@ -335,8 +335,8 @@ function spawnShootingStar(){
   else if(side===2){ x1=Math.random()*W; y1=H; }
   else { x1=0; y1=Math.random()*H; }
 
-  // 中央付近に向かって流れる
-  const tx=80+Math.random()*180, ty=60+Math.random()*130;
+  // 表示領域の完全な中央に向かって流れる
+  const tx=W/2, ty=H/2;
   const dx=tx-x1, dy=ty-y1;
   const dist=Math.sqrt(dx*dx+dy*dy)||1;
   const len=50+Math.random()*80;
