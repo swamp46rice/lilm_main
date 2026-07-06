@@ -266,7 +266,7 @@ button[disabled]:hover{background:transparent;}
 .log div.log-event{color:var(--rare);}
 .log div.log-dream{color:var(--legend);}
 .log div.log-observe{color:#e8d860;}
-.log div.log-pink{color:#ff8fc0;}
+.log div.log-pink{color:#ffe0ee;}
 /* ===== インベントリモーダル ===== */
 #inventoryOverlay{
   display:none;position:absolute;top:0;left:0;width:860px;height:660px;

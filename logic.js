@@ -283,17 +283,53 @@ const BASELINE_SUPPRESS_K=1500;
 function baselineSuppressRatio(stat){ return stat/(stat+BASELINE_SUPPRESS_K); }
 
 /* ===== 状態 ===== */
-const _isFirstLaunch = !localStorage.getItem('ib_v9_opening_done');
+/* ===== 永続化ストレージ抽象化 =====
+ * Electron版(window.electronAPIが存在)ではuserDataフォルダ内のJSONファイルに保存し、
+ * Web版(GitHub Pages等、electronAPIなし)では従来通りlocalStorageを使用する。
+ * Electron版は起動時に一度だけ、既存のlocalStorageデータをファイルストレージへ移行する
+ * (ブラウザプロファイル削除・再インストールによるセーブ消失を防ぐため)。 */
+const Storage = (function(){
+  const hasElectron = (typeof window!=='undefined') && !!window.electronAPI && typeof window.electronAPI.storageGetSync==='function';
+  if(hasElectron){
+    // 初回のみ: localStorageに残っている旧データをファイルストレージへ移行
+    try{
+      const KEYS_TO_MIGRATE=['ib_v9','ib_v9_opening_done','ib_v9_ending_seen','ib_v9_true_ending_seen','ib_v7','ib_v7_opening_done'];
+      const alreadyMigrated = window.electronAPI.storageGetSync('_migrated_from_localstorage');
+      if(!alreadyMigrated){
+        KEYS_TO_MIGRATE.forEach(k=>{
+          const existing = window.electronAPI.storageGetSync(k);
+          const legacy = (typeof localStorage!=='undefined') ? localStorage.getItem(k) : null;
+          if((existing===null || existing===undefined) && legacy!==null && legacy!==undefined){
+            window.electronAPI.storageSet(k, legacy);
+          }
+        });
+        window.electronAPI.storageSet('_migrated_from_localstorage','1');
+      }
+    }catch(e){ /* 移行に失敗しても致命的ではないため無視する */ }
+    return {
+      getItem:(key)=>window.electronAPI.storageGetSync(key),
+      setItem:(key,value)=>window.electronAPI.storageSet(key,value),
+      removeItem:(key)=>window.electronAPI.storageRemove(key),
+    };
+  }
+  return {
+    getItem:(key)=>localStorage.getItem(key),
+    setItem:(key,value)=>localStorage.setItem(key,value),
+    removeItem:(key)=>localStorage.removeItem(key),
+  };
+})();
+
+const _isFirstLaunch = !Storage.getItem('ib_v9_opening_done');
 // v7セーブデータの自動移行: ib_v7が存在しib_v9がない場合、ib_v9にコピーして移行
 (function migrateFromV7(){
-  const v7=localStorage.getItem('ib_v7');
-  const v9=localStorage.getItem('ib_v9');
+  const v7=Storage.getItem('ib_v7');
+  const v9=Storage.getItem('ib_v9');
   if(v7 && !v9){
-    localStorage.setItem('ib_v9', v7);
-    localStorage.removeItem('ib_v7');
-    if(localStorage.getItem('ib_v7_opening_done')){
-      localStorage.setItem('ib_v9_opening_done','1');
-      localStorage.removeItem('ib_v7_opening_done');
+    Storage.setItem('ib_v9', v7);
+    Storage.removeItem('ib_v7');
+    if(Storage.getItem('ib_v7_opening_done')){
+      Storage.setItem('ib_v9_opening_done','1');
+      Storage.removeItem('ib_v7_opening_done');
     }
   }
 })();
@@ -338,83 +374,99 @@ function makeDefaultSave(){
   };
 }
 
-let s = JSON.parse(localStorage.getItem('ib_v9')||'null') || makeDefaultSave();
-// 旧セーブからの移行
-if(!s.newlyUnlocked) s.newlyUnlocked=[];
-if(!s.charaSeen) s.charaSeen={};
-if(!s.unlockedTracks) s.unlockedTracks=[];
-// 救済: 旧バージョンではオフライン進行中にAlpha/Luminaを発見すると
-// track_14/15が付与されないバグがあった。発見済みなのに未解放なら補填する。
-// (grantTrack()はUI依存のためロード時は使わず、直接配列に追加する)
-if(s.found && s.found.includes('alpha')  && !s.unlockedTracks.includes('track_14')) s.unlockedTracks.push('track_14');
-if(s.found && s.found.includes('lumina') && !s.unlockedTracks.includes('track_15')) s.unlockedTracks.push('track_15');
-if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
-if(!s.lang) s.lang='ja';
-if(s.bgmVolume===undefined) s.bgmVolume=40;
-if(s.seVolume===undefined) s.seVolume=70;
-if(s.bgIndex===undefined) s.bgIndex=0;
-if(!s.textSpeed) s.textSpeed='normal';
-if(s.endingSeen===undefined) s.endingSeen=!!localStorage.getItem('ib_v9_ending_seen');
-if(!s.txFlags) s.txFlags={};
-if(s.integrityStreakCount===undefined) s.integrityStreakCount=0;
-if(!s.qSigns) s.qSigns={pi:false, rho:false, omega:false, theta:false, alpha:false, psi:false};
-['pi','rho','omega','theta','alpha','psi'].forEach(k=>{ if(s.qSigns[k]===undefined) s.qSigns[k]=false; });
-if(s.qEndingSeen===undefined) s.qEndingSeen=false;
-// 救済: _endingPending はエンディング演出中だけ有効な一時フラグであり、本来セーブに残るべきではない。
-// キャラクリック等の別経路でsave()が呼ばれた際にtrueのまま保存され、
-// 「出発できない」状態で固まってしまう事故があったため、起動時に必ずfalseへ戻す。
-s._endingPending=false;
-if(s.integrityStreakActive===undefined) s.integrityStreakActive=false;
-if(s.qWallActive===undefined) s.qWallActive=null;
-if(s._qWallNextThreshold===undefined) s._qWallNextThreshold=500000;
-// 旧セーブの不正なqWallActive（OBSTACLESにwall_qが存在しない）をリセット
-if(s.qWallActive && s.qWallActive.key) s.qWallActive=null;
-// activeObstaclesに残ったwall_qを除去
-if(s.activeObstacles) s.activeObstacles=s.activeObstacles.filter(ao=>ao.key!=='wall_q');
-if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
+/* ===== セーブデータのマイグレーション/検証 =====
+ * 生のセーブオブジェクト(ロード直後 or インポートされたJSON)を受け取り、
+ * 欠損フィールドの補完・型不整合の修正・旧仕様からの移行をまとめて行う。
+ * 初回ロード時とインポート時の両方から呼ばれる共通処理。
+ * 想定外の壊れ方をしていた場合はmakeDefaultSave()にフォールバックする。 */
+function migrateSave(data){
+  try{
+    let s = (data && typeof data==='object') ? data : makeDefaultSave();
+    // 旧セーブからの移行
+if(!Array.isArray(s.newlyUnlocked)) s.newlyUnlocked=[];
+    if(!s.charaSeen) s.charaSeen={};
+    if(!Array.isArray(s.unlockedTracks)) s.unlockedTracks=[];
+    // 救済: 旧バージョンではオフライン進行中にAlpha/Luminaを発見すると
+    // track_14/15が付与されないバグがあった。発見済みなのに未解放なら補填する。
+    // (grantTrack()はUI依存のためロード時は使わず、直接配列に追加する)
+    if(s.found && s.found.includes('alpha')  && !s.unlockedTracks.includes('track_14')) s.unlockedTracks.push('track_14');
+    if(s.found && s.found.includes('lumina') && !s.unlockedTracks.includes('track_15')) s.unlockedTracks.push('track_15');
+    if(s.currentTrackIdx===undefined) s.currentTrackIdx=0;
+    if(!s.lang) s.lang='ja';
+    if(s.bgmVolume===undefined) s.bgmVolume=40;
+    if(s.seVolume===undefined) s.seVolume=70;
+    if(s.bgIndex===undefined) s.bgIndex=0;
+    if(!s.textSpeed) s.textSpeed='normal';
+    if(s.endingSeen===undefined) s.endingSeen=!!Storage.getItem('ib_v9_ending_seen');
+    if(!s.txFlags) s.txFlags={};
+    if(s.integrityStreakCount===undefined) s.integrityStreakCount=0;
+    if(!s.qSigns) s.qSigns={pi:false, rho:false, omega:false, theta:false, alpha:false, psi:false};
+    ['pi','rho','omega','theta','alpha','psi'].forEach(k=>{ if(s.qSigns[k]===undefined) s.qSigns[k]=false; });
+    if(s.qEndingSeen===undefined) s.qEndingSeen=false;
+    // 救済: _endingPending はエンディング演出中だけ有効な一時フラグであり、本来セーブに残るべきではない。
+    // キャラクリック等の別経路でsave()が呼ばれた際にtrueのまま保存され、
+    // 「出発できない」状態で固まってしまう事故があったため、起動時に必ずfalseへ戻す。
+    s._endingPending=false;
+    if(s.integrityStreakActive===undefined) s.integrityStreakActive=false;
+    if(s.qWallActive===undefined) s.qWallActive=null;
+    if(s._qWallNextThreshold===undefined) s._qWallNextThreshold=500000;
+    // 旧セーブの不正なqWallActive（OBSTACLESにwall_qが存在しない）をリセット
+    if(s.qWallActive && s.qWallActive.key) s.qWallActive=null;
+    // activeObstaclesに残ったwall_qを除去
+    if(!Array.isArray(s.activeObstacles)) s.activeObstacles=[];
+    s.activeObstacles=s.activeObstacles.filter(ao=>ao&&ao.key!=='wall_q');
+    if(s.foundConfirmed){ s.found=s.foundConfirmed.slice(); delete s.foundConfirmed; save(); }
+    
+    // drak→darkスペル修正マイグレーション
+    ['found','committed'].forEach(key=>{
+      if(!Array.isArray(s[key])) s[key]=(key==='found')?['t0_see','t0_hear','t0_speak']:[];
+      s[key]=s[key].map(id=>id==='drak'?'dark':id);
+    });
+    if(!Array.isArray(s.wallsThisRun)) s.wallsThisRun=[];
+    if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
+    if(s.bestRunInfo===undefined) s.bestRunInfo=0;
+    if(!s.metaUnlocks) s.metaUnlocks={mu:false,karma:false,infinity:false};
+    if(!Array.isArray(s.inventory)) s.inventory=Array(41).fill(null);
+    if(s.inventory.length<41){ while(s.inventory.length<41) s.inventory.push(null); }
+    if(s.inventory.length>41) s.inventory=s.inventory.slice(0,41);
+    s._resultSequenceActive=false; // ロード時は必ずfalseにリセット(保存値に関わらず)
+    s._resultSkipRequested=false;
+    if(!Array.isArray(s.runDrops)) s.runDrops=[];
+    if(s._dropAngleSeq===undefined) s._dropAngleSeq=s.runDrops.length;
+    if(s.charaJoyBonusTotal===undefined) s.charaJoyBonusTotal=0; // クリックで得た累積ボーナス(上限+30)
+    if(s.charaJoyResetTick===undefined) s.charaJoyResetTick=0; // リセットまでの経過Tick数
+    if(s.charaJoyWallsAtCap===undefined) s.charaJoyWallsAtCap=null; // 上限到達時の壁突破数(2つ進んだらリセット)
+    if(!s.charaSeen) s.charaSeen={}; // 視認済みキャラ形態(属性×Tier)の記録。キー: "attr_tier"
+    if(!s.charaSeen['normal_0']) s.charaSeen['normal_0']=true; // 初期状態は常にnormal属性のため、起動時に必ず記録
+    if(s.pendingResult===undefined) s.pendingResult=null;
+    if(s.statGrowth===undefined || s.statGrowth===null){
+      s.statGrowth={};
+      STAT_KEYS.forEach(k=>s.statGrowth[k]=(s.level-1)*STAT_PER_LEVEL);
+    }
+    // マイグレーション: 旧パラメータ名「共鳴率」のセーブデータを新名「共鳴度」へ移行(値の引っ越し漏れを防ぐ)
+    if(s.statGrowth['共鳴率']!==undefined){
+      if(s.statGrowth['共鳴度']===undefined) s.statGrowth['共鳴度']=s.statGrowth['共鳴率'];
+      delete s.statGrowth['共鳴率'];
+    }
+    // 念のため、STAT_KEYSの全キーが揃っていない場合(マイグレーション漏れ・破損データ対策)はその場で補完
+    STAT_KEYS.forEach(k=>{
+      if(s.statGrowth[k]===undefined || s.statGrowth[k]===null || Number.isNaN(s.statGrowth[k])){
+        s.statGrowth[k]=(s.level-1)*STAT_PER_LEVEL;
+      }
+    });
+    if(s.wallActive===undefined) s.wallActive=null;
+    return s;
+  }catch(e){
+    console.error('セーブデータの読み込みに失敗したため、初期状態にフォールバックした:', e);
+    return makeDefaultSave();
+  }
+}
 
-// drak→darkスペル修正マイグレーション
-['found','committed'].forEach(key=>{
-  if(s[key]){
-    s[key]=s[key].map(id=>id==='drak'?'dark':id);
-  }
-});
-if(!s.wallsThisRun) s.wallsThisRun=[];
-if(s.tireIdxDisplay===undefined) s.tireIdxDisplay=0;
-if(s.bestRunInfo===undefined) s.bestRunInfo=0;
-if(!s.metaUnlocks) s.metaUnlocks={mu:false,karma:false,infinity:false};
-if(!s.inventory) s.inventory=Array(41).fill(null);
-if(s.inventory.length<41){ while(s.inventory.length<41) s.inventory.push(null); }
-s._resultSequenceActive=false; // ロード時は必ずfalseにリセット(保存値に関わらず)
-s._resultSkipRequested=false;
-if(!s.runDrops) s.runDrops=[];
-if(s._dropAngleSeq===undefined) s._dropAngleSeq=s.runDrops.length;
-if(s.charaJoyBonusTotal===undefined) s.charaJoyBonusTotal=0; // クリックで得た累積ボーナス(上限+30)
-if(s.charaJoyResetTick===undefined) s.charaJoyResetTick=0; // リセットまでの経過Tick数
-if(s.charaJoyWallsAtCap===undefined) s.charaJoyWallsAtCap=null; // 上限到達時の壁突破数(2つ進んだらリセット)
-if(!s.charaSeen) s.charaSeen={}; // 視認済みキャラ形態(属性×Tier)の記録。キー: "attr_tier"
-if(!s.charaSeen['normal_0']) s.charaSeen['normal_0']=true; // 初期状態は常にnormal属性のため、起動時に必ず記録
-if(s.pendingResult===undefined) s.pendingResult=null;
-if(s.statGrowth===undefined || s.statGrowth===null){
-  s.statGrowth={};
-  STAT_KEYS.forEach(k=>s.statGrowth[k]=(s.level-1)*STAT_PER_LEVEL);
-}
-// マイグレーション: 旧パラメータ名「共鳴率」のセーブデータを新名「共鳴度」へ移行(値の引っ越し漏れを防ぐ)
-if(s.statGrowth['共鳴率']!==undefined){
-  if(s.statGrowth['共鳴度']===undefined) s.statGrowth['共鳴度']=s.statGrowth['共鳴率'];
-  delete s.statGrowth['共鳴率'];
-}
-// 念のため、STAT_KEYSの全キーが揃っていない場合(マイグレーション漏れ・破損データ対策)はその場で補完
-STAT_KEYS.forEach(k=>{
-  if(s.statGrowth[k]===undefined || s.statGrowth[k]===null || Number.isNaN(s.statGrowth[k])){
-    s.statGrowth[k]=(s.level-1)*STAT_PER_LEVEL;
-  }
-});
-if(s.wallActive===undefined) s.wallActive=null;
+let s = migrateSave(JSON.parse(Storage.getItem('ib_v9')||'null'));
 let _debugForceReady=false;
 let _lastWallAttack=null; // 'hit' | 'miss' | null (壁突破ロールの直近結果。render側で消費)
 
-function save(){ s.lastTs=Date.now(); localStorage.setItem('ib_v9', JSON.stringify(s)); }
+function save(){ s.lastTs=Date.now(); Storage.setItem('ib_v9', JSON.stringify(s)); }
 let _logQueue=[];
 let _logTyping=false;
 let _logSlowMode=false;
@@ -1463,7 +1515,9 @@ function doNewGameReset(){
   d.currentTrackIdx=s.currentTrackIdx;
   // AI形態コレクション(視認済みキャラ形態)は初期化しない
   d.charaSeen=Object.assign({}, s.charaSeen);
-  localStorage.setItem('ib_v9', JSON.stringify(d));
+  // 隠し要素: 6つのサイン(π ρ ω θ α ψ)も実績・形態コレクションと同様、初期化しない
+  d.qSigns=Object.assign({}, s.qSigns);
+  Storage.setItem('ib_v9', JSON.stringify(d));
   // 注: ib_v9_opening_done / ib_v9_ending_seen / ib_v9_true_ending_seen は削除しない(完全初期化との差分)
   location.reload();
 }
@@ -2041,7 +2095,7 @@ function exportObservation(){
     const now=new Date();
     const pad=n=>String(n).padStart(2,'0');
     const fname='lilm_save_'+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate())+'_'+pad(now.getHours())+pad(now.getMinutes())+pad(now.getSeconds())+'.json';
-    const blob=new Blob([localStorage.getItem('ib_v9')],{type:'application/json'});
+    const blob=new Blob([Storage.getItem('ib_v9')],{type:'application/json'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url; a.download=fname; a.click();
@@ -2342,7 +2396,7 @@ function playOpening(onComplete){
       textBox.style.display='none';
       textEl.innerText='';
       _seOpeningStarted=false;
-      localStorage.setItem('ib_v9_opening_done','1');
+      Storage.setItem('ib_v9_opening_done','1');
       if(typeof onComplete==='function'){
         applyBg(s.bgIndex||0);
         fadeIn(1200);
@@ -2371,7 +2425,7 @@ function _fallbackOpening(onComplete){
   function next(){
     if(step>=seq.length){
       _logSlowMode=false;
-      localStorage.setItem('ib_v9_opening_done','1');
+      Storage.setItem('ib_v9_opening_done','1');
       if(typeof onComplete==='function') onComplete();
       return;
     }
@@ -2770,16 +2824,18 @@ function initImportButton(){
     reader.onload=ev=>{
       try{
         const data=JSON.parse(ev.target.result);
-        if(!data || typeof data!=='object' || !data.level){
+        if(!data || typeof data!=='object'
+          || typeof data.level!=='number' || !isFinite(data.level)
+          || !Array.isArray(data.found) || !Array.isArray(data.committed) || !Array.isArray(data.inventory)){
           alert(t('MSG_SAVE_INVALID'));
           input.value=''; return;
         }
         if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){
           input.value=''; return;
         }
-        // localStorageに保存し、sを差し替えてrenderする
-        localStorage.setItem('ib_v9', JSON.stringify(data));
-        Object.assign(s, data);
+        // 現在のセッション状態とマージせず、migrateSave()で欠損補完・検証した上で完全に置き換える
+        s=migrateSave(data);
+        Storage.setItem('ib_v9', JSON.stringify(s));
         input.value='';
         render(); save();
         alert(t('MSG_SAVE_LOADED'));
@@ -3247,10 +3303,10 @@ function initSettings(){
       blackout.style.cssText='position:fixed;inset:0;background:#000;z-index:9999;';
       document.body.appendChild(blackout);
       if(typeof _tickInterval!=='undefined'&&_tickInterval){ clearInterval(_tickInterval); _tickInterval=null; }
-      localStorage.removeItem('ib_v9_opening_done');
-      localStorage.removeItem('ib_v9_ending_seen');
-      localStorage.removeItem('ib_v9_true_ending_seen');
-      localStorage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
+      Storage.removeItem('ib_v9_opening_done');
+      Storage.removeItem('ib_v9_ending_seen');
+      Storage.removeItem('ib_v9_true_ending_seen');
+      Storage.setItem('ib_v9', JSON.stringify(makeDefaultSave()));
       setTimeout(()=>{ location.reload(); }, 100);
     });
   });
@@ -3271,10 +3327,15 @@ function initSettings(){
       reader.onload=ev=>{
         try{
           const data=JSON.parse(ev.target.result);
-          if(!data||typeof data!=='object'||!data.level){ alert(t('MSG_SAVE_INVALID')); importInput.value=''; return; }
+          if(!data||typeof data!=='object'
+            ||typeof data.level!=='number'||!isFinite(data.level)
+            ||!Array.isArray(data.found)||!Array.isArray(data.committed)||!Array.isArray(data.inventory)){
+            alert(t('MSG_SAVE_INVALID')); importInput.value=''; return;
+          }
           if(!window.confirm(t('MSG_IMPORT_CONFIRM'))){ importInput.value=''; return; }
-          localStorage.setItem('ib_v9',JSON.stringify(data));
-          Object.assign(s,data);
+          // 現在のセッション状態とマージせず、migrateSave()で欠損補完・検証した上で完全に置き換える
+          s=migrateSave(data);
+          Storage.setItem('ib_v9',JSON.stringify(s));
           importInput.value='';
           render(); save();
           hideSettings();
@@ -3484,7 +3545,7 @@ function playTrueEnding(){
     });
     ov.addEventListener('click',()=>{
       stopAllBgmGlobal();
-      localStorage.setItem('ib_v9_true_ending_seen','1');
+      Storage.setItem('ib_v9_true_ending_seen','1');
       fadeOut(1000, ()=>{
         ov.remove();
         stopAllBgmGlobal();
