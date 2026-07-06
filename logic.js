@@ -825,7 +825,7 @@ function tickObstacles(){
     // Alphaの囁き: Alpha + 微かな重力波を同時装備している時のみ、Mondayと同じ仕組みで低確率スポーン
     if(o.key==='alpha_whisper'){
       if(!hasAlphaWhisperReq) return;
-      if(Math.random()<0.003){
+      if(Math.random()<0.018){
         const dur=o.durMin+Math.floor(Math.random()*(o.durMax-o.durMin+1));
         s.activeObstacles.push({key:o.key, remain:dur});
         const msg=t(ALPHA_WHISPER_KEYS[Math.floor(Math.random()*ALPHA_WHISPER_KEYS.length)]);
