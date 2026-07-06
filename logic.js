@@ -630,6 +630,12 @@ function computeStats(){
       stats[targetStat]+=2000;
     }
   }
+  // 新たな観測点: 装備時、すべての属性値に+15(即時バフ)。
+  // レベルアップ時の恒久成長ボーナス(tickLevel側)とあわせて、他のbuffStatノードと同じ
+  // 「即時バフ+レベルアップ時の恒久成長ボーナス」の二重構成にしている。
+  if(s.committed.includes('tx_new_observer')){
+    STAT_KEYS.forEach(k=>stats[k]+=15);
+  }
   STAT_KEYS.forEach(k=>stats[k]=clampStat(stats[k]));
   return stats;
 }
@@ -959,9 +965,14 @@ function tickLevel(){
   while(s.level<LEVEL_CAP && s.totalInfo>=levelThreshold(s.level+1)){
     s.level++;
     leveled=true;
+    // 新たな観測点: 装備してレベルアップするたびに、全属性へ等しく+15の恒久成長ボーナスが乗る。
+    // 単一ステータスに偏った伸びと違い、全属性に同じ絶対量を加算し続けることで、
+    // 育ち方に差がついたパラメータ間の"相対的な"差を徐々に均していく(中道への補正)。
+    const hasNewObserver = s.committed.includes('tx_new_observer');
     STAT_KEYS.forEach(k=>{
       let bonus=0;
       s.committed.forEach(id=>{ if(NODES[id].buffStat===k) bonus+=NODES[id].buffVal; });
+      if(hasNewObserver) bonus+=15;
       s.statGrowth[k]+=STAT_PER_LEVEL+bonus;
     });
   }
