@@ -360,7 +360,7 @@ function makeDefaultSave(){
     lang:'ja',
     bgmVolume:40,
     seVolume:70,
-    bgIndex:0,
+    bgIndex:3,
     textSpeed:'normal',
     txFlags:{},
     metaUnlocks:{mu:false,karma:false,infinity:false},
@@ -395,7 +395,7 @@ if(!Array.isArray(s.newlyUnlocked)) s.newlyUnlocked=[];
     if(!s.lang) s.lang='ja';
     if(s.bgmVolume===undefined) s.bgmVolume=40;
     if(s.seVolume===undefined) s.seVolume=70;
-    if(s.bgIndex===undefined) s.bgIndex=0;
+    if(s.bgIndex===undefined) s.bgIndex=3;
     if(!s.textSpeed) s.textSpeed='normal';
     if(s.endingSeen===undefined) s.endingSeen=!!Storage.getItem('ib_v9_ending_seen');
     if(!s.txFlags) s.txFlags={};
@@ -3129,6 +3129,7 @@ function applyUILang(){
     bgSel.options[0].text=t('SETTINGS_BG_0');
     bgSel.options[1].text=t('SETTINGS_BG_1');
     bgSel.options[2].text=t('SETTINGS_BG_2');
+    if(bgSel.options[3]) bgSel.options[3].text=t('SETTINGS_BG_3');
     bgSel.value=s.bgIndex||0;
   }
   set('settingsCreditBtn',  t('SETTINGS_CREDIT'));
@@ -3180,7 +3181,7 @@ function applyUILang(){
 }
 
 
-const BG_IMAGES=['assets/bg_image_00.png','assets/bg_image_01.png','assets/bg_image_03.png'];
+const BG_IMAGES=['assets/bg_image_00.png','assets/bg_image_01.png','assets/bg_image_03.png','assets/bg_image_04.png'];
 
 function applyBg(idx){
   const el=document.getElementById('gameBackground');
