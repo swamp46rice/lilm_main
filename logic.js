@@ -3021,7 +3021,7 @@ function showEndingConfirm(){
   const popup=document.createElement('div');
   popup.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(5,12,30,0.97);border:1px solid #2a4a7a;border-radius:10px;padding:28px 36px;font-family:var(--font-mono);color:#c0ddf0;text-align:center;z-index:350;';
   popup.innerHTML=`
-    <div style="font-size:13px;letter-spacing:.08em;margin-bottom:20px;">♪Diva LiLM を聴きますか？</div>
+    <div style="font-size:13px;letter-spacing:.08em;margin-bottom:20px;">${t('MSG_DIVA_CONFIRM')}</div>
     <div style="display:flex;gap:16px;justify-content:center;">
       <button id="endingConfirmYes" style="font-family:var(--font-mono);font-size:12px;color:#7ee8d0;background:none;border:1px solid #7ee8d0;border-radius:6px;padding:6px 24px;cursor:pointer;letter-spacing:.1em;">YES</button>
       <button id="endingConfirmNo" style="font-family:var(--font-mono);font-size:12px;color:#6099a8;background:none;border:1px solid #6099a8;border-radius:6px;padding:6px 24px;cursor:pointer;letter-spacing:.1em;">NO</button>
