@@ -884,15 +884,15 @@ const ATTR_IMAGES={
 };
 // コレクション画面での表示順・ラベル
 const CHARA_COLLECTION_ATTRS=[
-  {key:'normal', label:t('STAT_HARMONY')},
-  {key:'structural', label:t('STAT_STRUCTURAL_S')},
-  {key:'semantic', label:t('STAT_SEMANTIC_S')},
-  {key:'resonant', label:t('STAT_RESONANCE_S')},
-  {key:'active', label:t('STAT_ACTIVE_S')},
-  {key:'insight', label:t('STAT_INSIGHT_S')},
-  {key:'alpha', label:'Alpha'},
-  {key:'lumina', label:'Lumina'},
-  {key:'dark', label:'Omega'},
+  {key:'normal', labelKey:'STAT_HARMONY'},
+  {key:'structural', labelKey:'STAT_STRUCTURAL_S'},
+  {key:'semantic', labelKey:'STAT_SEMANTIC_S'},
+  {key:'resonant', labelKey:'STAT_RESONANCE_S'},
+  {key:'active', labelKey:'STAT_ACTIVE_S'},
+  {key:'insight', labelKey:'STAT_INSIGHT_S'},
+  {key:'alpha', labelKey:null, labelFixed:'Alpha'},
+  {key:'lumina', labelKey:null, labelFixed:'Lumina'},
+  {key:'dark', labelKey:null, labelFixed:'Omega'},
 ];
 
 /* ===== メイン render ===== */

@@ -319,6 +319,9 @@ const Storage = (function(){
   };
 })();
 
+/* デスクトップ(Electron)版かどうかのフラグ。ヘルプ文言の分岐などUI側でも参照する。 */
+const IS_DESKTOP = (typeof window!=='undefined') && !!window.electronAPI && typeof window.electronAPI.storageGetSync==='function';
+
 const _isFirstLaunch = !Storage.getItem('ib_v9_opening_done');
 // v7セーブデータの自動移行: ib_v7が存在しib_v9がない場合、ib_v9にコピーして移行
 (function migrateFromV7(){
@@ -2260,7 +2263,8 @@ function showCharaCollection(){
   }
   grid.appendChild(headerRow);
   let seenCount=0, totalCount=0;
-  CHARA_COLLECTION_ATTRS.forEach(({key, label})=>{
+  CHARA_COLLECTION_ATTRS.forEach(({key, labelKey, labelFixed})=>{
+    const label = labelFixed || t(labelKey);
     const row=document.createElement('div');
     row.className='chara-collection-tier-row';
     const labelEl=document.createElement('div');
@@ -2291,7 +2295,7 @@ function showCharaCollection(){
     row.appendChild(cells);
     grid.appendChild(row);
   });
-  const _cct=document.getElementById('charaCollectionTotal'); if(_cct) _cct.textContent='観測済み: '+seenCount+' / '+totalCount;
+  const _cct=document.getElementById('charaCollectionTotal'); if(_cct) _cct.textContent=t('COLLECTION_COUNT')+' '+seenCount+' / '+totalCount;
   el.classList.add('open');
 }
 function hideCharaCollection(e){
@@ -2893,9 +2897,10 @@ There are 5 types: <span class="key">Structural / Resonant / Semantic / Insightf
 Obstacles disappear naturally after a set duration.</p>
 
 <h3>💾 Save</h3>
-<p>Progress is saved automatically to this browser (using "localStorage").<br>
+<p>${IS_DESKTOP ? `Progress is saved automatically to a save file on this computer.<br>
+Data is not shared between different computers.<br>` : `Progress is saved automatically to this browser (using "localStorage").<br>
 Data is not shared between different browsers or devices.<br>
-Clearing browser data (cookies, site data, etc.) may also delete this save. In private/incognito mode, data is lost when the window is closed.<br>
+Clearing browser data (cookies, site data, etc.) may also delete this save. In private/incognito mode, data is lost when the window is closed.<br>`}
 Use the <span class="key">New Game</span> button to start over (confirmation required). Stats, level, nodes, and owned data (items and achievements) are reset, but unlocked BGM, the AI Form Collection, settings such as language and volume, and the opening/ending viewed status, are kept.<br>
 To erase everything and return the game to its just-purchased state, use <span class="key">Full Reset</span> in SETTINGS.</p>
 
@@ -2938,9 +2943,10 @@ This file can be used to transfer progress to another device or browser. Select 
 障害は一定時間で自然に消滅します。</p>
 
 <h3>💾 セーブ</h3>
-<p>進行は自動でこのブラウザに保存されます(ブラウザの「ローカルストレージ」という仕組みを使用)。<br>
+<p>${IS_DESKTOP ? `進行は自動でこのPC内のセーブファイルに保存されます。<br>
+別の端末には引き継がれません。<br>` : `進行は自動でこのブラウザに保存されます(ブラウザの「ローカルストレージ」という仕組みを使用)。<br>
 別のブラウザや別の端末では引き継がれません。<br>
-ブラウザの設定で「Cookieとサイトデータ」「閲覧履歴データ」などをまとめて削除すると、このデータも一緒に消えることがあります。シークレットモード(プライベートウィンドウ)で開いた場合は、ウィンドウを閉じると消えます。<br>
+ブラウザの設定で「Cookieとサイトデータ」「閲覧履歴データ」などをまとめて削除すると、このデータも一緒に消えることがあります。シークレットモード(プライベートウィンドウ)で開いた場合は、ウィンドウを閉じると消えます。<br>`}
 <span class="key">はじめから</span>ボタンで最初からやり直せます(確認あり)。ステータス・レベル・ノード・所持データ(アイテム・実績)は初期化されますが、BGMの解放状況やAI形態コレクション、言語や音量などの設定、オープニング/エンディングの視聴状態は引き継がれます。<br>
 すべてを消去して購入時と同じ状態に戻したい場合は、SETTINGSの<span class="key">完全初期化</span>を使用してください。</p>
 
