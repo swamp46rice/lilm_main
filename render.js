@@ -1229,11 +1229,13 @@ function toggleCompactMode(){
   const win=document.querySelector('.window');
   if(_compactMode){
     win.classList.add('compact-mode');
-    document.getElementById('compactToggle').textContent='⊞';
+    document.getElementById('iconCompact').src='assets/icon_big.png';
+    document.getElementById('iconCompact').alt=t('UI_COMPACT_OFF');
     document.getElementById('compactToggle').title=t('UI_COMPACT_OFF');
   } else {
     win.classList.remove('compact-mode');
-    document.getElementById('compactToggle').textContent='⊟';
+    document.getElementById('iconCompact').src='assets/icon_small.png';
+    document.getElementById('iconCompact').alt=t('UI_COMPACT_ON');
     document.getElementById('compactToggle').title=t('UI_COMPACT_ON');
   }
   // Electronアプリの場合はウィンドウサイズも切り替え
